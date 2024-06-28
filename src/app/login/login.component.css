@@ -1,0 +1,39 @@
+.container {
+    background-color: #eceaea;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter';
+}
+
+.input {   
+    display: flex;
+    flex-direction: column;
+}
+
+.input-box{
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 250px;
+    margin: 30px 0px;
+}
+
+.alternate-login {
+    display: flex;
+    flex-direction: column;
+}
+
+.icon-box {
+    display: flex;
+    justify-content: space-evenly;
+}
