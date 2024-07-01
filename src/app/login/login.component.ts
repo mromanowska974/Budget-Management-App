@@ -49,8 +49,26 @@ export class LoginComponent {
     });
   }
 
+  handleError(error){
+    switch(error.code){
+      case 'auth/invalid-email':
+        this.errorMessage = 'Proszę podać e-mail';
+        break;
+      case 'auth/invalid-credential':
+        this.errorMessage = 'Nieprawidłowe dane logowania';
+        break;
+      case 'auth/email-already-in-use':
+        this.errorMessage = 'E-mail jest już zarejestrowany';
+        break;
+      case 'auth/missing-password':
+        this.errorMessage = 'Proszę podać hasło';
+        break;
+      default:
+        this.errorMessage = 'Nie można zalogować'
+    }
+  }
+
   onSubmit(){
-    console.log(this.signupForm.value)
     if(this.loginMode){
       this.authService
         .login(this.signupForm.value.email, this.signupForm.value.password)
@@ -59,7 +77,9 @@ export class LoginComponent {
             this.router.navigate(['main-page']);
           },
           error: (error) => {
-            this.errorMessage = error.code;
+            console.log(error.code)
+
+            this.handleError(error)
           }
         })
     }
@@ -71,7 +91,9 @@ export class LoginComponent {
             this.router.navigate(['main-page']);
           },
           error: (error) => {
-            this.errorMessage = error.code;
+            console.log(error.code)
+
+            this.handleError(error)
           }
         })
     }

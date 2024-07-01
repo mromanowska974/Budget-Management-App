@@ -37,3 +37,10 @@
     display: flex;
     justify-content: space-evenly;
 }
+
+.error {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 50px;
+}

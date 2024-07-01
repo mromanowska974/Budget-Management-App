@@ -3,25 +3,7 @@
     flex-direction: column;
     background-color: #eceaea;
     width: 100%;
-    height: 100vh;
     font-family: 'Inter';
-}
-
-.row {
-    display: flex;
-    margin: 20px 0;
-    justify-content: space-around;
-}
-
-.box:last-child{
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.box:nth-child(2) {
-    width: 45%;
 }
 
 .account-management {
@@ -55,13 +37,6 @@
     padding: 5px;
 }
 
-.last-expenses-list {
-    /* padding-left: 2%; */
-    width: 90%;
-    margin: 0 10px 0 30px;
-    align-self: flex-end;
-}
-
 .widget {
     display: flex;
     flex-direction: column;
@@ -77,13 +52,10 @@
     padding: 0 20px;
 }
 
-.last-expenses-list .widget table{
-    margin-left: 20px;
-    width: 95%;
-}
-
-.last-expenses-list .widget table td{
-    padding: 5px 0;
+.last-expenses-list .widget .scroll{
+    overflow-y: scroll;
+    height: 20vh;
+    padding-bottom: 10px;
 }
 
 .last-expenses-list .widget table td:first-child{
@@ -98,10 +70,6 @@
     width: 15%;
 }
 
-.last-expenses-list .widget table td:nth-child(4){
-    width: 40%;
-}
-
 .last-expenses-list .widget table td:nth-child(5){
     width: 10%;
 }
@@ -112,20 +80,9 @@
     flex-direction: column;
 }
 
-.addBtn button {
-    align-self: flex-end;
-}
-
-.hamburger {
-    padding: 15px 10px;
-    width: 5%; 
-}
-
 .text-form {
     display: flex;
     flex-direction: column;
-    width: 300px;
-    margin: 1% 2%;
 }
 
 .change-month {
@@ -142,4 +99,116 @@
 
 .change-month p {
     padding: 0;
+}
+
+@media (orientation: landscape){
+    .row {
+        display: flex;
+        margin: 20px;
+        justify-content: space-around;
+    }    
+
+    .hamburger {
+        padding: 15px 10px;
+        width: 5%; 
+    }
+
+    .box:last-child{
+        width: 45%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .box:nth-child(2) {
+        width: 45%;
+    }
+
+    .container {
+        height: 100vh;
+    }
+
+    .text-form {
+        width: 300px;
+    }
+
+    .addBtn button {
+        align-self: flex-end;
+    }
+
+    .last-expenses-list {
+        width: 89%;
+        margin: 0 30px 0 30px;
+        align-self: flex-end;
+    }
+
+    .last-expenses-list .widget table{
+        margin-left: 20px;
+        width: 95%;
+    }
+
+    .last-expenses-list .widget table td{
+        padding: 5px 0;
+    }
+
+    .last-expenses-list .widget table td:nth-child(4){
+        width: 40%;
+    }
+}
+
+@media (orientation: portrait){
+    .container {
+        height: 165vh;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: column;
+        margin: 20px;
+        justify-content: space-between;
+        height: 120vh;
+    } 
+    
+    .box {
+        width: 95%;
+        display: flex;
+        align-self: center;
+        flex-direction: column;
+    }
+
+    .box:nth-child(2) {
+        margin-top: -30px;
+    }
+
+    .box:last-child{
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: space-between;
+        height: 50vh;
+    }
+
+    .text-form {
+        align-self: center;
+        width: 100%;
+    }
+
+    .last-expenses-list {
+        width: 90%;
+        align-self: center;
+    }
+
+    .last-expenses-list .widget table{
+        margin-left: 15px;
+        width: 90%;
+    }
+
+    .last-expenses-list .widget table td{
+        padding: 1px 0;
+        font-size: 85%;
+    }
+
+    .last-expenses-list .widget table td:nth-child(4){
+        width: 25%;
+        text-wrap: wrap;
+    }
 }

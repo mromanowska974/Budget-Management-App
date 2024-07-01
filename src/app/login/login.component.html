@@ -1,6 +1,6 @@
 <div class="container">
     <form (ngSubmit)="onSubmit()" #f="ngForm">
-        <div *ngIf="errorMessage">
+        <div *ngIf="errorMessage" class="error">
             {{ errorMessage }}
         </div>
         <div class="input-box">
@@ -32,11 +32,13 @@
                 type="submit"
                 appButtonDir 
                 (click)="onSignUp()"
+                [disabled]="!f.valid"
             >Zarejestruj się</button>
             <button
                 type="submit"
                 appButtonDir 
                 (click)="onLogin()"
+                [disabled]="!f.valid"
             >Zaloguj się</button>
         </div>
     </form>
