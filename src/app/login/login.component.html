@@ -1,25 +1,52 @@
 <div class="container">
-    <div class="input-box">
-        <div class="input">
-            <label>E-mail</label>
-            <input type="email" appInputDir>
+    <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <div *ngIf="errorMessage">
+            {{ errorMessage }}
         </div>
-        <div class="input">
-            <label>Hasło</label>
-            <input type="password" appInputDir>
+        <div class="input-box">
+            <div class="input">
+                <label for="email">E-mail</label>
+                <input 
+                    type="email" 
+                    id="email"
+                    ngModel
+                    name="email"
+                    appInputDir
+                    required
+                >
+            </div>
+            <div class="input">
+                <label for="password">Hasło</label>
+                <input 
+                    type="password"
+                    id="password"
+                    ngModel
+                    name="password"
+                    appInputDir
+                    required
+                >
+            </div>
         </div>
-    </div>
-    <div class="buttons">
-        <button appButtonDir>Zarejestruj się</button>
-        <button appButtonDir (click)="onLogin()">Zaloguj się</button>
-    </div>
+        <div class="buttons">
+            <button 
+                type="submit"
+                appButtonDir 
+                (click)="onSignUp()"
+            >Zarejestruj się</button>
+            <button
+                type="submit"
+                appButtonDir 
+                (click)="onLogin()"
+            >Zaloguj się</button>
+        </div>
+    </form>
     <div class="alternate-login">
         <p>Wybierz inną metodę logowania</p>
         <div class="icon-box">
-            <a href="">
+            <a (click)="onSignInFB()">
                 <img src="../assets/icons/fb-icon.png" width="50px">
             </a>
-            <a href="">
+            <a (click)="onSignInGoogle()">
                 <img src="../assets/icons/google-icon.png" width="50px">
             </a>
         </div>

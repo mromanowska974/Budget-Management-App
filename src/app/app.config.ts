@@ -1,15 +1,22 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, EnvironmentInjector, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore'
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { provideAuth, getAuth } from '@angular/fire/auth'
 
 import { routes } from './app.routes';
-import { firebaseConfig } from './app.firebaseConfig';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { environment } from '../environments/environment.development';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideFirestore(() => getFirestore())
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth()),
+    { 
+      provide: FIREBASE_OPTIONS,
+      useValue: environment.firebaseConfig
+    }
   ]
 };
