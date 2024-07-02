@@ -104,13 +104,12 @@
 @media (orientation: landscape){
     .row {
         display: flex;
-        margin: 20px;
-        justify-content: space-around;
+        margin: 15px 20px 5px 0px;
+        justify-content: space-between;
     }    
 
     .hamburger {
-        padding: 15px 10px;
-        width: 5%; 
+        padding: 5px 0 0 10px;
     }
 
     .box:last-child{
@@ -137,8 +136,8 @@
     }
 
     .last-expenses-list {
-        width: 89%;
-        margin: 0 30px 0 30px;
+        width: 92%;
+        margin: 30px 20px 0 30px;
         align-self: flex-end;
     }
 

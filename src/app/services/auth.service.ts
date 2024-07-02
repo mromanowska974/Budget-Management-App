@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable, from } from 'rxjs';
@@ -9,16 +9,17 @@ import { User } from '../models/user.interface';
   providedIn: 'root'
 })
 export class AuthService {
+  afAuth = inject(AngularFireAuth);
+  auth = inject(Auth)
+
   user$ = user(this.auth);
   currentUserSig = signal<User | null | undefined>(undefined)
-
-  constructor(private afAuth: AngularFireAuth, private auth: Auth) { }
 
   private alternateAuthLogin(provider: any) {
     return this.afAuth
       .signInWithPopup(provider)
-      .then(() => {
-        console.log("zalogowano pomyślnie")
+      .then((data) => {
+        return data
       })
       .catch((error) => {
         console.log(error)
@@ -26,19 +27,19 @@ export class AuthService {
   }
 
   fbAuth(){
-    return this.alternateAuthLogin(new FacebookAuthProvider);
+    return from(this.alternateAuthLogin(new FacebookAuthProvider));
   }
 
   googleAuth(){
-    return this.alternateAuthLogin(new GoogleAuthProvider);
+    return from(this.alternateAuthLogin(new GoogleAuthProvider));
   }
 
-  register(email: string, password: string): Observable<void>{
+  register(email: string, password: string){
     const promise = createUserWithEmailAndPassword(
       this.auth,
       email,
       password
-    ).then(response => updateProfile(response.user, {displayName: 'Założyciel'}))
+    ).then()
 
     return from(promise); //from() zamienia Promise na Observable
   }

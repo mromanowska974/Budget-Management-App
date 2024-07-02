@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { InputDirDirective } from '../directives/input-dir.directive';
@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -20,14 +22,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  db = inject(Firestore);
+  router = inject(Router);
+  authService = inject(AuthService)
+
   @ViewChild('f') signupForm: NgForm;
   loginMode = false;
   errorMessage: string;
-
-  constructor(
-    private router: Router, 
-    private authService: AuthService
-  ){}
 
   onLogin(){
     this.loginMode = true;
@@ -38,14 +39,40 @@ export class LoginComponent {
   }
 
   onSignInFB(){
-    this.authService.fbAuth().then(() => {
-      this.router.navigate(['main-page']);
+    this.authService.fbAuth().subscribe((data) => {
+      const docRef = doc(this.db, "users", data!.user?.uid!)
+      let user;
+      from(getDoc(docRef)).subscribe(doc => {
+        user = doc
+        console.log(user._document)
+        if(!user._document){
+          console.log('user jest nowy')
+          this.createUser(data)
+        }
+        else {
+          console.log('user jest w bazie')
+        }
+        this.router.navigate(['main-page']);
+      })
     });
   }
 
   onSignInGoogle(){
-    this.authService.googleAuth().then(() => {
-      this.router.navigate(['main-page']);
+    this.authService.googleAuth().subscribe((data) => {
+      const docRef = doc(this.db, "users", data!.user?.uid!)
+      let user;
+      from(getDoc(docRef)).subscribe(doc => {
+        user = doc
+        console.log(user._document)
+        if(!user._document){
+          console.log('user jest nowy')
+          this.createUser(data)
+        }
+        else {
+          console.log('user jest w bazie')
+        }
+        this.router.navigate(['main-page']);
+      })
     });
   }
 
@@ -68,6 +95,23 @@ export class LoginComponent {
     }
   }
 
+  createUser(credential){
+    const docRef = doc(this.db, "users", credential.user.uid)
+    setDoc(docRef, {
+      email: credential.user.email,
+      profiles: [
+        {
+          name: 'Założyciel',
+          role: 'admin',
+          PIN: null,
+          categories: ['jedzenie', 'transport'],
+          expenses: []
+        }
+      ],
+      accountStatus: 'free'
+    })
+  }
+
   onSubmit(){
     if(this.loginMode){
       this.authService
@@ -87,7 +131,8 @@ export class LoginComponent {
       this.authService
         .register(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
-          next: () => {
+          next: (credential) => {
+            this.createUser(credential)
             this.router.navigate(['main-page']);
           },
           error: (error) => {
