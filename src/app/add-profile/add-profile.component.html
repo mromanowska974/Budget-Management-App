@@ -1,0 +1,32 @@
+<div class="container">
+    <button appButtonDir (click)="onGoBack()">Wróć</button>
+    <h1>Dodaj nowy profil</h1>
+    <p *ngIf="errorMsg && errorMsg.length > 0" > {{ errorMsg }} </p>
+    <form (ngSubmit)="onSubmit()" class="input-box" #f="ngForm">
+        <div class="input">
+            <label for="profileName">Nazwa Profilu</label>
+            <input 
+                appInputDir
+                id="profileName"
+                name="profileName"
+                ngModel
+                type="text"
+                required
+            >
+        </div>
+        <div class="input">
+            <label for="pinCode">Kod PIN</label>
+            <input 
+                appInputDir
+                id="pinCode"
+                name="pinCode"
+                ngModel
+                type="number"
+                minlength="4"
+                maxlength="8"
+                required
+            >
+        </div>
+        <button appButtonDir [disabled]="!f.valid">Zapisz</button>
+    </form>
+</div>

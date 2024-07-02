@@ -1,4 +1,8 @@
+import { Profile } from "./profile.interface";
+
 export interface User{
+    uid: string,
     email: string;
-    username: string;
+    accountStatus: string;
+    profiles: Profile[]
 }

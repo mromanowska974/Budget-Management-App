@@ -16,18 +16,16 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.css'
 })
-export class MainPageComponent implements OnInit{
+export class MainPageComponent {
   authService = inject(AuthService);
   router = inject(Router)
-
-  ngOnInit(): void {
-      this.authService.user$.subscribe(user => {
-        console.log(user?.uid)
-      })
-  }
 
   onLogout(){
     this.authService.logout();
     this.router.navigate(["login"]);
+  }
+
+  onAddProfile(){
+    this.router.navigate(["add-profile"]);
   }
 }

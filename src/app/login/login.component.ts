@@ -44,13 +44,8 @@ export class LoginComponent {
       let user;
       from(getDoc(docRef)).subscribe(doc => {
         user = doc
-        console.log(user._document)
         if(!user._document){
-          console.log('user jest nowy')
           this.createUser(data)
-        }
-        else {
-          console.log('user jest w bazie')
         }
         this.router.navigate(['main-page']);
       })
@@ -63,13 +58,8 @@ export class LoginComponent {
       let user;
       from(getDoc(docRef)).subscribe(doc => {
         user = doc
-        console.log(user._document)
         if(!user._document){
-          console.log('user jest nowy')
           this.createUser(data)
-        }
-        else {
-          console.log('user jest w bazie')
         }
         this.router.navigate(['main-page']);
       })

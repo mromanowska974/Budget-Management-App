@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Data, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { User } from './models/user.interface';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-root',
@@ -15,17 +16,28 @@ export class AppComponent implements OnInit{
   title = 'budget-management-app';
 
   authService = inject(AuthService);
+  db = inject(Firestore);
 
   ngOnInit(): void {
       this.authService.user$.subscribe(user => {
         if(user){
-          this.authService.currentUserSig.set({
-            email: user.email!,
-            username: user.displayName!
-          })
+          const docRef = doc(this.db, "users", user.uid)
+          getDoc(docRef).then(data => {
+            let userDoc = data; 
+
+            this.authService.currentUserSig.set({
+              email: userDoc.data()!['email'],
+              accountStatus: userDoc.data()!['accountStatus'],
+              profiles: userDoc.data()!['profiles'],
+              uid: user.uid
+            })
+            console.log(this.authService.currentUserSig())
+          });
+
         } else {
           this.authService.currentUserSig.set(null);
         }
+
         console.log(this.authService.currentUserSig())
       });
   }
