@@ -4,6 +4,6 @@ export interface Profile {
     PIN: number;
     name: string;
     role: string;
-    categories: string[];
+    categories: {content: string, color: string}[];
     expenses: Expense[];
 }

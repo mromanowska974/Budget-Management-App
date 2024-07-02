@@ -44,12 +44,12 @@ export class AuthService {
     return from(promise); //from() zamienia Promise na Observable
   }
 
-  login(email: string, password: string): Observable<void>{
+  login(email: string, password: string){
     const promise = signInWithEmailAndPassword(
       this.auth,
       email, 
       password
-    ).then(() => {}) //trzeba zrobić pustą funkcję żeby nie wywalało błędu że to nie jest Observable<void>
+    ).then()
 
     return from(promise);
   }

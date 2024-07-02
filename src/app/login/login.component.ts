@@ -8,6 +8,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { from } from 'rxjs';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ import { from } from 'rxjs';
 export class LoginComponent {
   db = inject(Firestore);
   router = inject(Router);
-  authService = inject(AuthService)
+  authService = inject(AuthService);
+  dataService = inject(DataService);
 
   @ViewChild('f') signupForm: NgForm;
   loginMode = false;
@@ -40,28 +42,34 @@ export class LoginComponent {
 
   onSignInFB(){
     this.authService.fbAuth().subscribe((data) => {
-      const docRef = doc(this.db, "users", data!.user?.uid!)
       let user;
-      from(getDoc(docRef)).subscribe(doc => {
+
+      this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
         user = doc
         if(!user._document){
-          this.createUser(data)
+          this.dataService.addUser(data)
         }
-        this.router.navigate(['main-page']);
+        else {
+          if(user.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
+          else this.router.navigate(['profiles-panel']);
+        }
       })
     });
   }
 
   onSignInGoogle(){
     this.authService.googleAuth().subscribe((data) => {
-      const docRef = doc(this.db, "users", data!.user?.uid!)
       let user;
-      from(getDoc(docRef)).subscribe(doc => {
+
+      this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
         user = doc
         if(!user._document){
-          this.createUser(data)
+          this.dataService.addUser(data)
         }
-        this.router.navigate(['main-page']);
+        else {
+          if(user.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
+          else this.router.navigate(['profiles-panel']);
+        }
       })
     });
   }
@@ -85,34 +93,18 @@ export class LoginComponent {
     }
   }
 
-  createUser(credential){
-    const docRef = doc(this.db, "users", credential.user.uid)
-    setDoc(docRef, {
-      email: credential.user.email,
-      profiles: [
-        {
-          name: 'Założyciel',
-          role: 'admin',
-          PIN: null,
-          categories: ['jedzenie', 'transport'],
-          expenses: []
-        }
-      ],
-      accountStatus: 'free'
-    })
-  }
-
   onSubmit(){
     if(this.loginMode){
       this.authService
         .login(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
-          next: () => {
-            this.router.navigate(['main-page']);
+          next: (data) => {
+            this.dataService.getUser(data.user.uid).subscribe(user => {
+              if(user.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
+              else this.router.navigate(['profiles-panel']);
+            })
           },
           error: (error) => {
-            console.log(error.code)
-
             this.handleError(error)
           }
         })
@@ -122,12 +114,10 @@ export class LoginComponent {
         .register(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
           next: (credential) => {
-            this.createUser(credential)
+            this.dataService.addUser(credential)
             this.router.navigate(['main-page']);
           },
           error: (error) => {
-            console.log(error.code)
-
             this.handleError(error)
           }
         })

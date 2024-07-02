@@ -47,7 +47,13 @@ export class AddProfileComponent {
         PIN: this.profileForm.value.pinCode,
         name: this.profileForm.value.profileName,
         role: 'user',
-        categories: ['jedzenie', 'transport'],
+        categories: [{
+          content: 'jedzenie',
+          color: '#ff0000'
+        }, {
+          content: 'transport',
+          color: '#ffff00'
+        }],
         expenses: []
       }
   
@@ -56,14 +62,15 @@ export class AddProfileComponent {
       const docRef = doc(this.db, "users", this.currentUser?.uid!);
       updateDoc(docRef, {
         profiles: this.currentUser?.profiles
+      }).then(() => {
+        this.onGoBack();
       })
+
     }
     else {
       if(this.currentUser?.profiles.length! >= this.profilesLimit) this.errorMsg = 'Przekroczono limit profili'
       if(this.profileForm.value.pinCode.toString().length < 4 || this.profileForm.value.pinCode.toString().length > 8) this.errorMsg = 'Kod PIN musi zawierać od 4 do 8 cyfr.'
       if(this.currentUser?.profiles.filter(profil => profil.name === this.profileForm.value.profileName).length! > 0) this.errorMsg = "Profil o podanej nazwie już istnieje"
     }
-
-    //this.onGoBack();
   }
 }
