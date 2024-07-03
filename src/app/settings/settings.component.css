@@ -1,0 +1,45 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    font-family: "Inter";
+    background-color: #eceaea;
+    height: 100vh;
+    padding: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    width: 90vw;
+}
+
+.row button:last-child{
+    width: 80px;
+}
+
+.account-name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn-box {
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+    width: 300px;
+    justify-content: space-evenly;
+}
+
+@media (orientation: portrait){
+    .widget {
+        width: 200px !important;
+        height: 200px !important;
+    }
+
+    .btn-box {
+        width: 90vw;
+    }
+}

@@ -20,12 +20,24 @@
                             <img src="../assets/icons/swap-icon.png" width="35px">
                         </a>
                     </div>
-                    <a style="cursor: pointer;" (click)="onAddProfile()">Dodaj profil</a>
-                    <a style="cursor: pointer;">Ustawienia</a>
+                    <a 
+                        style="cursor: pointer;" 
+                        *ngIf="activeProfile?.PIN !== null && activeProfile?.role === 'admin'"
+                        (click)="onAddProfile()"
+                    >
+                        Dodaj profil
+                    </a>
+                    <a style="cursor: pointer;" (click)="onSettings()">Ustawienia</a>
                     <a style="cursor: pointer;">Powiadomienia</a>
                     <a style="cursor: pointer;" (click)="onLogout()">Wyloguj się</a>
                 </div>
             </div>
+            <p
+                style="color: red;"
+                *ngIf="activeProfile?.PIN === null && activeProfile?.role === 'admin'"
+            >
+                Ustaw kod PIN dla swojego profilu, żeby móc dodawać nowe profile!
+            </p>
             <div class="text-form">
                 <div class="change-month">
                     <a> < </a>
