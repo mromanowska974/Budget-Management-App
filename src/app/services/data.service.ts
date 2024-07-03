@@ -19,7 +19,7 @@ export class DataService{
 
     addUser(data){
         const docRef = doc(this.db, "users", data.user.uid)
-        setDoc(docRef, {
+        return setDoc(docRef, {
           email: data.user.email,
           profiles: [
             {

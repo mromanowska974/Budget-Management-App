@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { from } from 'rxjs';
 import { DataService } from '../services/data.service';
+import { User } from '../models/user.interface';
 
 @Component({
   selector: 'app-login',
@@ -42,35 +43,13 @@ export class LoginComponent {
 
   onSignInFB(){
     this.authService.fbAuth().subscribe((data) => {
-      let user;
-
-      this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
-        user = doc
-        if(!user._document){
-          this.dataService.addUser(data)
-        }
-        else {
-          if(user.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
-          else this.router.navigate(['profiles-panel']);
-        }
-      })
+      this.handleAlternateSignIn(data);
     });
   }
 
   onSignInGoogle(){
     this.authService.googleAuth().subscribe((data) => {
-      let user;
-
-      this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
-        user = doc
-        if(!user._document){
-          this.dataService.addUser(data)
-        }
-        else {
-          if(user.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
-          else this.router.navigate(['profiles-panel']);
-        }
-      })
+      this.handleAlternateSignIn(data)
     });
   }
 
@@ -93,6 +72,43 @@ export class LoginComponent {
     }
   }
 
+  setActiveUser(doc){
+    let user: User = {
+      uid: doc.data()!['uid'],
+      email: doc.data()!['email'],
+      accountStatus: doc.data()!['accountStatus'],
+      profiles: doc.data()!['profiles'],
+    }
+
+    this.authService.setUser(user);
+  }
+
+  handleAlternateSignIn(data){
+    let userDoc;
+
+    this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
+      userDoc = doc
+
+      if(!userDoc._document){
+        this.dataService.addUser(data).then(() => {
+          this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
+            let loggedUser = doc
+
+            this.setActiveUser(loggedUser);
+          })
+        });
+        
+        this.router.navigate(['main-page'])
+      }
+      else {
+        this.setActiveUser(userDoc);
+
+        if(userDoc.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
+        else this.router.navigate(['profiles-panel']);
+      }
+    })
+  }
+
   onSubmit(){
     if(this.loginMode){
       this.authService
@@ -100,6 +116,8 @@ export class LoginComponent {
         .subscribe({
           next: (data) => {
             this.dataService.getUser(data.user.uid).subscribe(user => {
+              this.setActiveUser(user);
+
               if(user.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
               else this.router.navigate(['profiles-panel']);
             })
@@ -114,7 +132,13 @@ export class LoginComponent {
         .register(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
           next: (credential) => {
-            this.dataService.addUser(credential)
+            this.dataService.addUser(credential).then(() => {
+              this.dataService.getUser(credential!.user?.uid!).subscribe(doc => {
+                let loggedUser = doc
+  
+                this.setActiveUser(loggedUser);
+              })
+            })
             this.router.navigate(['main-page']);
           },
           error: (error) => {

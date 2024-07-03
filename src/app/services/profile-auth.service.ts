@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { Profile } from "../models/profile.interface";
-import { Subject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProfileAuthService {
-    private activeProfile = new Subject<Profile>;
+    private activeProfile = new BehaviorSubject<Profile | null>(null);
 
     getActiveProfile(){
         return this.activeProfile;

@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Observable, from } from 'rxjs';
+import { BehaviorSubject, Observable, from } from 'rxjs';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, user } from '@angular/fire/auth';
 import { User } from '../models/user.interface';
 
@@ -10,10 +10,13 @@ import { User } from '../models/user.interface';
 })
 export class AuthService {
   afAuth = inject(AngularFireAuth);
-  auth = inject(Auth)
+  auth = inject(Auth);
 
-  user$ = user(this.auth);
-  currentUserSig = signal<User | null | undefined>(undefined)
+  user = new BehaviorSubject<User|null>(null);
+
+  setUser(loggedUser: User | null){
+    this.user.next(loggedUser)
+  }
 
   private alternateAuthLogin(provider: any) {
     return this.afAuth
@@ -56,6 +59,8 @@ export class AuthService {
 
   logout(): Observable<void>{
     const promise = signOut(this.auth);
+
+    this.setUser(null)
 
     return from(promise);
   }

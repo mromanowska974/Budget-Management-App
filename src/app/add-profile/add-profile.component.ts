@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { InputDirDirective } from '../directives/input-dir.directive';
@@ -7,6 +7,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Profile } from '../models/profile.interface';
 import { CommonModule } from '@angular/common';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
+import { User } from '../models/user.interface';
 
 @Component({
   selector: 'app-add-profile',
@@ -20,17 +21,23 @@ import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
   templateUrl: './add-profile.component.html',
   styleUrl: './add-profile.component.css'
 })
-export class AddProfileComponent {
+export class AddProfileComponent implements OnInit{
   @ViewChild('f') profileForm: NgForm;
   router = inject(Router);
   authService = inject(AuthService);
   db = inject(Firestore)
 
-  currentUser = this.authService.currentUserSig();
+  currentUser: User | null = null;
   newProfile: Profile;
   errorMsg: string;
 
   profilesLimit = this.currentUser?.accountStatus === 'free' ? 3 : 6;
+
+  ngOnInit(): void {
+      this.authService.user.subscribe(user => {
+        this.currentUser = user
+      })
+  }
 
   onGoBack(){
     this.router.navigate(['main-page']);

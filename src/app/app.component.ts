@@ -20,25 +20,27 @@ export class AppComponent implements OnInit{
   db = inject(Firestore);
   dataService = inject(DataService);
 
+  loggedUser: User | null = null;
+
   ngOnInit(): void {
-      this.authService.user$.subscribe(user => {
+      this.authService.user.subscribe(user => {
         if(user){
           this.dataService.getUser(user.uid).subscribe(data => {
-            let userDoc = data; 
-
-            this.authService.currentUserSig.set({
+            let userDoc = data;
+            this.loggedUser = {
               email: userDoc.data()!['email'],
               accountStatus: userDoc.data()!['accountStatus'],
               profiles: userDoc.data()!['profiles'],
               uid: user.uid
-            })
-            console.log(this.authService.currentUserSig())
+            }
+
+            console.log(this.loggedUser)
           })
         } else {
-          this.authService.currentUserSig.set(null);
+          this.loggedUser = null
         }
 
-        console.log(this.authService.currentUserSig())
+        console.log(this.loggedUser)
       });
   }
 }

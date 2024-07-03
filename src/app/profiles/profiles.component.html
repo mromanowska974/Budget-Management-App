@@ -1,6 +1,6 @@
 <div class="container">
     <h1>Wybierz Profil</h1>
-    <div class="profiles-box">
+    <div class="profiles-box" *ngIf="isLoaded">
         <div class="profile" *ngFor="let profile of profiles" >
             <div 
                 class="widget" 
