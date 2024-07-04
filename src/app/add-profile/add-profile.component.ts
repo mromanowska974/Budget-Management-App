@@ -8,6 +8,7 @@ import { Profile } from '../models/profile.interface';
 import { CommonModule } from '@angular/common';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 import { User } from '../models/user.interface';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'app-add-profile',
@@ -31,11 +32,13 @@ export class AddProfileComponent implements OnInit{
   newProfile: Profile;
   errorMsg: string;
 
-  profilesLimit = this.currentUser?.accountStatus === 'free' ? 3 : 6;
+  profilesLimit: number;
 
   ngOnInit(): void {
       this.authService.user.subscribe(user => {
         this.currentUser = user
+        this.profilesLimit = this.currentUser?.accountStatus === 'free' ? 3 : 6;
+        console.log(this.profilesLimit)
       })
   }
 
@@ -51,13 +54,16 @@ export class AddProfileComponent implements OnInit{
       && this.profileForm.value.pinCode.toString().length <= 8 )
       && this.currentUser?.profiles.filter(profil => profil.name === this.profileForm.value.profileName).length! === 0){
       this.newProfile = {
+        id: uuid(),
         PIN: this.profileForm.value.pinCode.toString(),
         name: this.profileForm.value.profileName,
         role: 'user',
         categories: [{
+          id: uuid(),
           content: 'jedzenie',
           color: '#ff0000'
         }, {
+          id: uuid(),
           content: 'transport',
           color: '#ffff00'
         }],

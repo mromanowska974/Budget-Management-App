@@ -11,6 +11,7 @@ import { ModalService } from '../services/modal.service';
 import { InputDirDirective } from '../directives/input-dir.directive';
 import { DataService } from '../services/data.service';
 import { ProfileAuthService } from '../services/profile-auth.service';
+import { LocalStorageService } from '../services/local-storage.service';
 
 
 @Component({
@@ -34,14 +35,16 @@ export class SettingsComponent implements OnInit, OnDestroy{
   authService = inject(AuthService);
   modalService = inject(ModalService);
   dataService = inject(DataService);
+  localStorageService = inject(LocalStorageService);
   profileAuth = inject(ProfileAuthService);
 
   sub: Subscription
+  profileId = this.localStorageService.getItem('profileId');
 
   isLoaded = false;
   action: string;
   loggedUser: User | null = null;
-  activeProfile: Profile | null = null;
+  activeProfile: Profile;
   errorMsg: string = '';
 
   ngOnInit(): void {
@@ -53,10 +56,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
           this.isLoaded = true;
         }
         else {
-          this.profileAuth.getActiveProfile().subscribe(profile => {
-            this.activeProfile = profile;
-            this.isLoaded = true;
-          })
+          this.activeProfile = this.loggedUser?.profiles.find(profile => profile.id === this.profileId)!
+          this.isLoaded = true;
         }
       })
   }
@@ -66,7 +67,6 @@ export class SettingsComponent implements OnInit, OnDestroy{
   }
 
   onGoBack(){
-    //this.profileAuth.setActiveProfile(this.activeProfile!)
     this.router.navigate(['main-page'])
   }
 
@@ -78,9 +78,9 @@ export class SettingsComponent implements OnInit, OnDestroy{
   onCloseModal(){
     this.errorMsg = ''
     this.profileAuth.getActiveProfile().subscribe(newProfile => {
-      this.activeProfile = newProfile
-      this.modalService.closeModal(this.modalView)
+      this.activeProfile = newProfile!
     })
+    this.modalService.closeModal(this.modalView)
   }
 
   onSubmitModal(data: any){
@@ -89,11 +89,13 @@ export class SettingsComponent implements OnInit, OnDestroy{
       case 'changePinCode':
         if(this.activeProfile?.PIN === null){
           this.dataService.updateProfile(this.loggedUser?.uid!, 'PIN', data, this.activeProfile).subscribe(() => console.log('udało się'))
+          this.activeProfile.PIN = data;
           this.onCloseModal()
         }
         else{
-          if(data[1] === this.activeProfile?.PIN){
+          if(data[1] === this.activeProfile.PIN){
             this.dataService.updateProfile(this.loggedUser?.uid!, 'PIN', data[0], this.activeProfile!).subscribe(() => console.log('udało się'))
+            this.activeProfile.PIN = data;
             this.onCloseModal()
           }
           else {

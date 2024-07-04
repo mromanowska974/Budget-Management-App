@@ -3,6 +3,8 @@ import { Firestore, arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } fr
 import { from } from "rxjs";
 import { Profile } from "../models/profile.interface";
 import { ProfileAuthService } from "./profile-auth.service";
+import { v4 as uuid } from "uuid"
+import { AuthService } from "./auth.service";
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +12,7 @@ import { ProfileAuthService } from "./profile-auth.service";
 export class DataService{
     db = inject(Firestore)
     profileAuth = inject(ProfileAuthService)
+    authService = inject(AuthService);
 
     getUser(id: string){
         const docRef = doc(this.db, "users", id);
@@ -29,13 +32,16 @@ export class DataService{
           email: data.user.email,
           profiles: [
             {
+              id: uuid(),
               name: 'Założyciel',
               role: 'admin',
               PIN: null,
               categories: [{
+                id: uuid(),
                 content: 'jedzenie',
                 color: '#ff0000'
               }, {
+                id: uuid(),
                 content: 'transport',
                 color: '#ffff00'
               }],
@@ -62,6 +68,16 @@ export class DataService{
           profiles: arrayUnion(newProfile)
         }).then(() => {
           this.profileAuth.setActiveProfile(newProfile);
+
+          this.getUser(id).subscribe(user => {
+            console.log(user.data())
+            this.authService.setUser({
+              uid: id,
+              email: user.data()!['email'],
+              accountStatus: user.data()!['accountStatus'],
+              profiles: user.data()!['profiles'],
+            })
+          })
         })
       }))
     }

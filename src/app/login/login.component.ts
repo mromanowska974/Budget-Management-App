@@ -10,6 +10,7 @@ import { Firestore } from '@angular/fire/firestore';
 import { DataService } from '../services/data.service';
 import { User } from '../models/user.interface';
 import { ProfileAuthService } from '../services/profile-auth.service';
+import { LocalStorageService } from '../services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +30,7 @@ export class LoginComponent {
   authService = inject(AuthService);
   profileAuth = inject(ProfileAuthService);
   dataService = inject(DataService);
+  localStorageService = inject(LocalStorageService);
 
   @ViewChild('f') signupForm: NgForm;
   loginMode = false;
@@ -83,8 +85,9 @@ export class LoginComponent {
     }
 
     this.authService.setUser(user);
+    this.saveToLocalStorage('uid', uid)
 
-    if(user.profiles.length === 1) this.profileAuth.setActiveProfile(user.profiles[0])
+    if(user.profiles.length === 1) this.saveToLocalStorage('profileId', user.profiles[0].id)
   }
 
   handleAlternateSignIn(data){
@@ -111,6 +114,10 @@ export class LoginComponent {
         else this.router.navigate(['profiles-panel']);
       }
     })
+  }
+
+  saveToLocalStorage(key, value) {
+    this.localStorageService.setItem(key, value);
   }
 
   onSubmit(){

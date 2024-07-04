@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Data, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { User } from './models/user.interface';
-import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { DataService } from './services/data.service';
+import { LocalStorageService } from './services/local-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -19,28 +20,29 @@ export class AppComponent implements OnInit{
   authService = inject(AuthService);
   db = inject(Firestore);
   dataService = inject(DataService);
+  localStorageService = inject(LocalStorageService)
 
   loggedUser: User | null = null;
 
   ngOnInit(): void {
-      this.authService.user.subscribe(user => {
-        if(user){
-          this.dataService.getUser(user.uid).subscribe(data => {
-            let userDoc = data;
-            this.loggedUser = {
-              email: userDoc.data()!['email'],
-              accountStatus: userDoc.data()!['accountStatus'],
-              profiles: userDoc.data()!['profiles'],
-              uid: user.uid
-            }
+    let uid: string |null = this.retrieveFromLocalStorage('uid');
 
-            console.log(this.loggedUser)
-          })
-        } else {
-          this.loggedUser = null
-        }
+    if(uid !== null){
+      this.dataService.getUser(uid!).subscribe(result => {
+        console.log(result.data())
+        this.authService.setUser({
+          email: result.data()!['email'],
+          accountStatus: result.data()!['accountStatus'],
+          profiles: result.data()!['profiles'],
+          uid: uid!
+        })
 
-        console.log(this.loggedUser)
-      });
+      })
+    }
+  }
+
+  retrieveFromLocalStorage(key) {
+    const value = this.localStorageService.getItem(key);
+    return value;
   }
 }

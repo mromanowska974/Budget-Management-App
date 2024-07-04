@@ -8,6 +8,7 @@ import { Profile } from '../models/profile.interface';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ProfileAuthService } from '../services/profile-auth.service';
+import { LocalStorageService } from '../services/local-storage.service';
 
 @Component({
   selector: 'app-main-page',
@@ -25,20 +26,19 @@ import { ProfileAuthService } from '../services/profile-auth.service';
 export class MainPageComponent implements OnInit, OnDestroy{
   authService = inject(AuthService);
   router = inject(Router)
-  profileAuth = inject(ProfileAuthService);
+  localStorageService = inject(LocalStorageService);
+
+  profileId = this.localStorageService.getItem('profileId');
 
   loggedUser: User | null = null;
-  activeProfile: Profile | null = null
+  activeProfile: Profile;
   sub: Subscription;
 
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user
-
-        this.profileAuth.getActiveProfile().subscribe(profile => {
-          this.activeProfile = profile;
-          //this.isLoaded = true;
-        })
+        console.log(this.loggedUser);
+        this.activeProfile = this.loggedUser?.profiles.find(profile => profile.id === this.profileId)!
       })
   }
 
@@ -47,6 +47,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
   }
 
   onLogout(){
+    this.localStorageService.clear();
     this.authService.logout();
     this.router.navigate(["login"]);
   }
