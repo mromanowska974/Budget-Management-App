@@ -1,20 +1,26 @@
 import { Injectable, inject } from "@angular/core";
-import { Firestore, doc, getDoc, setDoc } from "@angular/fire/firestore";
+import { Firestore, arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "@angular/fire/firestore";
 import { from } from "rxjs";
+import { Profile } from "../models/profile.interface";
+import { ProfileAuthService } from "./profile-auth.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class DataService{
     db = inject(Firestore)
+    profileAuth = inject(ProfileAuthService)
 
     getUser(id: string){
         const docRef = doc(this.db, "users", id);
         return from(getDoc(docRef));
     }
 
-    updateUser(){
-
+    updateUser(id: string, propToEdit, newValue){
+        const docRef = doc(this.db, "users", id);
+        return from(updateDoc(docRef, {
+          [propToEdit]: newValue
+        }))
     }
 
     addUser(data){
@@ -42,5 +48,21 @@ export class DataService{
 
     addProfile(){
 
+    }
+
+    updateProfile(id: string, propToEdit, newValue, activeProfile: Profile){
+      let newProfile = JSON.parse(JSON.stringify(activeProfile));
+      newProfile[propToEdit] = newValue;
+
+      const docRef = doc(this.db, "users", id);
+      return from(updateDoc(docRef, {
+        profiles: arrayRemove(activeProfile),
+      }).then(() => {
+        updateDoc(docRef, {
+          profiles: arrayUnion(newProfile)
+        }).then(() => {
+          this.profileAuth.setActiveProfile(newProfile);
+        })
+      }))
     }
 }

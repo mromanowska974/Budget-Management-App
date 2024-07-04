@@ -4,3 +4,7 @@
     font-family: 'Inter';
     src: url('assets/Inter Font/static/Inter-SemiBold.ttf');
 }
+
+body {
+    margin: 0;
+}

@@ -38,7 +38,7 @@ export class ProfileAuthComponent implements OnInit{
 
   onSubmit(){
     this.errorMsg = '';
-    let pinCode: number = +this.pinCodeInput.nativeElement.value
+    let pinCode: string = this.pinCodeInput.nativeElement.value
     if(pinCode === this.activeProfile?.PIN){
       this.router.navigate(['main-page']);
     }

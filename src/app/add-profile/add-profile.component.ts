@@ -51,7 +51,7 @@ export class AddProfileComponent implements OnInit{
       && this.profileForm.value.pinCode.toString().length <= 8 )
       && this.currentUser?.profiles.filter(profil => profil.name === this.profileForm.value.profileName).length! === 0){
       this.newProfile = {
-        PIN: this.profileForm.value.pinCode,
+        PIN: this.profileForm.value.pinCode.toString(),
         name: this.profileForm.value.profileName,
         role: 'user',
         categories: [{

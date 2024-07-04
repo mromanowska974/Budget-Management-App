@@ -6,10 +6,10 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
-import { from } from 'rxjs';
+import { Firestore } from '@angular/fire/firestore';
 import { DataService } from '../services/data.service';
 import { User } from '../models/user.interface';
+import { ProfileAuthService } from '../services/profile-auth.service';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +27,7 @@ export class LoginComponent {
   db = inject(Firestore);
   router = inject(Router);
   authService = inject(AuthService);
+  profileAuth = inject(ProfileAuthService);
   dataService = inject(DataService);
 
   @ViewChild('f') signupForm: NgForm;
@@ -72,15 +73,18 @@ export class LoginComponent {
     }
   }
 
-  setActiveUser(doc){
+  setActiveUser(doc, uid){
+    console.log(doc.data())
     let user: User = {
-      uid: doc.data()!['uid'],
+      uid: uid,
       email: doc.data()!['email'],
       accountStatus: doc.data()!['accountStatus'],
       profiles: doc.data()!['profiles'],
     }
 
     this.authService.setUser(user);
+
+    if(user.profiles.length === 1) this.profileAuth.setActiveProfile(user.profiles[0])
   }
 
   handleAlternateSignIn(data){
@@ -94,14 +98,14 @@ export class LoginComponent {
           this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
             let loggedUser = doc
 
-            this.setActiveUser(loggedUser);
+            this.setActiveUser(loggedUser, data!.user?.uid!);
           })
         });
         
         this.router.navigate(['main-page'])
       }
       else {
-        this.setActiveUser(userDoc);
+        this.setActiveUser(userDoc, data!.user?.uid!);
 
         if(userDoc.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
         else this.router.navigate(['profiles-panel']);
@@ -116,7 +120,7 @@ export class LoginComponent {
         .subscribe({
           next: (data) => {
             this.dataService.getUser(data.user.uid).subscribe(user => {
-              this.setActiveUser(user);
+              this.setActiveUser(user, data.user.uid);
 
               if(user.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
               else this.router.navigate(['profiles-panel']);
@@ -136,7 +140,7 @@ export class LoginComponent {
               this.dataService.getUser(credential!.user?.uid!).subscribe(doc => {
                 let loggedUser = doc
   
-                this.setActiveUser(loggedUser);
+                this.setActiveUser(loggedUser, credential!.user?.uid!);
               })
             })
             this.router.navigate(['main-page']);
