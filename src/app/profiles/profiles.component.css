@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #eceaea;
+    height: 100vh;
+    font-family: 'Inter';
+    padding: 60px;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+.profiles-box {
+    height: 60vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.widget img {
+    width: 20vh;
+}
+
+@media (orientation: portrait) {
+    .profiles-box {
+        width: 70vw;
+    }
+    .profile {
+        width: 25vh;
+        height: 25vh;
+    }
+}
+
+@media (orientation: landscape) {
+    .profiles-box {
+        width: 60vw;
+    }
+    .profile {        
+        width: 30vh;
+        height: 30vh;               
+    }
+}

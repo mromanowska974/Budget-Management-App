@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: #eceaea;
+    height: 100vh;
+    font-family: 'Inter';
+    padding: 20px;
+}
+
+button:first-child {
+    align-self: flex-end;
+    width: 70px;
+}
+
+h1 {
+    align-self: center;
+    font-size: 60px;
+    text-align: center;
+}
+
+p {
+    align-self: center;
+    color: red;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 40vh;
+    padding: 50px;
+    align-items: center;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-box button {
+    align-self: center;
+    margin: 40px;
+    width: 80px;
+}

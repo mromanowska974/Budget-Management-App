@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: #eceaea;
+    height: 100vh;
+    font-family: 'Inter';
+    padding: 20px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+.widget, p, input, button {
+    margin-top: -50px;
+}
+
+input {
+    width: 100px !important; 
+}

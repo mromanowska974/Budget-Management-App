@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { InputDirDirective } from '../directives/input-dir.directive';
@@ -6,6 +6,11 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Firestore } from '@angular/fire/firestore';
+import { DataService } from '../services/data.service';
+import { User } from '../models/user.interface';
+import { ProfileAuthService } from '../services/profile-auth.service';
+import { LocalStorageService } from '../services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -20,14 +25,16 @@ import { CommonModule } from '@angular/common';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  db = inject(Firestore);
+  router = inject(Router);
+  authService = inject(AuthService);
+  profileAuth = inject(ProfileAuthService);
+  dataService = inject(DataService);
+  localStorageService = inject(LocalStorageService);
+
   @ViewChild('f') signupForm: NgForm;
   loginMode = false;
   errorMessage: string;
-
-  constructor(
-    private router: Router, 
-    private authService: AuthService
-  ){}
 
   onLogin(){
     this.loginMode = true;
@@ -38,14 +45,14 @@ export class LoginComponent {
   }
 
   onSignInFB(){
-    this.authService.fbAuth().then(() => {
-      this.router.navigate(['main-page']);
+    this.authService.fbAuth().subscribe((data) => {
+      this.handleAlternateSignIn(data);
     });
   }
 
   onSignInGoogle(){
-    this.authService.googleAuth().then(() => {
-      this.router.navigate(['main-page']);
+    this.authService.googleAuth().subscribe((data) => {
+      this.handleAlternateSignIn(data)
     });
   }
 
@@ -68,17 +75,65 @@ export class LoginComponent {
     }
   }
 
+  setActiveUser(doc, uid){
+    console.log(doc.data())
+    let user: User = {
+      uid: uid,
+      email: doc.data()!['email'],
+      accountStatus: doc.data()!['accountStatus'],
+      profiles: doc.data()!['profiles'],
+    }
+
+    this.authService.setUser(user);
+    this.saveToLocalStorage('uid', uid)
+
+    if(user.profiles.length === 1) this.saveToLocalStorage('profileId', user.profiles[0].id)
+  }
+
+  handleAlternateSignIn(data){
+    let userDoc;
+
+    this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
+      userDoc = doc
+
+      if(!userDoc._document){
+        this.dataService.addUser(data).then(() => {
+          this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
+            let loggedUser = doc
+
+            this.setActiveUser(loggedUser, data!.user?.uid!);
+          })
+        });
+        
+        this.router.navigate(['main-page'])
+      }
+      else {
+        this.setActiveUser(userDoc, data!.user?.uid!);
+
+        if(userDoc.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
+        else this.router.navigate(['profiles-panel']);
+      }
+    })
+  }
+
+  saveToLocalStorage(key, value) {
+    this.localStorageService.setItem(key, value);
+  }
+
   onSubmit(){
     if(this.loginMode){
       this.authService
         .login(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
-          next: () => {
-            this.router.navigate(['main-page']);
+          next: (data) => {
+            this.dataService.getUser(data.user.uid).subscribe(user => {
+              this.setActiveUser(user, data.user.uid);
+
+              if(user.data()!["profiles"].length === 1) this.router.navigate(['main-page']);
+              else this.router.navigate(['profiles-panel']);
+            })
           },
           error: (error) => {
-            console.log(error.code)
-
             this.handleError(error)
           }
         })
@@ -87,12 +142,17 @@ export class LoginComponent {
       this.authService
         .register(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
-          next: () => {
+          next: (credential) => {
+            this.dataService.addUser(credential).then(() => {
+              this.dataService.getUser(credential!.user?.uid!).subscribe(doc => {
+                let loggedUser = doc
+  
+                this.setActiveUser(loggedUser, credential!.user?.uid!);
+              })
+            })
             this.router.navigate(['main-page']);
           },
           error: (error) => {
-            console.log(error.code)
-
             this.handleError(error)
           }
         })

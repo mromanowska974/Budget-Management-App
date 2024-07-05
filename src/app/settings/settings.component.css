@@ -1,0 +1,103 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    font-family: "Inter";
+    background-color: #eceaea;
+    height: 100vh;
+    padding: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    width: 90vw;
+}
+
+.row button:last-child, .gap{
+    width: 80px;
+}
+
+.account-name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
+}
+
+.btn-box {
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+    width: 300px;
+    justify-content: space-evenly;
+}
+
+.modal-container {
+    background-color: #eceaea;
+    width: 97%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    justify-content: space-between;
+}
+
+.modal-row {
+    display: flex;
+    width: 100%;
+    height: 25%;
+    margin: 0%;
+}
+
+.modal-row button {
+    display: flex;
+    position: relative;
+    top: -20px;
+    border: none;
+    background-color: #eceaea;
+}
+
+.modal-row button, .modal-row img{
+    width: 40px !important; 
+    height: 40px !important; 
+}
+
+.modal-row h1 {
+    font-size: 50px;
+    text-align: center;
+    width: 80%;
+    margin: 0 0 0 10%;
+}
+
+.modal-container button:last-child{
+    margin: 20px 0;
+    justify-self: end;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+}
+
+
+@media (orientation: portrait){
+    .widget, img {
+        width: 200px !important;
+        height: 200px !important;
+    }
+
+    .btn-box {
+        width: 90vw;
+    }
+
+    .modal-row h1{
+        font-size: 35px;
+        width: 60%;
+        margin: 0 0 0 20%;
+    }
+}
+

@@ -1,24 +1,28 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Observable, from } from 'rxjs';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, user } from '@angular/fire/auth';
+import { BehaviorSubject, Observable, from } from 'rxjs';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
 import { User } from '../models/user.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  user$ = user(this.auth);
-  currentUserSig = signal<User | null | undefined>(undefined)
+  afAuth = inject(AngularFireAuth);
+  auth = inject(Auth);
 
-  constructor(private afAuth: AngularFireAuth, private auth: Auth) { }
+  user = new BehaviorSubject<User|null>(null);
+
+  setUser(loggedUser: User | null){
+    this.user.next(loggedUser)
+  }
 
   private alternateAuthLogin(provider: any) {
     return this.afAuth
       .signInWithPopup(provider)
-      .then(() => {
-        console.log("zalogowano pomyślnie")
+      .then((data) => {
+        return data
       })
       .catch((error) => {
         console.log(error)
@@ -26,35 +30,37 @@ export class AuthService {
   }
 
   fbAuth(){
-    return this.alternateAuthLogin(new FacebookAuthProvider);
+    return from(this.alternateAuthLogin(new FacebookAuthProvider));
   }
 
   googleAuth(){
-    return this.alternateAuthLogin(new GoogleAuthProvider);
+    return from(this.alternateAuthLogin(new GoogleAuthProvider));
   }
 
-  register(email: string, password: string): Observable<void>{
+  register(email: string, password: string){
     const promise = createUserWithEmailAndPassword(
       this.auth,
       email,
       password
-    ).then(response => updateProfile(response.user, {displayName: 'Założyciel'}))
+    ).then()
 
     return from(promise); //from() zamienia Promise na Observable
   }
 
-  login(email: string, password: string): Observable<void>{
+  login(email: string, password: string){
     const promise = signInWithEmailAndPassword(
       this.auth,
       email, 
       password
-    ).then(() => {}) //trzeba zrobić pustą funkcję żeby nie wywalało błędu że to nie jest Observable<void>
+    ).then()
 
     return from(promise);
   }
 
   logout(): Observable<void>{
     const promise = signOut(this.auth);
+
+    this.setUser(null)
 
     return from(promise);
   }

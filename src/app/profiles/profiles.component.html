@@ -1,0 +1,17 @@
+<div class="container">
+    <h1>Wybierz Profil</h1>
+    <div class="profiles-box" *ngIf="isLoaded">
+        <div class="profile" *ngFor="let profile of profiles" >
+            <div 
+                class="widget" 
+                appWidget
+                widgetWidth="20vh"
+                widgetHeight="20vh"
+                (click)="onSelectProfile(profile.name)"
+            >
+                <img [src]="profile.role === 'admin' ? '../assets/icons/admin-icon.png' : '../assets/icons/user-icon.png'">
+            </div>
+            <p>{{ profile.name }}</p>
+        </div>
+    </div>
+</div>

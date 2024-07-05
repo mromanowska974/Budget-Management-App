@@ -1,0 +1,23 @@
+<div class="container" *ngIf="isLoaded === true">
+    <h1>Podaj kod PIN</h1>
+    <div 
+        class="widget"
+        appWidget
+        widgetHeight="200px"
+        widgetWidth="200px"
+    >
+        <img 
+            [src]="activeProfile.role === 'admin' ? '../assets/icons/admin-icon.png' : '../assets/icons/user-icon.png'"
+            width="200px"
+        >
+    </div>
+    <p>Dla profilu: {{ activeProfile.name }}</p>
+    <p *ngIf="errorMsg.length > 0" style="color: red;"> {{ errorMsg }}</p>
+    <input
+        appInputDir
+        type="number"
+        style="-webkit-text-security:disc"
+        #pinCode
+    >
+    <button appButtonDir (click)="onSubmit()">Zatwierdź</button>
+</div>
