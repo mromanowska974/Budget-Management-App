@@ -15,7 +15,7 @@
     width: 90vw;
 }
 
-.row button:last-child{
+.row button:last-child, .gap{
     width: 80px;
 }
 
@@ -23,6 +23,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-self: center;
 }
 
 .btn-box {
@@ -54,7 +55,7 @@
 .modal-row button {
     display: flex;
     position: relative;
-    top: -30px;
+    top: -20px;
     border: none;
     background-color: #eceaea;
 }
@@ -72,14 +73,16 @@
 }
 
 .modal-container button:last-child{
-    margin: 40px 0;
+    margin: 20px 0;
     justify-self: end;
 }
 
 .input {
     display: flex;
     flex-direction: column;
+    margin: 20px;
 }
+
 
 @media (orientation: portrait){
     .widget, img {

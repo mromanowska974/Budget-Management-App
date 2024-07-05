@@ -45,7 +45,9 @@ export class DataService{
                 content: 'transport',
                 color: '#ffff00'
               }],
-              expenses: []
+              expenses: [],
+              monthlyLimit: 99.99,
+              notificationTime: 3
             }
           ],
           accountStatus: 'free'

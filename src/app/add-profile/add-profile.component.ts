@@ -67,7 +67,9 @@ export class AddProfileComponent implements OnInit{
           content: 'transport',
           color: '#ffff00'
         }],
-        expenses: []
+        expenses: [],
+        monthlyLimit: 99.99,
+        notificationTime: 3
       }
   
       this.currentUser?.profiles.push(this.newProfile);

@@ -7,5 +7,7 @@ export interface Profile {
     name: string;
     role: string;
     categories: {id, content: string, color: string}[];
-    expenses: Expense[];
+    expenses: Expense[],
+    monthlyLimit: number,
+    notificationTime: number
 }

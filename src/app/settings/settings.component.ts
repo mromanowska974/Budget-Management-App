@@ -46,6 +46,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
   loggedUser: User | null = null;
   activeProfile: Profile;
   errorMsg: string = '';
+  settingMsg: string = '';
+  labelMsg: string = '';
 
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
@@ -71,14 +73,97 @@ export class SettingsComponent implements OnInit, OnDestroy{
   }
 
   onChangePinCode(template){
-    this.action = 'changePinCode'
+    this.action = 'changePinCode';
+    if(this.activeProfile.PIN === null) this.settingMsg = 'Ustaw kod PIN';
+    else this.settingMsg = 'Zmień kod PIN';
+
+    this.labelMsg = 'Nowy kod PIN'
     this.modalService.openModal(this.modalView, template)
+  }
+
+  private changePinCode(data: any){
+    if(this.activeProfile?.PIN === null){
+      this.dataService.updateProfile(this.loggedUser?.uid!, 'PIN', data, this.activeProfile).subscribe(() => console.log('udało się'))
+      this.activeProfile.PIN = data;
+      this.onCloseModal()
+    }
+    else{
+      if(data[1] === this.activeProfile.PIN){
+        if(data[1]===data[0]){
+          this.errorMsg = 'Proszę podać nowy kod PIN.'
+        }
+        else {
+          this.dataService.updateProfile(this.loggedUser?.uid!, 'PIN', data[0], this.activeProfile!).subscribe(() => console.log('udało się'))
+          this.onCloseModal()
+        }
+      }
+      else {
+        this.errorMsg = 'Stary kod PIN jest niepoprawny.'
+      }
+    }
+  }
+
+  onChangeName(template){
+    this.action = 'changeName'
+    this.settingMsg = 'Zmień nazwę profilu';
+    this.labelMsg = 'Nowa nazwa profilu';
+    this.modalService.openModal(this.modalView, template)
+  }
+
+  private changeName(data: string){
+    if(this.activeProfile.name === data){
+      this.errorMsg = 'Proszę podać nową nazwę.'
+    }   
+    else if(this.loggedUser?.profiles.find(profile => profile.name === data)){
+      this.errorMsg = 'Profil o podanej nazwie już istnieje'
+    }
+    else {
+      this.dataService.updateProfile(this.loggedUser?.uid!, 'name', data, this.activeProfile!).subscribe(() => console.log('udało się'))
+      this.onCloseModal();
+    }
+  }
+
+  onSetMonthlyLimit(template){
+    this.action = 'setMonthlyLimit'
+    this.settingMsg = 'Ustaw limit miesięczny'
+    this.labelMsg = 'Kwota PLN'
+    this.modalService.openModal(this.modalView, template)
+  }
+
+  private setMonthlyLimit(data: number){
+    if(this.activeProfile.monthlyLimit == data){
+      this.errorMsg = 'Proszę podać nową wartość.'
+    }
+    else {
+      this.dataService.updateProfile(this.loggedUser?.uid!, 'monthlyLimit', data, this.activeProfile!).subscribe(() => console.log('udało się'))
+      this.onCloseModal();
+    }
+  }
+
+  onSetNotificationTime(template){
+    this.action = 'setNotificationTime'
+    this.settingMsg = 'Ustaw czas powiadomień'
+    this.labelMsg = 'Liczba dni przed nadejściem daty realizacji wydatku'
+    this.modalService.openModal(this.modalView, template)
+  }
+
+  private setNotificationTime(data: number){
+    if(this.activeProfile.notificationTime == data){
+      this.errorMsg = 'Proszę podać nową wartość.'
+    }
+    else {
+      this.dataService.updateProfile(this.loggedUser?.uid!, 'notificationTime', data, this.activeProfile!).subscribe(() => console.log('udało się'))
+      this.onCloseModal();
+    }
   }
 
   onCloseModal(){
     this.errorMsg = ''
     this.profileAuth.getActiveProfile().subscribe(newProfile => {
-      this.activeProfile = newProfile!
+      if(newProfile !== null){
+        console.log(newProfile, this.activeProfile)
+        this.activeProfile = newProfile!
+      }
     })
     this.modalService.closeModal(this.modalView)
   }
@@ -87,23 +172,17 @@ export class SettingsComponent implements OnInit, OnDestroy{
     this.errorMsg = ''
     switch(this.action){
       case 'changePinCode':
-        if(this.activeProfile?.PIN === null){
-          this.dataService.updateProfile(this.loggedUser?.uid!, 'PIN', data, this.activeProfile).subscribe(() => console.log('udało się'))
-          this.activeProfile.PIN = data;
-          this.onCloseModal()
-        }
-        else{
-          if(data[1] === this.activeProfile.PIN){
-            this.dataService.updateProfile(this.loggedUser?.uid!, 'PIN', data[0], this.activeProfile!).subscribe(() => console.log('udało się'))
-            this.activeProfile.PIN = data;
-            this.onCloseModal()
-          }
-          else {
-            this.errorMsg = 'Stary kod PIN jest niepoprawny.'
-          }
-        }
+        this.changePinCode(data);
         break;
-
+      case 'changeName':
+        this.changeName(data);
+        break;
+      case 'setMonthlyLimit':
+        this.setMonthlyLimit(data);
+        break;
+      case 'setNotificationTime':
+        this.setNotificationTime(data);
+        break;
     }
   }
 }
