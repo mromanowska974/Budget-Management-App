@@ -8,7 +8,10 @@
 
 .menu {
     display: flex;
-    gap: 10px;
+}
+
+.hamburger {
+    margin: 10px 0 0 10px;
 }
 
 .account-management {
@@ -109,7 +112,6 @@
 
 @media (orientation: landscape){   
     .hamburger {
-        margin-top: 10px;
         padding: 5px;
         height: 30px;
     }
@@ -133,7 +135,7 @@
 
     .container {
         height: 100vh;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: 1fr repeat(5, 3fr);
         grid-template-rows: repeat(7, 1fr);
     }
 
@@ -180,7 +182,7 @@
 
 @media (orientation: portrait){
     .container {
-        grid-template-rows: repeat(10, 1fr);
+        grid-template-rows: 1fr repeat(9, 2fr);
         max-height: 200vh;
     }
 
@@ -188,10 +190,6 @@
         flex-direction: column;
         grid-row-start: 1;
         grid-row-end: 2;
-    }
-
-    .hamburger {
-        margin-left: 10px;
     }
 
     .account-management {

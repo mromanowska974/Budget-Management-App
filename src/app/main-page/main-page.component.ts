@@ -35,6 +35,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
   loggedUser: User | null = null;
   activeProfile: Profile;
   sub: Subscription;
+  menuToggled = false;
 
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
@@ -60,5 +61,9 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   onSettings(){
     this.router.navigate(["settings"]);
+  }
+
+  onToggleMenu(){
+    this.menuToggled = !this.menuToggled
   }
 }
