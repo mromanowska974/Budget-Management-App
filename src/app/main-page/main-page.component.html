@@ -4,59 +4,6 @@
         <a class="hamburger">
             <img src="../assets/icons/menu-button.png" width="50px">
         </a>
-<<<<<<< Updated upstream
-        <div class="box">
-            <div class="account-management">
-                <div 
-                    class="widget" 
-                    appWidget 
-                    [widgetHeight]="'100px'"
-                    [widgetWidth]="'100px'"
-                >
-                    <img src="">
-                </div>
-                <div class="account-info">
-                    <div class="account-name">
-                        <h1>{{ activeProfile.name }}</h1>
-                        <a>
-                            <img src="../assets/icons/swap-icon.png" width="35px">
-                        </a>
-                    </div>
-                    <a 
-                        style="cursor: pointer;" 
-                        *ngIf="activeProfile?.PIN !== null && activeProfile?.role === 'admin'"
-                        (click)="onAddProfile()"
-                    >
-                        Dodaj profil
-                    </a>
-                    <a style="cursor: pointer;" (click)="onSettings()">Ustawienia</a>
-                    <a style="cursor: pointer;">Powiadomienia</a>
-                    <a style="cursor: pointer;" (click)="onLogout()">Wyloguj się</a>
-                </div>
-            </div>
-            <p
-                style="color: red;"
-                *ngIf="activeProfile?.PIN === null && activeProfile?.role === 'admin'"
-            >
-                Ustaw kod PIN dla swojego profilu, żeby móc dodawać nowe profile!
-            </p>
-            <div class="text-form">
-                <div class="change-month">
-                    <a> < </a>
-                    <p> Czerwiec 2024 </p>
-                    <a> > </a>
-                </div>
-                <div 
-                    class="widget"
-                    appWidget
-                    widgetHeight="150px"
-                    widgetWidth="100%"
-                >
-                    <p>Wydatki w: czerwiec 2024</p>
-                    <h1>99,99zł</h1>
-                </div>
-            </div>
-=======
     </div>
     <div class="account-management">
         <div 
@@ -66,7 +13,6 @@
             [widgetWidth]="'150px'"
         >
             <img [src]="activeProfile.role === 'admin' ? '../assets/icons/admin-icon.png' : '../assets/icons/user-icon.png'">
->>>>>>> Stashed changes
         </div>
         <div class="account-info">
             <div class="account-name">
@@ -108,6 +54,7 @@
             <p>Wydatki w: czerwiec 2024</p>
             <h1>99,99zł</h1>
         </div>
+
     </div>
     <div class="box">
         <div class="addBtn">
@@ -193,5 +140,4 @@
                 </table>
             </div>
         </div>
-    </div>
 </div>
