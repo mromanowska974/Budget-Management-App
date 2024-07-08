@@ -10,6 +10,7 @@ import { Firestore, addDoc, collection, doc, updateDoc } from '@angular/fire/fir
 import { User } from '../models/user.interface';
 import { v4 as uuid } from 'uuid';
 import { ContainerDirective } from '../directives/container.directive';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-add-profile',
@@ -29,10 +30,10 @@ export class AddProfileComponent implements OnInit{
   @ViewChild('f') profileForm: NgForm;
   router = inject(Router);
   authService = inject(AuthService);
-  db = inject(Firestore)
+  dataService = inject(DataService);
+  db = inject(Firestore);
 
   loggedUser: User;
-  newProfile: Profile;
   errorMsg: string;
 
   profilesLimit: number;
@@ -56,31 +57,31 @@ export class AddProfileComponent implements OnInit{
       && ( this.profileForm.value.pinCode.toString().length >= 4
       && this.profileForm.value.pinCode.toString().length <= 8 )
       && this.loggedUser.profiles.filter(profile => profile.name === this.profileForm.value.profileName).length! === 0){
-      this.newProfile = {
+
+      let newProfile = {
         PIN: this.profileForm.value.pinCode.toString(),
         name: this.profileForm.value.profileName,
         role: 'user',
-        categories: [{
-          id: uuid(),
-          content: 'jedzenie',
-          color: '#ff0000'
-        }, {
-          id: uuid(),
-          content: 'transport',
-          color: '#ffff00'
-        }],
-        expenses: [],
         monthlyLimit: 99.99,
         notificationTime: 3
       }
 
-      const docRef = collection(this.db, `users/${this.loggedUser.uid}/profiles`);
-      addDoc(docRef, this.newProfile).then(() => {
-        this.loggedUser.profiles.push(this.newProfile)
-        this.authService.changeUser('profiles', this.loggedUser.profiles, this.loggedUser)
-        this.onGoBack();
-      })
+      this.dataService.addProfile(this.loggedUser.uid, newProfile).then(pid => {
+        this.dataService.addCategory(this.loggedUser.uid, pid, {
+          content: 'jedzenie',
+          color: '#ff0000'
+        })
+        this.dataService.addCategory(this.loggedUser.uid, pid, {
+          content: 'transport',
+          color: '#ffff00'
+        })
 
+        this.loggedUser.profiles.push(newProfile)
+
+        this.authService.changeUser('profiles', this.loggedUser.profiles, this.loggedUser)
+        this.router.navigate(['main-page']);
+      })
+      
     }
     else {
       if(this.loggedUser.profiles.length! >= this.profilesLimit) this.errorMsg = 'Przekroczono limit profili'

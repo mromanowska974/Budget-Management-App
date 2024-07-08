@@ -14,6 +14,8 @@ export class DataService{
     profileAuth = inject(ProfileAuthService)
     authService = inject(AuthService);
 
+    //USERS
+
     getUser(id: string){
         const docRef = doc(this.db, "users", id);
         return from(getDoc(docRef));
@@ -32,17 +34,26 @@ export class DataService{
           email: data.user.email,
           accountStatus: 'free'
         }).then(() => {
-          this.addProfile(data.user.uid)
+          this.addProfile(data.user.uid).then(pid => {
+            this.addCategory(data.user.uid, pid, {
+              content: 'jedzenie',
+              color: '#ff0000'
+            })
+            this.addCategory(data.user.uid, pid, {
+              content: 'transport',
+              color: '#ffff00'
+            })
+          })
         })
     }
+
+    //PROFILES
 
     getProfiles(uid): Promise<Profile[]>{
       const profilesDoc = collection(this.db, `users/${uid}/profiles`)
       let profiles: Profile[] = []; 
 
       return getDocs(profilesDoc).then((data): Profile[] => {
-        console.log(data.docs);
-
         data.docs.forEach(profile => {
           console.log(profile.id)
             profiles.push(
@@ -50,9 +61,7 @@ export class DataService{
                 id: profile.id,
                 name: profile.data()!['name'],
                 role: profile.data()!['role'],
-                categories: profile.data()!['categories'],
                 PIN: profile.data()!['PIN'],
-                expenses: profile.data()!['expenses'],
                 monthlyLimit: profile.data()!['monthlyLimit'],
                 notificationTime: profile.data()!['notificationTime'],
               }
@@ -64,25 +73,15 @@ export class DataService{
 
     addProfile(uid, data?){
       const profilesRef = collection(this.db, `users/${uid}/profiles`)
-      console.log(profilesRef)
 
       return addDoc(profilesRef, {
-          name: 'Założyciel',
-          role: 'admin',
-          PIN: null,
-          categories: [{
-            id: uuid(),
-            content: 'jedzenie',
-            color: '#ff0000'
-          }, {
-            id: uuid(),
-            content: 'transport',
-            color: '#ffff00'
-          }],
-          expenses: [],
+          name: data ? data.name : 'Założyciel',
+          role: data ? 'user' : 'admin',
+          PIN: data ? data.PIN : null,
+          //expenses: [], -> tu też będzie kolekcja
           monthlyLimit: 99.99,
           notificationTime: 3
-      })
+      }).then(data => data.id)
     }
 
     updateProfile(uid: string, pid: string, propToEdit, newValue, activeProfile: Profile){
@@ -94,7 +93,40 @@ export class DataService{
       return from(updateDoc(docRef, {
         [propToEdit]: newValue
       }).then(() => {
-        this.profileAuth.setActiveProfile(newProfile);
+          this.profileAuth.setActiveProfile(newProfile);
       }))
+    }
+
+    //CATEGORIES
+
+    getCategories(uid: string, pid: string){
+      const profilesDoc = collection(this.db, `users/${uid}/profiles/${pid}/categories`)
+      let categories: {id: string, content: string, color: string}[] = []; 
+
+      return getDocs(profilesDoc).then((data): {id: string, content: string, color: string}[] => {
+        console.log(data.docs);
+
+        data.docs.forEach(category => {
+          categories.push(
+              {
+                id: category.id,
+                content: category.data()!['content'],
+                color: category.data()!['color']
+              }
+            ) 
+        })
+        return categories;
+      })
+    }
+
+    addCategory(uid, pid, data){
+      const categoriesRef = collection(this.db, `users/${uid}/profiles/${pid}/categories`)
+      return addDoc(categoriesRef, data)
+    }
+
+    //EXPENSES
+
+    addExpense(uid, pid, data){
+
     }
 }

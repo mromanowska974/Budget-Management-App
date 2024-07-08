@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { LocalStorageService } from '../services/local-storage.service';
 import { CategoriesMenuComponent } from '../categories-menu/categories-menu.component';
+import { DataService } from '../services/data.service';
 
 
 @Component({
@@ -27,12 +28,13 @@ import { CategoriesMenuComponent } from '../categories-menu/categories-menu.comp
 })
 export class MainPageComponent implements OnInit, OnDestroy{
   authService = inject(AuthService);
-  router = inject(Router)
+  router = inject(Router);
+  dataService = inject(DataService);
   localStorageService = inject(LocalStorageService);
 
   profileId = this.localStorageService.getItem('profileId');
 
-  loggedUser: User;
+  loggedUser: User | null = null;
   activeProfile: Profile;
   sub: Subscription;
   menuToggled = false;
@@ -40,8 +42,12 @@ export class MainPageComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
-        console.log(this.loggedUser);
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!
+        
+        this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
+          this.activeProfile.categories = data;
+          console.log(this.activeProfile);
+        })
       })
   }
 

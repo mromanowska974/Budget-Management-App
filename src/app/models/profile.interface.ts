@@ -6,8 +6,8 @@ export interface Profile {
     PIN: string;
     name: string;
     role: string;
-    categories: {id, content: string, color: string}[];
-    expenses: Expense[],
+    categories?: {id, content: string, color: string}[];
+    expenses?: Expense[],
     monthlyLimit: number,
     notificationTime: number
 }
