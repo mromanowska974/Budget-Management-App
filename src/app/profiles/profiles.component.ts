@@ -8,12 +8,15 @@ import { User } from '../models/user.interface';
 import { Profile } from '../models/profile.interface';
 import { LocalStorageService } from '../services/local-storage.service';
 import { Subscription } from 'rxjs';
+import { ContainerDirective } from '../directives/container.directive';
 
 @Component({
   selector: 'app-profiles',
   standalone: true,
   imports: [
     WidgetDirective,
+    ContainerDirective,
+    
     CommonModule
   ],
   templateUrl: './profiles.component.html',

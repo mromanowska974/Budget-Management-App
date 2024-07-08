@@ -12,6 +12,7 @@ import { InputDirDirective } from '../directives/input-dir.directive';
 import { DataService } from '../services/data.service';
 import { ProfileAuthService } from '../services/profile-auth.service';
 import { LocalStorageService } from '../services/local-storage.service';
+import { ContainerDirective } from '../directives/container.directive';
 
 
 @Component({
@@ -21,6 +22,7 @@ import { LocalStorageService } from '../services/local-storage.service';
     WidgetDirective,
     ButtonDirDirective,
     InputDirDirective,
+    ContainerDirective,
 
     CommonModule
   ],
@@ -166,6 +168,10 @@ export class SettingsComponent implements OnInit, OnDestroy{
       }
     })
     this.modalService.closeModal(this.modalView)
+  }
+
+  onEditProfiles(){
+    this.router.navigate(['edit-profiles'])
   }
 
   onSubmitModal(data: any){

@@ -1,0 +1,77 @@
+<div class="container" appContainer *ngIf="isLoaded">
+    <ng-template #modalView>
+        <div class="modal-container">
+            <div class="row">
+                <h1>{{ actionMsg }}</h1>
+                <button (click)="onCloseModal()">
+                    <img src="../assets/icons/cancel.png">
+                </button>
+            </div>
+            <div class="content" [ngSwitch]="action">
+                <div *ngSwitchCase="'modifyPrivileges'">
+                    <span>
+                        <input
+                            type="radio"
+                            name="privileges"> Założyciel
+                    </span>
+                    <span>
+                        <input
+                            type="radio"
+                            name="privileges"> Współdzielący
+                    </span>
+                </div>
+                <div *ngSwitchCase="'resetPinCode'">
+                    <label>Nowy kod PIN</label>
+                    <input
+                        appInputDir
+                        name="newPinCode"
+                        type="number"
+                        style="-webkit-text-security:disc"
+                        #newPinCode>
+                </div>
+                <div *ngSwitchCase="'deleteProfile'">
+                    <p style="
+                        color: red; 
+                        text-align: center; 
+                        width: 100%;"
+                    >UWAGA!!! Czynności nie można cofnąć.</p>
+                </div>
+            </div>
+            <div class="btn-box-modal">
+                <button appButtonDir>Potwierdź</button>
+                <button *ngIf="action !== 'resetPinCode'" appButtonDir>Anuluj</button>
+            </div>
+        </div>
+    </ng-template>
+    <button class="backBtn" appButtonDir (click)="onGoBack()">Wróć</button>
+    <div class="items-box">
+        <div class="item"  *ngFor="let profile of loggedUser.profiles">
+            <p>{{ profile.name }}</p>
+            <div 
+                class="widget"
+                appWidget
+                widgetHeight="150px"
+                widgetWidth="150px" 
+            >
+                <img 
+                    [src]="profile.role === 'admin' ? '../assets/icons/admin-icon.png' : '../assets/icons/user-icon.png'"
+                    width="150px"
+                >
+            </div>
+            <div class="btn-box">
+                <button appButtonDir (click)="onModifyPrivileges(modalView, profile.name)">
+                    <img src="../assets/icons/pencil-icon.png" width="20px">
+                </button>
+                <button appButtonDir (click)="onResetPinCode(modalView)">
+                    <img src="../assets/icons/reset-icon.png" width="20px">
+                </button>
+                <button 
+                    appButtonDir (click)="onDeleteProfile(modalView, profile.name)"
+                    [disabled]="profile.role === 'admin'"
+                >
+                    <img src="../assets/icons/trash-icon.png" width="20px">
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

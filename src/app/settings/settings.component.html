@@ -1,4 +1,4 @@
-<div class="container" *ngIf="isLoaded">
+<div class="container" *ngIf="isLoaded" appContainer>
     <ng-template #modalView>
         <div class="modal-container">
             <div class="modal-row">
@@ -67,7 +67,7 @@
         <button appButtonDir (click)="onChangePinCode(modalView)">
             {{ activeProfile.PIN === null ?'Ustaw' : 'Zmień' }} kod PIN profilu
         </button>
-        <button *ngIf="activeProfile?.role === 'admin'" appButtonDir>Edytuj/usuń profile</button>
+        <button *ngIf="activeProfile?.role === 'admin'" appButtonDir (click)="onEditProfiles()">Edytuj/usuń profile</button>
         <button appButtonDir (click)="onSetMonthlyLimit(modalView)">Ustaw limit miesięczny</button>
         <button appButtonDir (click)="onSetNotificationTime(modalView)">Ustaw czas powiadomień</button>
     </div>

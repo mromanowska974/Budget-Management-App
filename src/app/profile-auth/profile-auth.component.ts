@@ -10,6 +10,7 @@ import { AuthService } from '../services/auth.service';
 import { User } from '../models/user.interface';
 import { LocalStorageService } from '../services/local-storage.service';
 import { Subscription } from 'rxjs';
+import { ContainerDirective } from '../directives/container.directive';
 
 @Component({
   selector: 'app-profile-auth',
@@ -18,6 +19,8 @@ import { Subscription } from 'rxjs';
     WidgetDirective,
     ButtonDirDirective,
     InputDirDirective,
+    ContainerDirective,
+    
     CommonModule
   ],
   templateUrl: './profile-auth.component.html',

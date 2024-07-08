@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 import { User } from '../models/user.interface';
 import { v4 as uuid } from 'uuid';
+import { ContainerDirective } from '../directives/container.directive';
 
 @Component({
   selector: 'app-add-profile',
@@ -16,6 +17,8 @@ import { v4 as uuid } from 'uuid';
   imports: [
     ButtonDirDirective,
     InputDirDirective,
+    ContainerDirective,
+    
     FormsModule,
     CommonModule
   ],

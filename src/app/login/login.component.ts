@@ -11,6 +11,7 @@ import { DataService } from '../services/data.service';
 import { User } from '../models/user.interface';
 import { ProfileAuthService } from '../services/profile-auth.service';
 import { LocalStorageService } from '../services/local-storage.service';
+import { ContainerDirective } from '../directives/container.directive';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,8 @@ import { LocalStorageService } from '../services/local-storage.service';
   imports: [
     ButtonDirDirective,
     InputDirDirective,
+    ContainerDirective,
+    
     FormsModule,
     CommonModule
   ],

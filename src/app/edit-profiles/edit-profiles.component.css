@@ -1,0 +1,106 @@
+.container {
+    justify-content: space-evenly;
+    padding: 0 20px;
+    align-items: center;
+}
+
+.backBtn{
+    align-self: flex-end;
+    width: 70px;
+}
+
+.items-box {
+    height: 85vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 70%;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 250px;
+}
+
+.btn-box {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px 0;
+}
+
+.item p {
+    margin: 10px;
+}
+
+.btn-box button{
+    width: 30px;
+    height: 30px !important;
+}
+
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    margin: 30px 15px;
+}
+
+.row {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.row button, .row img{
+    width: 50px;
+    height: 50px;
+}
+
+.row button {
+    border: none;
+    background-color: #eceaea;
+}
+
+.row h1{
+    text-wrap: wrap;
+    text-align: center;
+    width: 70%;
+    font-size: 40px;
+    margin: 10px 10% 0 10%;
+}
+
+.btn-box-modal {
+    display: flex;
+    justify-content: space-evenly;
+    width: 50%;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 15vh;
+}
+
+.content div{
+    display: flex;
+    flex-direction: column;
+}
+
+span {
+    margin: 15px;
+}
+
+@media (orientation: portrait){
+    .row h1{
+        font-size: 30px;
+        width: 90%;
+    }
+
+    .btn-box-modal {
+        width: 80%;
+    }
+}
