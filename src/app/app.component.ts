@@ -28,13 +28,15 @@ export class AppComponent implements OnInit{
     let uid: string |null = this.retrieveFromLocalStorage('uid');
 
     if(uid !== null){
-      this.dataService.getUser(uid!).subscribe(result => {
+      this.dataService.getUser(uid).subscribe(result => {
         console.log(result.data())
-        this.authService.setUser({
-          email: result.data()!['email'],
-          accountStatus: result.data()!['accountStatus'],
-          profiles: result.data()!['profiles'],
-          uid: uid!
+        this.dataService.getProfiles(uid).then(data => {
+          this.authService.setUser({
+            email: result.data()!['email'],
+            accountStatus: result.data()!['accountStatus'],
+            profiles: data,
+            uid: uid!
+          })
         })
 
       })

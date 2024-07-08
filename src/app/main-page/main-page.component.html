@@ -31,13 +31,13 @@
             <a style="cursor: pointer;" (click)="onSettings()">Ustawienia</a>
             <a style="cursor: pointer;">Powiadomienia</a>
             <a style="cursor: pointer;" (click)="onLogout()">Wyloguj się</a>
+            <p
+                style="color: red;"
+                *ngIf="activeProfile?.PIN === null && activeProfile?.role === 'admin'"
+            >
+                Ustaw kod PIN dla swojego profilu, żeby móc dodawać nowe profile!
+            </p>
         </div>
-        <p
-            style="color: red;"
-            *ngIf="activeProfile?.PIN === null && activeProfile?.role === 'admin'"
-        >
-            Ustaw kod PIN dla swojego profilu, żeby móc dodawać nowe profile!
-        </p>
     </div>
     <div class="text-form">
         <div class="change-month">

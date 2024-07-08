@@ -18,6 +18,11 @@ export class AuthService {
     this.user.next(loggedUser)
   }
 
+  changeUser(propToChange, newValue, user: User){
+    user[propToChange] = newValue;
+    this.setUser(user);
+  }
+
   private alternateAuthLogin(provider: any) {
     return this.afAuth
       .signInWithPopup(provider)

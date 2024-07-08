@@ -36,7 +36,7 @@ export class DataService{
         })
     }
 
-    async getProfiles(uid): Promise<Profile[]>{
+    getProfiles(uid): Promise<Profile[]>{
       const profilesDoc = collection(this.db, `users/${uid}/profiles`)
       let profiles: Profile[] = []; 
 
@@ -61,6 +61,7 @@ export class DataService{
         return profiles;
       })
     }
+
     addProfile(uid, data?){
       const profilesRef = collection(this.db, `users/${uid}/profiles`)
       console.log(profilesRef)
@@ -84,29 +85,16 @@ export class DataService{
       })
     }
 
-    updateProfile(id: string, propToEdit, newValue, activeProfile: Profile){
+    updateProfile(uid: string, pid: string, propToEdit, newValue, activeProfile: Profile){
       let newProfile = JSON.parse(JSON.stringify(activeProfile));
       newProfile[propToEdit] = newValue;
 
-      const docRef = doc(this.db, "users", id);
-      return from(updateDoc(docRef, {
-        profiles: arrayRemove(activeProfile),
-      }).then(() => {
-        updateDoc(docRef, {
-          profiles: arrayUnion(newProfile)
-        }).then(() => {
-          this.profileAuth.setActiveProfile(newProfile);
+      const docRef = doc(this.db, `users/${uid}/profiles`, pid);
 
-          this.getUser(id).subscribe(user => {
-            console.log(user.data())
-            this.authService.setUser({
-              uid: id,
-              email: user.data()!['email'],
-              accountStatus: user.data()!['accountStatus'],
-              profiles: user.data()!['profiles'],
-            })
-          })
-        })
+      return from(updateDoc(docRef, {
+        [propToEdit]: newValue
+      }).then(() => {
+        this.profileAuth.setActiveProfile(newProfile);
       }))
     }
 }

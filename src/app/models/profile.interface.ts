@@ -2,7 +2,7 @@ import { Expense } from "./expense.interface";
 import { v4 as uuidv4 } from 'uuid';
 
 export interface Profile {
-    id;
+    id?;
     PIN: string;
     name: string;
     role: string;

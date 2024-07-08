@@ -45,7 +45,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
 
   isLoaded = false;
   action: string;
-  loggedUser: User | null = null;
+  loggedUser: User;
   activeProfile: Profile;
   errorMsg: string = '';
   settingMsg: string = '';
@@ -53,9 +53,9 @@ export class SettingsComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
-        this.loggedUser = user
+        this.loggedUser = user!
         
-        if(this.loggedUser?.profiles.length === 1){
+        if(this.loggedUser.profiles.length === 1){
           this.activeProfile = this.loggedUser.profiles[0]
           this.isLoaded = true;
         }
@@ -85,17 +85,25 @@ export class SettingsComponent implements OnInit, OnDestroy{
 
   private changePinCode(data: any){
     if(this.activeProfile?.PIN === null){
-      this.dataService.updateProfile(this.loggedUser?.uid!, 'PIN', data, this.activeProfile).subscribe(() => console.log('udało się'))
+      this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data, this.activeProfile).subscribe(() => {
+        this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+          this.authService.changeUser('profiles', data, this.loggedUser)
+        })
+      })
       this.activeProfile.PIN = data;
       this.onCloseModal()
     }
     else{
       if(data[1] === this.activeProfile.PIN){
-        if(data[1]===data[0]){
+        if(data[1]===data[0] || data[0] === ''){
           this.errorMsg = 'Proszę podać nowy kod PIN.'
         }
         else {
-          this.dataService.updateProfile(this.loggedUser?.uid!, 'PIN', data[0], this.activeProfile!).subscribe(() => console.log('udało się'))
+          this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data[0], this.activeProfile).subscribe(() => {
+            this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+              this.authService.changeUser('profiles', data, this.loggedUser)
+            })
+          })
           this.onCloseModal()
         }
       }
@@ -120,7 +128,11 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Profil o podanej nazwie już istnieje'
     }
     else {
-      this.dataService.updateProfile(this.loggedUser?.uid!, 'name', data, this.activeProfile!).subscribe(() => console.log('udało się'))
+      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'name', data, this.activeProfile).subscribe(() => {
+        this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+          this.authService.changeUser('profiles', data, this.loggedUser)
+        })
+      })
       this.onCloseModal();
     }
   }
@@ -137,7 +149,11 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
-      this.dataService.updateProfile(this.loggedUser?.uid!, 'monthlyLimit', data, this.activeProfile!).subscribe(() => console.log('udało się'))
+      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'monthlyLimit', data, this.activeProfile).subscribe(() => {
+        this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+          this.authService.changeUser('profiles', data, this.loggedUser)
+        })
+      })
       this.onCloseModal();
     }
   }
@@ -154,7 +170,11 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
-      this.dataService.updateProfile(this.loggedUser?.uid!, 'notificationTime', data, this.activeProfile!).subscribe(() => console.log('udało się'))
+      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'notificationTime', data, this.activeProfile).subscribe(() => {
+        this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+          this.authService.changeUser('profiles', data, this.loggedUser)
+        })
+      })
       this.onCloseModal();
     }
   }
