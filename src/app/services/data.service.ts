@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { Firestore, arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "@angular/fire/firestore";
+import { Firestore, addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, getDocs, setDoc, updateDoc } from "@angular/fire/firestore";
 import { from } from "rxjs";
 import { Profile } from "../models/profile.interface";
 import { ProfileAuthService } from "./profile-auth.service";
@@ -30,32 +30,58 @@ export class DataService{
         const docRef = doc(this.db, "users", data.user.uid)
         return setDoc(docRef, {
           email: data.user.email,
-          profiles: [
-            {
-              id: uuid(),
-              name: 'Założyciel',
-              role: 'admin',
-              PIN: null,
-              categories: [{
-                id: uuid(),
-                content: 'jedzenie',
-                color: '#ff0000'
-              }, {
-                id: uuid(),
-                content: 'transport',
-                color: '#ffff00'
-              }],
-              expenses: [],
-              monthlyLimit: 99.99,
-              notificationTime: 3
-            }
-          ],
           accountStatus: 'free'
+        }).then(() => {
+          this.addProfile(data.user.uid)
         })
     }
 
-    addProfile(){
+    async getProfiles(uid): Promise<Profile[]>{
+      const profilesDoc = collection(this.db, `users/${uid}/profiles`)
+      let profiles: Profile[] = []; 
 
+      return getDocs(profilesDoc).then((data): Profile[] => {
+        console.log(data.docs);
+
+        data.docs.forEach(profile => {
+          console.log(profile.id)
+            profiles.push(
+              {
+                id: profile.id,
+                name: profile.data()!['name'],
+                role: profile.data()!['role'],
+                categories: profile.data()!['categories'],
+                PIN: profile.data()!['PIN'],
+                expenses: profile.data()!['expenses'],
+                monthlyLimit: profile.data()!['monthlyLimit'],
+                notificationTime: profile.data()!['notificationTime'],
+              }
+            ) 
+        })
+        return profiles;
+      })
+    }
+    addProfile(uid, data?){
+      const profilesRef = collection(this.db, `users/${uid}/profiles`)
+      console.log(profilesRef)
+
+      return addDoc(profilesRef, {
+          name: 'Założyciel',
+          role: 'admin',
+          PIN: null,
+          categories: [{
+            id: uuid(),
+            content: 'jedzenie',
+            color: '#ff0000'
+          }, {
+            id: uuid(),
+            content: 'transport',
+            color: '#ffff00'
+          }],
+          expenses: [],
+          monthlyLimit: 99.99,
+          notificationTime: 3
+      })
     }
 
     updateProfile(id: string, propToEdit, newValue, activeProfile: Profile){

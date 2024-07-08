@@ -32,16 +32,16 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   profileId = this.localStorageService.getItem('profileId');
 
-  loggedUser: User | null = null;
+  loggedUser: User;
   activeProfile: Profile;
   sub: Subscription;
   menuToggled = false;
 
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
-        this.loggedUser = user
+        this.loggedUser = user!
         console.log(this.loggedUser);
-        this.activeProfile = this.loggedUser?.profiles.find(profile => profile.id === this.profileId)!
+        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!
       })
   }
 
