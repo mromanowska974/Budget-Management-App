@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { Firestore, addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, getDocs, setDoc, updateDoc } from "@angular/fire/firestore";
+import { Firestore, addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from "@angular/fire/firestore";
 import { from } from "rxjs";
 import { Profile } from "../models/profile.interface";
 import { ProfileAuthService } from "./profile-auth.service";
@@ -110,6 +110,12 @@ export class DataService{
           //this.profileAuth.setActiveProfile(newProfile); -> to trzeba gdzie indziej dać
       }))
 
+    }
+
+    deleteProfile(uid: string, pid: string){
+      const docRef = doc(this.db, `users/${uid}/profiles/${pid}`)
+
+      return deleteDoc(docRef)
     }
 
     //CATEGORIES

@@ -1,4 +1,4 @@
-import { Component, ComponentRef, inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ContainerDirective } from '../directives/container.directive';
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { WidgetDirective } from '../directives/widget.directive';
@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './edit-profiles.component.html',
   styleUrl: './edit-profiles.component.css'
 })
-export class EditProfilesComponent implements OnInit{
+export class EditProfilesComponent implements OnInit, OnDestroy{
   @ViewChild('modalView', { read: ViewContainerRef }) modalView: ViewContainerRef;
 
   router = inject(Router);
@@ -41,15 +41,20 @@ export class EditProfilesComponent implements OnInit{
   action: string;
   actionMsg: string;
   data: any;
+  modalSub: Subscription;
   sub: Subscription;
 
   ngOnInit(): void {
-      this.authService.user.subscribe(user => {
+      this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
         this.isLoaded = true;
 
         console.log(this.loggedUser)
       })
+  }
+
+  ngOnDestroy(): void {
+      this.sub.unsubscribe();
   }
 
   onGoBack(){
@@ -65,13 +70,11 @@ export class EditProfilesComponent implements OnInit{
   onResetPinCode(template, profileIndex){
     this.action = 'resetPinCode'
     this.actionMsg = 'Podaj nowy kod PIN'
-    console.log('lolo')
     this.modalService.openModal(this.modalView, template, profileIndex)
   }
 
   private resetPinCode(data){
-    console.log('dede')
-    this.sub = this.modalService.dataSub.subscribe(pid => {
+    this.modalSub = this.modalService.dataSub.subscribe(pid => {
       console.log(data, pid)
 
       this.dataService.updateProfile(this.loggedUser.uid, pid, 'PIN', data.toString()).subscribe(data => {
@@ -85,27 +88,38 @@ export class EditProfilesComponent implements OnInit{
     })
   }
 
-  onDeleteProfile(template, profileName){
+  onDeleteProfile(template, profileName, profileIndex){
     this.action = 'deleteProfile'
     this.actionMsg = 'Czy na pewno chcesz usunąć '+profileName+'?';
-    this.modalService.openModal(this.modalView, template)
+    this.modalService.openModal(this.modalView, template, profileIndex)
+  }
+
+  private deleteProfile(pid: string){
+    this.dataService.deleteProfile(this.loggedUser.uid, pid).then(() => {
+      console.log('no to kop w dupe')
+      this.authService.deleteProfile(this.loggedUser, pid)
+      console.log(this.authService.user.value)
+      this.onCloseModal();
+    })
   }
 
   onCloseModal(){
-    if(this.sub) this.sub.unsubscribe()
+    if(this.modalSub) this.modalSub.unsubscribe()
     this.modalService.closeModal(this.modalView)
   }
 
   onSubmitModal(){
-    switch(this.action){
-      case 'modifyPrivileges':
-        break;
-      case 'resetPinCode':
-        console.log('nene')
-        this.resetPinCode(this.data)
-        break;
-      case 'deleteProfile':
-        break;
-    }
+    this.modalService.dataSub.subscribe(data => {
+      switch(this.action){
+        case 'modifyPrivileges':
+          break;
+        case 'resetPinCode':
+          this.resetPinCode(this.data)
+          break;
+        case 'deleteProfile':
+          this.deleteProfile(data)
+          break;
+      }
+    })
   }
 }

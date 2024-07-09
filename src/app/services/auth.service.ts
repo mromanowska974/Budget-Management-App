@@ -30,6 +30,11 @@ export class AuthService {
     this.setUser(user);
   }
 
+  deleteProfile(user: User, profileId){
+    user.profiles = user.profiles.filter(profile => profile.id !== profileId);
+    this.setUser(user)
+  }
+
   private alternateAuthLogin(provider: any) {
     return this.afAuth
       .signInWithPopup(provider)
