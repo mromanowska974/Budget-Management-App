@@ -7,6 +7,7 @@ import { ProfileAuthComponent } from './profile-auth/profile-auth.component';
 import { SettingsComponent } from './settings/settings.component';
 import { EditProfilesComponent } from './edit-profiles/edit-profiles.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
+import { AddCategoryComponent } from './add-category/add-category.component';
 
 export const routes: Routes = [
     {
@@ -45,5 +46,9 @@ export const routes: Routes = [
     {
         path: 'subscription',
         component: SubscriptionComponent
+    },
+    {
+        path: 'add-category',
+        component: AddCategoryComponent
     }
 ];

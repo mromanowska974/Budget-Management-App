@@ -1,0 +1,43 @@
+<div class="container" appContainer>
+    <form class="form" #categoryForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="inputs">
+            <div class="color-select">
+                <div class="color-select-input">
+                    <label>Kolor</label>
+                    <input 
+                        id="color"
+                        type="color"
+                        name="color"
+                        ngModel
+                        required
+                    >
+                </div>
+                <div 
+                    class="widget" 
+                    appWidget
+                    widgetHeight="200px"
+                    widgetWidth="200px"
+                    [ngStyle]="{
+                        backgroundColor: categoryForm.value.color ? categoryForm.value.color : 'black'
+                    }"
+                >
+                </div>
+            </div>
+            <div class="input">
+                <label>Nazwa kategorii</label>
+                <input
+                    appInputDir
+                    id="content"
+                    name="content"
+                    type="text"
+                    ngModel
+                    required
+                >
+            </div>
+        </div>
+        <div class="btn-box">
+            <button appButtonDir type="submit">Zapisz</button>
+            <button appButtonDir (click)="onGoBack()" type="button">Anuluj</button>
+        </div>
+    </form>
+</div>
