@@ -37,7 +37,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
   loggedUser: User | null = null;
   activeProfile: Profile;
   sub: Subscription;
-  menuToggled = false;
+  menuToggled = true;
 
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {

@@ -77,7 +77,7 @@
                 </button>
                 <button 
                     appButtonDir (click)="onDeleteProfile(modalView, profile.name, profile.id)"
-                    [disabled]="profile.role === 'admin'"
+                    *ngIf="profile.role !== 'admin'"
                 >
                     <img src="../assets/icons/trash-icon.png" width="20px">
                 </button>
