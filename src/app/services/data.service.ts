@@ -55,7 +55,6 @@ export class DataService{
 
       return getDocs(profilesDoc).then((data): Profile[] => {
         data.docs.forEach(profile => {
-          console.log(profile.id)
             profiles.push(
               {
                 id: profile.id,
@@ -68,6 +67,23 @@ export class DataService{
             ) 
         })
         return profiles;
+      })
+    }
+
+    getProfile(uid, pid){
+      const profileDoc = doc(this.db, `users/${uid}/profiles/${pid}`)
+
+      return getDoc(profileDoc).then(data => {
+        let profile = {
+          id: data.id,
+          name: data.data()!['name'],
+          role: data.data()!['role'],
+          PIN: data.data()!['PIN'],
+          monthlyLimit: data.data()!['monthlyLimit'],
+          notificationTime: data.data()!['notificationTime'],
+        }
+
+        return profile;
       })
     }
 
@@ -84,17 +100,16 @@ export class DataService{
       }).then(data => data.id)
     }
 
-    updateProfile(uid: string, pid: string, propToEdit, newValue, activeProfile: Profile){
-      let newProfile = JSON.parse(JSON.stringify(activeProfile));
-      newProfile[propToEdit] = newValue;
-
+    updateProfile(uid: string, pid: string, propToEdit, newValue){
       const docRef = doc(this.db, `users/${uid}/profiles`, pid);
 
       return from(updateDoc(docRef, {
         [propToEdit]: newValue
       }).then(() => {
-          this.profileAuth.setActiveProfile(newProfile);
+         return this.getProfile(uid, pid).then((profile):Profile => profile)
+          //this.profileAuth.setActiveProfile(newProfile); -> to trzeba gdzie indziej dać
       }))
+
     }
 
     //CATEGORIES

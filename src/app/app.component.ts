@@ -29,7 +29,6 @@ export class AppComponent implements OnInit{
 
     if(uid !== null){
       this.dataService.getUser(uid).subscribe(result => {
-        console.log(result.data())
         this.dataService.getProfiles(uid).then(data => {
           this.authService.setUser({
             email: result.data()!['email'],

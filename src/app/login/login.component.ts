@@ -80,7 +80,6 @@ export class LoginComponent {
   }
 
   setActiveUser(doc, uid){
-    console.log(doc.data())
       return this.dataService.getProfiles(uid).then(data => {
         let user: User = {
           uid: uid,

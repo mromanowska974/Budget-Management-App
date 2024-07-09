@@ -42,7 +42,6 @@ export class AddProfileComponent implements OnInit{
       this.authService.user.subscribe(user => {
         this.loggedUser = user!
         this.profilesLimit = this.loggedUser.accountStatus === 'free' ? 3 : 6;
-        console.log(this.profilesLimit)
       })
   }
 

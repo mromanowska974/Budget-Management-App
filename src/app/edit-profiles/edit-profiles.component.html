@@ -27,7 +27,7 @@
                         name="newPinCode"
                         type="number"
                         style="-webkit-text-security:disc"
-                        #newPinCode>
+                        [(ngModel)]="data">
                 </div>
                 <div *ngSwitchCase="'deleteProfile'">
                     <p style="
@@ -38,8 +38,8 @@
                 </div>
             </div>
             <div class="btn-box-modal">
-                <button appButtonDir>Potwierdź</button>
-                <button *ngIf="action !== 'resetPinCode'" appButtonDir>Anuluj</button>
+                <button appButtonDir (click)="onSubmitModal()">Potwierdź</button>
+                <button *ngIf="action !== 'resetPinCode'" appButtonDir (click)="onCloseModal()">Anuluj</button>
             </div>
         </div>
     </ng-template>
@@ -62,7 +62,7 @@
                 <button appButtonDir (click)="onModifyPrivileges(modalView, profile.name)">
                     <img src="../assets/icons/pencil-icon.png" width="20px">
                 </button>
-                <button appButtonDir (click)="onResetPinCode(modalView)">
+                <button appButtonDir (click)="onResetPinCode(modalView, profile.id)">
                     <img src="../assets/icons/reset-icon.png" width="20px">
                 </button>
                 <button 

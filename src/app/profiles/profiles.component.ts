@@ -38,7 +38,6 @@ export class ProfilesComponent implements OnInit, OnDestroy{
       this.sub = this.authService.user.subscribe(user => {
         this.currentUser = user
         this.profiles = this.currentUser!.profiles;
-        console.log(this.currentUser)
 
         this.isLoaded = true;
       });

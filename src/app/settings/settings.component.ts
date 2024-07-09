@@ -85,7 +85,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
 
   private changePinCode(data: any){
     if(this.activeProfile?.PIN === null){
-      this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data, this.activeProfile).subscribe(() => {
+      this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data).subscribe(() => {
         this.dataService.getProfiles(this.loggedUser.uid).then(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })
@@ -99,7 +99,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
           this.errorMsg = 'Proszę podać nowy kod PIN.'
         }
         else {
-          this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data[0], this.activeProfile).subscribe(() => {
+          this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data[0]).subscribe(() => {
             this.dataService.getProfiles(this.loggedUser.uid).then(data => {
               this.authService.changeUser('profiles', data, this.loggedUser)
             })
@@ -128,7 +128,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Profil o podanej nazwie już istnieje'
     }
     else {
-      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'name', data, this.activeProfile).subscribe(() => {
+      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'name', data).subscribe(() => {
         this.dataService.getProfiles(this.loggedUser.uid).then(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })
@@ -149,7 +149,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
-      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'monthlyLimit', data, this.activeProfile).subscribe(() => {
+      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'monthlyLimit', data).subscribe(() => {
         this.dataService.getProfiles(this.loggedUser.uid).then(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })
@@ -170,7 +170,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
-      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'notificationTime', data, this.activeProfile).subscribe(() => {
+      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'notificationTime', data).subscribe(() => {
         this.dataService.getProfiles(this.loggedUser.uid).then(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })

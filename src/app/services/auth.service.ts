@@ -23,6 +23,13 @@ export class AuthService {
     this.setUser(user);
   }
 
+  changeProfiles(user: User, newProfile){
+    const index = user.profiles.indexOf(user.profiles.find(profile => profile.id === newProfile.id)!);
+    user.profiles[index] = newProfile;
+
+    this.setUser(user);
+  }
+
   private alternateAuthLogin(provider: any) {
     return this.afAuth
       .signInWithPopup(provider)
