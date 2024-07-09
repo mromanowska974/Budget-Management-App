@@ -100,12 +100,12 @@ export class LoginComponent {
   handleAlternateSignIn(data){
     let userDoc;
 
-    this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
+    this.dataService.getUser(data!.user?.uid!).then(doc => {
       userDoc = doc
 
       if(!userDoc._document){
         this.dataService.addUser(data).then(() => {
-          this.dataService.getUser(data!.user?.uid!).subscribe(doc => {
+          this.dataService.getUser(data!.user?.uid!).then(doc => {
             let loggedUser = doc
 
             this.setActiveUser(loggedUser, data!.user?.uid!).then(() => {
@@ -135,7 +135,7 @@ export class LoginComponent {
         .login(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
           next: (data) => {
-            this.dataService.getUser(data.user.uid).subscribe(user => {
+            this.dataService.getUser(data.user.uid).then(user => {
               this.setActiveUser(user, data.user.uid).then(data => {
                 if(data.profiles.length === 1) this.router.navigate(['main-page']);
                 else this.router.navigate(['profiles-panel']);
@@ -154,7 +154,7 @@ export class LoginComponent {
         .subscribe({
           next: (credential) => {
             this.dataService.addUser(credential).then(() => {
-              this.dataService.getUser(credential!.user?.uid!).subscribe(doc => {
+              this.dataService.getUser(credential!.user?.uid!).then(doc => {
                 let loggedUser = doc
   
                 this.setActiveUser(loggedUser, credential!.user?.uid!).then(() => {

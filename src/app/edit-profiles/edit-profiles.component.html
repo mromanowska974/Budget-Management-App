@@ -59,7 +59,10 @@
                 >
             </div>
             <div class="btn-box">
-                <button appButtonDir (click)="onModifyPrivileges(modalView, profile.name)">
+                <button 
+                    appButtonDir (click)="onModifyPrivileges(modalView, profile.name)"
+                    *ngIf="loggedUser.accountStatus !== 'free'"
+                >
                     <img src="../assets/icons/pencil-icon.png" width="20px">
                 </button>
                 <button appButtonDir (click)="onResetPinCode(modalView, profile.id)">

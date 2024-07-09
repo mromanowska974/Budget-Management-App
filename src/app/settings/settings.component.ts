@@ -70,6 +70,10 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.sub.unsubscribe()
   }
 
+  onSubscription(){
+    this.router.navigate(['subscription'])
+  }
+
   onGoBack(){
     this.router.navigate(['main-page'])
   }

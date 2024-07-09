@@ -1,0 +1,46 @@
+.container{
+    align-items: center;
+    /* justify-content: center; */
+}
+
+.row{
+    display: flex;
+    width: 90%;
+    height: 30vh;
+    justify-content: space-between;
+    margin: 15px;
+}
+
+.icon{
+    padding-left: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+}
+
+.icon h1{
+    font-size: 45px;
+}
+
+.desc{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 15px;
+}
+
+.desc p{
+    align-self: flex-start;
+}
+
+button{
+    min-width: 80px;
+}
+
+.info{
+    width: 80%;
+    margin: 20px 10%;
+    font-size: 10px;
+    align-self: center;
+}
