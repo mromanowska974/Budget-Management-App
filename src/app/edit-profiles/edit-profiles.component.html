@@ -12,13 +12,20 @@
                     <span>
                         <input
                             type="radio"
-                            name="privileges"> Założyciel
+                            [value]="'admin'"
+                            name="privileges"
+                            [checked]="selectedProfile.role === 'admin' ? true : false"
+                            [(ngModel)]="data"> Założyciel
                     </span>
                     <span>
                         <input
                             type="radio"
-                            name="privileges"> Współdzielący
+                            [value]="'user'"
+                            name="privileges"
+                            [checked]="selectedProfile.role === 'user'"
+                            [(ngModel)]="data"> Współdzielący
                     </span>
+                    <p *ngIf="errorMsg.length > 0" style="color: red;">{{errorMsg}}</p>
                 </div>
                 <div *ngSwitchCase="'resetPinCode'">
                     <label>Nowy kod PIN</label>
@@ -60,7 +67,7 @@
             </div>
             <div class="btn-box">
                 <button 
-                    appButtonDir (click)="onModifyPrivileges(modalView, profile.name)"
+                    appButtonDir (click)="onModifyPrivileges(modalView, profile.name, profile.id)"
                     *ngIf="loggedUser.accountStatus !== 'free'"
                 >
                     <img src="../assets/icons/pencil-icon.png" width="20px">

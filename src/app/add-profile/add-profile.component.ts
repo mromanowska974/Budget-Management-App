@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { InputDirDirective } from '../directives/input-dir.directive';
@@ -11,6 +11,7 @@ import { User } from '../models/user.interface';
 import { v4 as uuid } from 'uuid';
 import { ContainerDirective } from '../directives/container.directive';
 import { DataService } from '../services/data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-profile',
@@ -26,7 +27,7 @@ import { DataService } from '../services/data.service';
   templateUrl: './add-profile.component.html',
   styleUrl: './add-profile.component.css'
 })
-export class AddProfileComponent implements OnInit{
+export class AddProfileComponent implements OnInit, OnDestroy{
   @ViewChild('f') profileForm: NgForm;
   router = inject(Router);
   authService = inject(AuthService);
@@ -35,14 +36,22 @@ export class AddProfileComponent implements OnInit{
 
   loggedUser: User;
   errorMsg: string;
+  sub: Subscription;
 
   profilesLimit: number;
 
   ngOnInit(): void {
-      this.authService.user.subscribe(user => {
+      this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
         this.profilesLimit = this.loggedUser.accountStatus === 'free' ? 3 : 6;
+        console.log(this.profilesLimit, this.loggedUser.profiles.length)
       })
+  }
+
+  ngOnDestroy(): void {
+      if(this.sub){
+        this.sub.unsubscribe()
+      }
   }
 
   onGoBack(){

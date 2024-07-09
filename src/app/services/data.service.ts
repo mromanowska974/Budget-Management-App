@@ -105,12 +105,12 @@ export class DataService{
     updateProfile(uid: string, pid: string, propToEdit, newValue){
       const docRef = doc(this.db, `users/${uid}/profiles`, pid);
 
-      return from(updateDoc(docRef, {
+      return updateDoc(docRef, {
         [propToEdit]: newValue
       }).then(() => {
          return this.getProfile(uid, pid).then((profile):Profile => profile)
           //this.profileAuth.setActiveProfile(newProfile); -> to trzeba gdzie indziej dać
-      }))
+      })
 
     }
 
