@@ -27,8 +27,4 @@ export class ModalService {
     this.newModalComponent.destroy()
     view.clear();
   }
-
-  submitModal(){
-    console.log(this.newModalComponent.instance)
-  }
 }

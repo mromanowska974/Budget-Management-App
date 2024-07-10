@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { WidgetDirective } from '../directives/widget.directive';
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { Router } from '@angular/router';
@@ -10,7 +10,6 @@ import { Profile } from '../models/profile.interface';
 import { ModalService } from '../services/modal.service';
 import { InputDirDirective } from '../directives/input-dir.directive';
 import { DataService } from '../services/data.service';
-import { ProfileAuthService } from '../services/profile-auth.service';
 import { LocalStorageService } from '../services/local-storage.service';
 import { ContainerDirective } from '../directives/container.directive';
 
@@ -38,7 +37,6 @@ export class SettingsComponent implements OnInit, OnDestroy{
   modalService = inject(ModalService);
   dataService = inject(DataService);
   localStorageService = inject(LocalStorageService);
-  profileAuth = inject(ProfileAuthService);
 
   sub: Subscription
   profileId = this.localStorageService.getItem('profileId');
@@ -89,18 +87,29 @@ export class SettingsComponent implements OnInit, OnDestroy{
 
   private changePinCode(data: any){
     if(this.activeProfile?.PIN === null){
-      this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data).then(() => {
-        this.dataService.getProfiles(this.loggedUser.uid).then(data => {
-          this.authService.changeUser('profiles', data, this.loggedUser)
+      if(data === ''){
+        this.errorMsg = 'Proszę podać nowy kod PIN.'
+      }
+      else if(data.length < 4 || data.length > 8){
+        this.errorMsg = 'Kod PIN musi mieć długość od 4 do 8 cyfr.'
+      }
+      else {
+        this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data).then(() => {
+          this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+            this.authService.changeUser('profiles', data, this.loggedUser)
+          })
         })
-      })
-      this.activeProfile.PIN = data;
-      this.onCloseModal()
+        this.activeProfile.PIN = data;
+        this.onCloseModal()
+      }
     }
     else{
       if(data[1] === this.activeProfile.PIN){
         if(data[1]===data[0] || data[0] === ''){
           this.errorMsg = 'Proszę podać nowy kod PIN.'
+        }
+        else if(data[0].length < 4 || data[0].length > 8){
+          this.errorMsg = 'Kod PIN musi mieć długość od 4 do 8 cyfr.'
         }
         else {
           this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data[0]).then(() => {
@@ -125,7 +134,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
   }
 
   private changeName(data: string){
-    if(this.activeProfile.name === data){
+    if(this.activeProfile.name === data || data === ''){
       this.errorMsg = 'Proszę podać nową nazwę.'
     }   
     else if(this.loggedUser?.profiles.find(profile => profile.name === data)){
@@ -149,7 +158,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
   }
 
   private setMonthlyLimit(data: number){
-    if(this.activeProfile.monthlyLimit == data){
+    if(this.activeProfile.monthlyLimit == data || data.toString() === ''){
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
@@ -170,7 +179,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
   }
 
   private setNotificationTime(data: number){
-    if(this.activeProfile.notificationTime == data){
+    if(this.activeProfile.notificationTime == data || data.toString() === ''){
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
@@ -185,12 +194,6 @@ export class SettingsComponent implements OnInit, OnDestroy{
 
   onCloseModal(){
     this.errorMsg = ''
-    this.profileAuth.getActiveProfile().subscribe(newProfile => {
-      if(newProfile !== null){
-        console.log(newProfile, this.activeProfile)
-        this.activeProfile = newProfile!
-      }
-    })
     this.modalService.closeModal(this.modalView)
   }
 
@@ -198,7 +201,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
     this.router.navigate(['edit-profiles'])
   }
 
-  onSubmitModal(data: any){
+  onSubmitModal(data: any){    
     this.errorMsg = ''
     switch(this.action){
       case 'changePinCode':

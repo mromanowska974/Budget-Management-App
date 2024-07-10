@@ -36,13 +36,11 @@ export class SubscriptionComponent implements OnInit{
   onChangeAccountStatus(){
     if(this.loggedUser.accountStatus==='free'){
       this.dataService.updateUser(this.loggedUser.uid, 'accountStatus', 'PLUS').subscribe(data => {
-        console.log(data)
         this.authService.changeUser('accountStatus', data!['accountStatus'], this.loggedUser)
       })
     }
     else {
       this.dataService.updateUser(this.loggedUser.uid, 'accountStatus', 'free').subscribe(data => {
-        console.log(data)
         this.authService.changeUser('accountStatus', data!['accountStatus'], this.loggedUser)
       })
     }

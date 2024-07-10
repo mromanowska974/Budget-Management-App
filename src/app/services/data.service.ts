@@ -1,9 +1,7 @@
 import { Injectable, inject } from "@angular/core";
-import { Firestore, addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from "@angular/fire/firestore";
+import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc } from "@angular/fire/firestore";
 import { from } from "rxjs";
 import { Profile } from "../models/profile.interface";
-import { ProfileAuthService } from "./profile-auth.service";
-import { v4 as uuid } from "uuid"
 import { AuthService } from "./auth.service";
 
 @Injectable({
@@ -11,7 +9,6 @@ import { AuthService } from "./auth.service";
 })
 export class DataService{
     db = inject(Firestore)
-    profileAuth = inject(ProfileAuthService)
     authService = inject(AuthService);
 
     //USERS
@@ -109,7 +106,6 @@ export class DataService{
         [propToEdit]: newValue
       }).then(() => {
          return this.getProfile(uid, pid).then((profile):Profile => profile)
-          //this.profileAuth.setActiveProfile(newProfile); -> to trzeba gdzie indziej dać
       })
 
     }
@@ -127,8 +123,6 @@ export class DataService{
       let categories: {id: string, content: string, color: string}[] = []; 
 
       return getDocs(profilesDoc).then((data): {id: string, content: string, color: string}[] => {
-        console.log(data.docs);
-
         data.docs.forEach(category => {
           categories.push(
               {

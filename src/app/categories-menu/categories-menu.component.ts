@@ -47,6 +47,5 @@ export class CategoriesMenuComponent implements OnInit{
         window.location.reload()
       })
     }
-    console.log(this.activeCategory)
   }
 }

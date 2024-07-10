@@ -38,11 +38,8 @@ export class CategoryPageComponent implements OnInit{
     const pid = this.localStorageService.getItem('profileId');
     const uid = this.localStorageService.getItem('uid');
 
-    console.log('wchodzi', uid)
-
     this.dataService.getUser(uid!).then(user => {
       this.dataService.getProfiles(uid).then(profiles => {
-        console.log('tu też', profiles)
         this.loggedUser = {
           uid: uid!,
           accountStatus: user!['accountStatus'],
@@ -54,7 +51,6 @@ export class CategoryPageComponent implements OnInit{
           this.activeProfile.categories = categories;
           this.activeCategory = this.activeProfile.categories!.find(category => category.id === catId)!
           this.isLoaded = true
-          console.log(this.loggedUser)    
         })
       })
     })

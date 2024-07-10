@@ -40,7 +40,6 @@ export class PageContainerComponent {
         
         this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
           this.activeProfile.categories = data;
-          console.log(this.activeProfile);
         })
       })
   }

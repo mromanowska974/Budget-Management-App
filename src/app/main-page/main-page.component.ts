@@ -45,7 +45,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
         
         this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
           this.activeProfile.categories = data;
-          console.log(this.activeProfile);
         })
       })
   }

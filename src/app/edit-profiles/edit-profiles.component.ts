@@ -83,14 +83,12 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
   private modifyPrivileges(data){
     if(((data === 'admin' && this.adminsCount < this.adminsLimit) || data === 'user') && this.selectedProfile.id !== this.activeProfile.id){
       this.dataService.updateProfile(this.loggedUser.uid, this.selectedProfile.id, 'role', data).then(profile => {
-        console.log('lolo')
         this.authService.changeProfiles(this.loggedUser, profile)
         this.data = null;
         this.action = '';
         this.onCloseModal()
       })
     }
-    console.log(data)
   }
 
   onResetPinCode(template, profileIndex){
@@ -128,7 +126,6 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
 
   onCloseModal(){
     this.errorMsg = '';
-    console.log(this.errorMsg)
     if(this.modalSub) this.modalSub.unsubscribe()
     this.modalService.closeModal(this.modalView)
   }

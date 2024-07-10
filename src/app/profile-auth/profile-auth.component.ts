@@ -1,8 +1,7 @@
-import { AfterContentInit, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { WidgetDirective } from '../directives/widget.directive';
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { InputDirDirective } from '../directives/input-dir.directive';
-import { ProfileAuthService } from '../services/profile-auth.service';
 import { Profile } from '../models/profile.interface';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';

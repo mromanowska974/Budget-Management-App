@@ -41,9 +41,6 @@ export class AuthService {
       .then((data) => {
         return data
       })
-      .catch((error) => {
-        console.log(error)
-      })
   }
 
   fbAuth(){

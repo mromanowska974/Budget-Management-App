@@ -6,13 +6,11 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { collection, Firestore, getDoc, getDocs } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { DataService } from '../services/data.service';
 import { User } from '../models/user.interface';
-import { ProfileAuthService } from '../services/profile-auth.service';
 import { LocalStorageService } from '../services/local-storage.service';
 import { ContainerDirective } from '../directives/container.directive';
-import { Profile } from '../models/profile.interface';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +30,6 @@ export class LoginComponent {
   db = inject(Firestore);
   router = inject(Router);
   authService = inject(AuthService);
-  profileAuth = inject(ProfileAuthService);
   dataService = inject(DataService);
   localStorageService = inject(LocalStorageService);
 
@@ -83,8 +80,8 @@ export class LoginComponent {
       return this.dataService.getProfiles(uid).then(data => {
         let user: User = {
           uid: uid,
-          email: doc.data()!['email'],
-          accountStatus: doc.data()!['accountStatus'],
+          email: doc.email,
+          accountStatus: doc.accountStatus,
           profiles: data,
         }
     
@@ -102,8 +99,7 @@ export class LoginComponent {
 
     this.dataService.getUser(data!.user?.uid!).then(doc => {
       userDoc = doc
-
-      if(!userDoc._document){
+      if(!userDoc){
         this.dataService.addUser(data).then(() => {
           this.dataService.getUser(data!.user?.uid!).then(doc => {
             let loggedUser = doc

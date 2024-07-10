@@ -39,17 +39,17 @@ export class AddCategoryComponent implements OnInit, OnDestroy{
   sub: Subscription;
   loggedUser: User;
   activeProfile: Profile;
+  errorMsg: string = '';
 
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
-
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.localStorageService.getItem('profileId'))!
       })
   }
 
   ngOnDestroy(): void {
-      
+      this.sub.unsubscribe()
   }
 
   onGoBack(){
@@ -57,8 +57,12 @@ export class AddCategoryComponent implements OnInit, OnDestroy{
   }
 
   onSubmit(){
-    console.log(this.categoryForm.value)
-    this.dataService.addCategory(this.loggedUser.uid, this.activeProfile.id, this.categoryForm.value)
-    this.onGoBack()
+    if(this.categoryForm.value.content.length > 0 && this.categoryForm.value.color.length > 0){
+      this.dataService.addCategory(this.loggedUser.uid, this.activeProfile.id, this.categoryForm.value)
+      this.onGoBack()
+    }
+    else{
+      this.errorMsg = 'Proszę podać prawidłowe dane.'
+    }
   }
 }
