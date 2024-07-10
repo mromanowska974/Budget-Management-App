@@ -1,0 +1,11 @@
+<div class="container" appContainer>
+    <div class="menu">
+        <app-categories-menu *ngIf="menuToggled" [categories]="activeProfile.categories"></app-categories-menu>
+        <a class="hamburger" (click)="onToggleMenu()">
+            <img src="../assets/icons/menu-button.png" width="30px">
+        </a>
+    </div>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

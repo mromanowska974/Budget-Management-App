@@ -6,14 +6,6 @@
     padding: 0;
 }
 
-.menu {
-    display: flex;
-}
-
-.hamburger {
-    margin: 10px 0 0 10px;
-}
-
 .account-management {
     display: flex;
     padding: 20px 0;
@@ -110,19 +102,7 @@
     padding: 0;
 }
 
-@media (orientation: landscape){   
-    .hamburger {
-        padding: 5px;
-        height: 30px;
-    }
-
-    .menu{
-        grid-column-start: 1;
-        grid-column-end: 2;
-        grid-row-start: 1;
-        grid-row-end: 8;
-    }
-
+@media (orientation: landscape){  
     .box{
         padding: 20px 20px 0 20px;
         flex-direction: column;
@@ -183,13 +163,7 @@
 @media (orientation: portrait){
     .container {
         grid-template-rows: 1fr repeat(9, 2fr);
-        max-height: 200vh;
-    }
-
-    .menu{
-        flex-direction: column;
-        grid-row-start: 1;
-        grid-row-end: 2;
+        max-height: 170vh;
     }
 
     .account-management {

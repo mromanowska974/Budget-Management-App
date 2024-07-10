@@ -19,6 +19,10 @@ button {
     display: flex;
 }
 
+.active {
+    box-shadow: inset 2px 2px 5px #9f9dcf;
+}
+
 .block {
     width: 25px;
     height: 25px;
@@ -59,7 +63,7 @@ button {
         height: 12vh;
         display: flex;
         overflow-x: auto;
-        max-width: 95vw;
+        margin: 0 10px;
     }
     h1 {
         text-align: center;

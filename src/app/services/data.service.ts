@@ -18,7 +18,7 @@ export class DataService{
 
     getUser(id: string){
         const docRef = doc(this.db, "users", id);
-        return getDoc(docRef);
+        return getDoc(docRef).then(data => data.data());
     }
 
     updateUser(id: string, propToEdit, newValue){
@@ -26,7 +26,7 @@ export class DataService{
         return from(updateDoc(docRef, {
           [propToEdit]: newValue
         }).then(() => {
-          return this.getUser(id).then(data => data.data())
+          return this.getUser(id)
         }))
     }
 

@@ -31,8 +31,8 @@ export class AppComponent implements OnInit{
       this.dataService.getUser(uid).then(result => {
         this.dataService.getProfiles(uid).then(data => {
           this.authService.setUser({
-            email: result.data()!['email'],
-            accountStatus: result.data()!['accountStatus'],
+            email: result!['email'],
+            accountStatus: result!['accountStatus'],
             profiles: data,
             uid: uid!
           })

@@ -1,0 +1,48 @@
+<div class="container" appContainer *ngIf="isLoaded">
+    <div class="row">
+        <div class="cat-info">
+            <div 
+                class="widget"
+                appWidget
+                widgetHeight="150px"
+                widgetWidth="150px"
+                [widgetColor]="activeCategory.color"
+            ></div>
+            <div class="text">
+                <h1>{{ activeCategory.content }}</h1>
+                <h4>Łączne wydatki: 99,99 zł</h4>
+            </div>
+        </div>
+        <div class="btn-box">
+            <button appButtonDir>
+                <img src="../assets/icons/pencil-icon.png" width="30px">
+            </button>
+            <button appButtonDir>
+                <img src="../assets/icons/trash-icon.png" width="30px">
+            </button>
+        </div>
+    </div>
+    <div class="change-month">
+        <p> <- </p>
+        <p> Czerwiec 2024 </p>
+        <p> -> </p>
+    </div>
+    <div class="content">
+        <div 
+            class="widget"
+            appWidget
+            widgetHeight="60vh"
+            widgetWidth="48%"
+        >
+
+        </div>
+        <div 
+            class="widget"
+            appWidget
+            widgetHeight="60vh"
+            widgetWidth="48%"
+        >
+
+        </div>
+    </div>
+</div>

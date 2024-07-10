@@ -1,0 +1,27 @@
+.container {
+    display: flex;
+}
+
+.menu {
+    display: flex;
+}
+
+.hamburger {
+    margin: 10px 0 0 10px;
+}
+
+.content {
+    width: 100%;
+}
+
+@media (orientation: landscape) {
+    .container {
+        flex-direction: row !important;
+    }
+}
+
+@media (orientation: portrait) {
+    .menu{
+        flex-direction: column;
+    }
+}

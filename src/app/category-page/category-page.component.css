@@ -1,0 +1,56 @@
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.cat-info {
+    display: flex;
+    gap: 20px
+}
+
+.cat-info h1{
+    font-size: 40px;
+}
+
+.btn-box {
+    display: flex;
+    gap: 10px;
+}
+
+.change-month {
+    display: flex;
+    margin: 0 20px;
+    justify-content: space-evenly;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 20px;
+}
+
+@media (orientation: portrait){
+    .container {
+        height: 160vh !important;
+    }
+    .change-month {
+        align-self: center;
+        width: 40%;
+    }
+
+    .content {
+        flex-direction: column;
+        gap: 20px
+    }
+
+    .content .widget {
+        width: 100% !important;
+    }
+}
+
+@media (orientation: landscape){
+    .change-month {
+        width: 30vh;
+    }
+}

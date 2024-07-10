@@ -8,6 +8,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { EditProfilesComponent } from './edit-profiles/edit-profiles.component';
 import { SubscriptionComponent } from './subscription/subscription.component';
 import { AddCategoryComponent } from './add-category/add-category.component';
+import { CategoryPageComponent } from './category-page/category-page.component';
+import { PageContainerComponent } from './page-container/page-container.component';
 
 export const routes: Routes = [
     {
@@ -21,7 +23,15 @@ export const routes: Routes = [
     },
     {
         path: 'main-page',
-        component: MainPageComponent
+        component: PageContainerComponent,
+        children: [{
+            path: '',
+            component: MainPageComponent
+        },
+        {
+            path: ':categoryName',
+            component: CategoryPageComponent
+        }]
     },
     {
         path: 'add-profile',

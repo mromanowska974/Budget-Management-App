@@ -7,6 +7,7 @@ import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 export class WidgetDirective implements OnInit {
   @Input() widgetWidth!: string;
   @Input() widgetHeight!: string;
+  @Input() widgetColor: string = 'white';
 
   style = this.el.nativeElement.style;
   
@@ -15,7 +16,7 @@ export class WidgetDirective implements OnInit {
   ngOnInit(): void {
     this.style.width = this.widgetWidth;
     this.style.height = this.widgetHeight;
-    this.style.backgroundColor = 'white';
+    this.style.backgroundColor = this.widgetColor;
     this.style.borderRadius = '20px';
     this.style.boxShadow = '2px 2px 2px #aaaaaa'; 
   }

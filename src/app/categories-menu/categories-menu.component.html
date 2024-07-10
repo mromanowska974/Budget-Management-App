@@ -1,7 +1,12 @@
 <div class="container">
     <h1>Kategorie</h1>
     <div class="categories-list">
-        <div class="item" *ngFor="let category of categories">
+        <div 
+            class="item"
+            *ngFor="let category of categories"
+            (click)="onSelectCategory(category)"
+            [ngClass]="{'active': activeCategory && category.id===activeCategory.id}"
+        >
             <div class="block" [style]="{backgroundColor: category.color}"></div>
             <p>{{ category.content }}</p>
         </div>
