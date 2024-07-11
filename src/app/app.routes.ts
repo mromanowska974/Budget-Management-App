@@ -24,18 +24,24 @@ export const routes: Routes = [
     {
         path: 'main-page',
         component: PageContainerComponent,
-        children: [{
-            path: '',
-            component: MainPageComponent
-        },
-        {
-            path: ':categoryName',
-            component: CategoryPageComponent
-        },
-        {
-            path: 'preview/:profileId',
-            component: MainPageComponent
-        }]
+        children: [
+            {
+                path: '',
+                component: MainPageComponent
+            },
+            {
+                path: ':categoryName',
+                component: CategoryPageComponent
+            },
+            {
+                path: 'preview/:profileId',
+                component: MainPageComponent
+            },
+            {
+                path: ':categoryName/preview',
+                component: CategoryPageComponent
+            }
+        ]
     },
     {
         path: 'add-profile',

@@ -13,7 +13,7 @@
                 <h4>Łączne wydatki: 99,99 zł</h4>
             </div>
         </div>
-        <div class="btn-box">
+        <div class="btn-box" *ngIf="!previewMode">
             <button appButtonDir (click)="onEditCategory(modalRef)">
                 <img src="../assets/icons/pencil-icon.png" width="30px">
             </button>

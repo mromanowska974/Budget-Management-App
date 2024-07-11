@@ -39,14 +39,26 @@ export class CategoriesMenuComponent implements OnInit{
     if(this.activeCategory && this.activeCategory.id === category.id){
       this.activeCategory = null
       this.localStorageService.removeItem('categoryId')
-      this.router.navigate(['main-page'])
+      if(this.previewMode){
+        this.router.navigate(['main-page', 'preview', this.localStorageService.getItem('previewedProfileId')])
+      }
+      else{
+        this.router.navigate(['main-page'])
+      }
     }
     else {
       this.activeCategory = category;
       this.localStorageService.setItem('categoryId', this.activeCategory.id)
-      this.router.navigate(['main-page', category.content]).then(() => {
-        window.location.reload()
-      })
+      if (this.previewMode){
+        this.router.navigate(['main-page', category.content, 'preview']).then(() => {
+          window.location.reload()
+        })
+      }
+      else {
+        this.router.navigate(['main-page', category.content]).then(() => {
+          window.location.reload()
+        })
+      }
     }
   }
 }

@@ -45,11 +45,13 @@ export class CategoryPageComponent implements OnInit{
   action: string = '';
   actionMsg: string = '';
   errorMsg: string = '';
+  previewMode: boolean;
 
   ngOnInit(): void {
     const catId = this.localStorageService.getItem('categoryId');
     const pid = this.localStorageService.getItem('profileId');
     const uid = this.localStorageService.getItem('uid');
+    const previewedId = this.localStorageService.getItem('previewedProfileId');
 
     this.dataService.getUser(uid!).then(user => {
       this.dataService.getProfiles(uid).then(profiles => {
@@ -59,12 +61,26 @@ export class CategoryPageComponent implements OnInit{
           email: user!['email'],
           profiles: profiles 
         }
-        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === pid)!;
-        this.dataService.getCategories(uid!, pid!).then(categories => {
-          this.activeProfile.categories = categories;
-          this.activeCategory = this.activeProfile.categories!.find(category => category.id === catId)!
-          this.isLoaded = true
-        })
+
+        if(previewedId){
+          this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === previewedId)!;
+          this.dataService.getCategories(uid!, previewedId!).then(categories => {
+            this.activeProfile.categories = categories;
+            this.activeCategory = this.activeProfile.categories!.find(category => category.id === catId)!
+            this.previewMode = true;
+            this.isLoaded = true
+          })
+        }
+        else {
+          this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === pid)!;
+          this.dataService.getCategories(uid!, pid!).then(categories => {
+            this.activeProfile.categories = categories;
+            this.activeCategory = this.activeProfile.categories!.find(category => category.id === catId)!
+            this.previewMode = false
+            this.isLoaded = true
+          })
+        }
+        
       })
     })
   }
