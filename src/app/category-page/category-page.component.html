@@ -14,10 +14,10 @@
             </div>
         </div>
         <div class="btn-box">
-            <button appButtonDir>
+            <button appButtonDir (click)="onEditCategory(modalRef)">
                 <img src="../assets/icons/pencil-icon.png" width="30px">
             </button>
-            <button appButtonDir>
+            <button appButtonDir (click)="onDeleteCategory(modalRef)">
                 <img src="../assets/icons/trash-icon.png" width="30px">
             </button>
         </div>
@@ -46,3 +46,38 @@
         </div>
     </div>
 </div>
+
+<ng-template #modalRef>
+    <div class="modal-container">
+        <div class="modal-row">
+            <h1>
+                {{ actionMsg }}
+            </h1>
+            <div class="button">
+                <button (click)="onCloseModal()">
+                    <img src="../assets/icons/cancel.png">
+                </button>
+            </div>
+        </div>
+        <div class="modal-content">
+            <p *ngIf="action === 'delete'" style="color: red;">
+                {{ 
+                    activeProfile.categories!.length > 2 ? 'UWAGA!!! Czynności nie można cofnąć!'
+                    : 'Profil musi mieć co najmniej dwie kategorie.'
+                }}
+            </p>
+            <div *ngIf="action === 'edit'" class="edit-content">
+                <div class="color">
+                    <label>Kolor</label>
+                    <input type="color" [value]="activeCategory.color" #color>
+                </div>
+                <div class="input">
+                    <label>Nazwa kategorii</label>
+                    <input type="text" [value]="activeCategory.content" appInputDir #content>
+                </div>
+                <p *ngIf="errorMsg.length > 0" style="color: red;">{{ errorMsg }}</p>
+            </div>
+        </div>
+        <button appButtonDir (click)="onSubmitModal()" [disabled]="action === 'delete' && activeProfile.categories!.length <= 2">Potwierdź</button>
+    </div>
+</ng-template>

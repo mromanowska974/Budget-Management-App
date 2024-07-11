@@ -20,7 +20,7 @@ export class ModalService {
       projectableNodes: [innerContent.rootNodes],
     });
 
-    this.dataSub.next(profileIndex)
+    if(profileIndex) this.dataSub.next(profileIndex)
   }
 
   closeModal(view: ViewContainerRef){

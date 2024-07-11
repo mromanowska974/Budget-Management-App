@@ -73,7 +73,7 @@ export class DataService{
       const profileDoc = doc(this.db, `users/${uid}/profiles/${pid}`)
 
       return getDoc(profileDoc).then(data => {
-        let profile = {
+        return {
           id: data.id,
           name: data.data()!['name'],
           role: data.data()!['role'],
@@ -81,8 +81,6 @@ export class DataService{
           monthlyLimit: data.data()!['monthlyLimit'],
           notificationTime: data.data()!['notificationTime'],
         }
-
-        return profile;
       })
     }
 
@@ -136,9 +134,36 @@ export class DataService{
       })
     }
 
+    getCategory(uid, pid, catId){
+      const categoryRef = doc(this.db, `users/${uid}/profiles/${pid}/categories/${catId}`)
+
+      return getDoc(categoryRef).then(data => {
+        return {
+          id: data.id,
+          content: data.data()!['content'],
+          color: data.data()!['color'],
+        }
+      })
+    }
+
     addCategory(uid, pid, data){
       const categoriesRef = collection(this.db, `users/${uid}/profiles/${pid}/categories`)
       return addDoc(categoriesRef, data)
+    }
+
+    updateCategory(uid, pid, catId, data){
+      const categoryRef = doc(this.db, `users/${uid}/profiles/${pid}/categories/${catId}`)
+
+      return updateDoc(categoryRef, {
+        content: data.content,
+        color: data.color
+      }).then(() => this.getCategory(uid, pid, catId)).then(category => category)
+    }
+
+    deleteCategory(uid, pid, catId){
+      const categoryRef = doc(this.db, `users/${uid}/profiles/${pid}/categories/${catId}`)
+
+      return deleteDoc(categoryRef)
     }
 
     //EXPENSES

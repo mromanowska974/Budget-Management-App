@@ -45,6 +45,9 @@ export class AddCategoryComponent implements OnInit, OnDestroy{
       this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.localStorageService.getItem('profileId'))!
+        this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
+          this.activeProfile.categories = data;
+        })
       })
   }
 
@@ -57,12 +60,20 @@ export class AddCategoryComponent implements OnInit, OnDestroy{
   }
 
   onSubmit(){
-    if(this.categoryForm.value.content.length > 0 && this.categoryForm.value.color.length > 0){
-      this.dataService.addCategory(this.loggedUser.uid, this.activeProfile.id, this.categoryForm.value)
-      this.onGoBack()
+    console.log(this.activeProfile.categories);
+    
+    if(this.categoryForm.value.content.length === 0 || this.categoryForm.value.color.length === 0){
+      this.errorMsg = 'Proszę podać prawidłowe dane.'
+    }
+    else if(this.activeProfile.categories?.find(category => category.content === this.categoryForm.value.content)){
+      this.errorMsg = 'Kategoria o podanej nazwie już istnieje.'
+    }
+    else if(this.activeProfile.categories?.find(category => category.color === this.categoryForm.value.color)){
+      this.errorMsg = 'Kategoria o podanym kolorze już istnieje.'
     }
     else{
-      this.errorMsg = 'Proszę podać prawidłowe dane.'
+      this.dataService.addCategory(this.loggedUser.uid, this.activeProfile.id, this.categoryForm.value)
+      this.onGoBack()
     }
   }
 }

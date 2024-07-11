@@ -30,6 +30,15 @@ export class AuthService {
     this.setUser(user);
   }
 
+  changeCategory(user: User, profileId: string, newCategory){
+    const profIndex = user.profiles.indexOf(user.profiles.find(profile => profile.id === profileId)!);
+    const catIndex = user.profiles[profIndex].categories!.indexOf(user.profiles[profIndex].categories!.find(category => category.id === newCategory.id)!);
+
+    user.profiles[profIndex].categories![catIndex] = newCategory;
+
+    this.setUser(user);
+  }
+
   deleteProfile(user: User, profileId){
     user.profiles = user.profiles.filter(profile => profile.id !== profileId);
     this.setUser(user)
