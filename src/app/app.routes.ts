@@ -31,6 +31,10 @@ export const routes: Routes = [
         {
             path: ':categoryName',
             component: CategoryPageComponent
+        },
+        {
+            path: 'preview/:profileId',
+            component: MainPageComponent
         }]
     },
     {

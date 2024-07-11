@@ -44,6 +44,11 @@
     padding: 5px;
 }
 
+.options {
+    display: flex;
+    flex-direction: column;
+}
+
 .widget {
     display: flex;
     flex-direction: column;
@@ -102,6 +107,49 @@
     padding: 0;
 }
 
+.modal-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px;
+}
+
+.modal-row h1{
+    width: 100%;
+    text-align: center;
+    text-wrap: wrap;
+    margin: 0;
+}
+
+.button button, .button img{
+    width: 50px;
+}
+
+.modal-content {
+    display: flex;
+    gap: 30px;
+    margin: 0 15px;
+    justify-content: space-evenly;
+    overflow-x: scroll;
+    padding: 10px 0;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 170px;
+    padding-top: 10px;
+}
+
+.active {
+    box-shadow: inset 3px 3px 5px #999999;
+}
+
 @media (orientation: landscape){  
     .box{
         padding: 20px 20px 0 20px;
@@ -157,6 +205,10 @@
 
     .last-expenses-list .widget table td:nth-child(4){
         width: 40%;
+    }
+
+    .modal-row h1{
+        font-size: 40px;
     }
 }
 
@@ -229,4 +281,8 @@
         width: 25%;
         text-wrap: wrap;
     } 
+
+    .modal-row h1{
+        font-size: 30px;
+    }
 }

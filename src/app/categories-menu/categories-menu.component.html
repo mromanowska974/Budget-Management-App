@@ -11,5 +11,5 @@
             <p>{{ category.content }}</p>
         </div>
     </div>
-    <button appButtonDir (click)="onAddCategory()">Dodaj kategorię</button>
+    <button appButtonDir *ngIf="!previewMode" (click)="onAddCategory()">Dodaj kategorię</button>
 </div>

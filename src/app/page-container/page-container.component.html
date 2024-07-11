@@ -1,11 +1,15 @@
 <div class="container" appContainer>
     <div class="menu">
-        <app-categories-menu *ngIf="menuToggled" [categories]="activeProfile.categories"></app-categories-menu>
+        <app-categories-menu 
+            *ngIf="menuToggled" 
+            [categories]="activeProfile.categories"
+            [previewMode]="previewMode"
+        ></app-categories-menu>
         <a class="hamburger" (click)="onToggleMenu()">
             <img src="../assets/icons/menu-button.png" width="30px">
         </a>
     </div>
     <div class="content">
-        <router-outlet></router-outlet>
+        <router-outlet (activate)="onActivate()"></router-outlet>
     </div>
 </div>

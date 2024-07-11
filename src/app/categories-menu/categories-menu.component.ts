@@ -20,6 +20,7 @@ export class CategoriesMenuComponent implements OnInit{
   localStorageService = inject(LocalStorageService);
 
   @Input() categories;
+  @Input() previewMode;
 
   activeCategory;
 
