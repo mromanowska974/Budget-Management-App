@@ -86,6 +86,11 @@
     width: 10%;
 }
 
+.no-expenses-info {
+    width: 90%;
+    text-align: center;
+}
+
 .addBtn {
     width: 100%;
     display: flex;

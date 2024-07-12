@@ -178,7 +178,7 @@ export class DataService{
               {
                 id: expense.id,
                 price: expense.data()!['price'],
-                date: expense.data()!['date'],
+                date: new Date(expense.data()!['date']),
                 description: expense.data()!['description'],
                 isPeriodic: expense.data()!['isPeriodic'],
                 renewalTime: expense.data()!['renewalTime'],

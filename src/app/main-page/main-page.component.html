@@ -66,7 +66,7 @@
             widgetWidth="70%"
         >
             <p>Wydatki w: {{ checkedMonth + ' ' + checkedDate.getFullYear()}}</p>
-            <h1>99,99zł</h1>
+            <h1>{{ monthlySum }} zł</h1>
         </div>
 
     </div>
@@ -82,7 +82,9 @@
                 widgetHeight="330px"
                 widgetWidth="100%"
             >
-    
+                <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
+                    Brak wydatków.
+                </p>
             </div>
         </div>
     </div>
@@ -95,11 +97,14 @@
         >
             <p>Ostatnie wydatki</p>
             <div class="scroll">
+                <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
+                    Brak wydatków.
+                </p>
                 <table>
-                    <tr *ngFor="let expense of activeProfile.expenses">
+                    <tr *ngFor="let expense of monthlyExpenses">
                         <td>{{ activeProfile.categories?.find(findCategory(expense))?.content }}</td>
                         <td>{{ expense.price + ' zł' }}</td>
-                        <td>{{ expense.date }}</td>
+                        <td>{{ expense.date | date}}</td>
                         <td>{{ expense.description }}</td>
                         <td>{{ expense.renewalTime ? expense.renewalTime + ' dni' : '-' }}</td>
                     </tr>

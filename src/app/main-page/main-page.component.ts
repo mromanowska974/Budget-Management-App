@@ -48,6 +48,8 @@ export class MainPageComponent implements OnInit, OnDestroy{
   today = new Date();
   checkedDate: Date = new Date(this.today);
   checkedMonth = Month[this.checkedDate.getMonth()];
+  monthlyExpenses: Expense[] = [];
+  monthlySum: number;
   sub: Subscription;
 
   ngOnInit(): void {
@@ -57,7 +59,8 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
         this.dataService.getExpenses(this.loggedUser.uid, this.activeProfile.id).then(data => {
           this.activeProfile.expenses = data;
-          console.log(data)
+          this.filterExpensesByMonth();
+          console.log(this.monthlyExpenses)
         })
         
         this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
@@ -103,6 +106,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
   onStepBackMonth(){
     this.checkedDate.setMonth(this.checkedDate.getMonth()-1);
     this.checkedMonth = Month[this.checkedDate.getMonth()]
+    this.filterExpensesByMonth()
   }
 
   onMoveForwardMonth(){
@@ -111,6 +115,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
     if((this.checkedDate.getMonth() < this.today.getMonth()) || (this.checkedDate.getMonth() >= this.today.getMonth() && this.checkedDate.getFullYear() < this.today.getFullYear())){
       this.checkedDate.setMonth(this.checkedDate.getMonth()+1);
       this.checkedMonth = Month[this.checkedDate.getMonth()]
+      this.filterExpensesByMonth()
     }
   }
 
@@ -139,5 +144,14 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   findCategory(expense: Expense){
     return (category) => category.id === expense.category
+  }
+
+  filterExpensesByMonth(){
+    this.monthlySum = 0;
+    this.monthlyExpenses = this.activeProfile.expenses!.filter(expense => expense.date.getMonth() === this.checkedDate.getMonth())!
+    console.log(this.monthlyExpenses)
+    this.monthlyExpenses.forEach(expense => {
+      this.monthlySum += expense.price;
+    })
   }
 }
