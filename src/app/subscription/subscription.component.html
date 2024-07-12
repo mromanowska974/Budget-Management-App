@@ -15,9 +15,28 @@
         </ul>
         <p>Wszystkie profile konta ze Statusem PLUS otrzymują powyższe korzyści.</p>
         <h1>Koszt: 19,99zł/miesiąc</h1>
-        <button appButtonDir (click)="onChangeAccountStatus()">
+        <button appButtonDir (click)="onChangeAccountStatus(modalRef)">
             {{ loggedUser.accountStatus === 'free' ? 'Kup' : 'Anuluj subskrypcję'}}
         </button>
         <p class="info">Możesz zrezygnować z subskrypcji w każdej chwili. Utracisz dostęp do powyższych korzyści 30 dni po ostatniej zapłacie.</p>
     </div>
 </div>
+
+<ng-template #modalRef>
+    <div class="modal-container">
+        <div class="modal-row">
+            <h1> Rezygnacja ze Statusu PLUS.</h1>
+            <div class="button">
+                <button (click)="onCloseModal()">
+                    <img src="../assets/icons/cancel.png">
+                </button>
+            </div>
+        </div>
+        <p>
+            Rezygnując ze Statusu PLUS rezygnujesz z płynących z niego korzyści. Zatem do zakończenia opłaconej w bieżącym miesiącu subskrypcji 
+            należy zredukować ilość profili do 3 dozwolonych w wersji darmowej oraz wybrać jednego Założyciela. W przeciwnym wypadku założymy, 
+            że dalej korzystasz z dodatkowych funkcji Statusu PLUS i rezygnacja z subskrypcji zostanie anulowana.
+        </p>
+        <button (click)="onUnderstood()" appButtonDir>Rozumiem</button>
+    </div>
+</ng-template>
