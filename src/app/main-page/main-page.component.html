@@ -55,9 +55,9 @@
     </div>
     <div class="text-form">
         <div class="change-month">
-            <a> < </a>
-            <p> Czerwiec 2024 </p>
-            <a> > </a>
+            <a (click)="onStepBackMonth()" style="cursor: pointer;"> < </a>
+            <p> {{ checkedMonth + ' ' + checkedDate.getFullYear()}} </p>
+            <a (click)="onMoveForwardMonth()" style="cursor: pointer;"> > </a>
         </div>
         <div 
             class="widget"
@@ -65,7 +65,7 @@
             widgetHeight="150px"
             widgetWidth="70%"
         >
-            <p>Wydatki w: czerwiec 2024</p>
+            <p>Wydatki w: {{ checkedMonth + ' ' + checkedDate.getFullYear()}}</p>
             <h1>99,99zł</h1>
         </div>
 

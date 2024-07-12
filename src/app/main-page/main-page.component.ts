@@ -12,6 +12,7 @@ import { CategoriesMenuComponent } from '../categories-menu/categories-menu.comp
 import { DataService } from '../services/data.service';
 import { ModalService } from '../services/modal.service';
 import { Expense } from '../models/expense.interface';
+import { Month } from '../models/months.enum';
 
 
 @Component({
@@ -44,6 +45,9 @@ export class MainPageComponent implements OnInit, OnDestroy{
   activeProfile: Profile;
   previewedProfile: Profile;
   previewMode = false;
+  today = new Date();
+  checkedDate: Date = new Date(this.today);
+  checkedMonth = Month[this.checkedDate.getMonth()];
   sub: Subscription;
 
   ngOnInit(): void {
@@ -94,6 +98,20 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   onAddExpense(){
     this.router.navigate(['add-expense'])
+  }
+
+  onStepBackMonth(){
+    this.checkedDate.setMonth(this.checkedDate.getMonth()-1);
+    this.checkedMonth = Month[this.checkedDate.getMonth()]
+  }
+
+  onMoveForwardMonth(){
+    console.log(this.checkedDate.getMonth(), this.today.getMonth(), this.checkedDate.getMonth() <= this.today.getMonth())
+    console.log(this.checkedDate.getFullYear(), this.today.getFullYear(), this.checkedDate.getFullYear() <= this.today.getFullYear())
+    if((this.checkedDate.getMonth() < this.today.getMonth()) || (this.checkedDate.getMonth() >= this.today.getMonth() && this.checkedDate.getFullYear() < this.today.getFullYear())){
+      this.checkedDate.setMonth(this.checkedDate.getMonth()+1);
+      this.checkedMonth = Month[this.checkedDate.getMonth()]
+    }
   }
 
   onSettings(){
