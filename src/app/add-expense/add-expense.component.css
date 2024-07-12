@@ -1,0 +1,43 @@
+.container {
+    align-items: center;
+    justify-content: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cyclic-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cyclic-value {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cyclic-value input{
+    width: 50px !important;
+}
+
+.btn-box {
+    align-self: center;
+    display: flex;
+    justify-content: space-evenly;
+    width: 80%;
+}
+
+button {
+    width: 80px;
+}

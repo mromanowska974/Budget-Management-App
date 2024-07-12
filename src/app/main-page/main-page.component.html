@@ -72,7 +72,7 @@
     </div>
     <div class="box">
         <div class="addBtn" *ngIf="!previewMode">
-            <button appButtonDir>Dodaj wydatek</button>
+            <button appButtonDir (click)="onAddExpense()">Dodaj wydatek</button>
         </div>
         <div *ngIf="previewMode"></div>
         <div class="graph">
@@ -96,61 +96,12 @@
             <p>Ostatnie wydatki</p>
             <div class="scroll">
                 <table>
-                    <tr>
-                        <td>Jedzenie</td>
-                        <td>21,99 zł</td>
-                        <td>15.06.2024</td>
-                        <td>Kebab</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>Transport</td>
-                        <td>78,00 zł</td>
-                        <td>01.06.2024</td>
-                        <td>Bilet miesięczny nananana</td>
-                        <td>co 30 dni</td>
-                    </tr>
-                    <tr>
-                        <td>Jedzenie</td>
-                        <td>21,99 zł</td>
-                        <td>15.06.2024</td>
-                        <td>Kebab</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>Transport</td>
-                        <td>78,00 zł</td>
-                        <td>01.06.2024</td>
-                        <td>Bilet miesięczny</td>
-                        <td>co 30 dni</td>
-                    </tr>
-                    <tr>
-                        <td>Jedzenie</td>
-                        <td>21,99 zł</td>
-                        <td>15.06.2024</td>
-                        <td>Kebab</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>Transport</td>
-                        <td>78,00 zł</td>
-                        <td>01.06.2024</td>
-                        <td>Bilet miesięczny</td>
-                        <td>co 30 dni</td>
-                    </tr>
-                    <tr>
-                        <td>Jedzenie</td>
-                        <td>21,99 zł</td>
-                        <td>15.06.2024</td>
-                        <td>Kebab</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>Transport</td>
-                        <td>78,00 zł</td>
-                        <td>01.06.2024</td>
-                        <td>Bilet miesięczny</td>
-                        <td>co 30 dni</td>
+                    <tr *ngFor="let expense of activeProfile.expenses">
+                        <td>{{ activeProfile.categories?.find(findCategory(expense))?.content }}</td>
+                        <td>{{ expense.price + ' zł' }}</td>
+                        <td>{{ expense.date }}</td>
+                        <td>{{ expense.description }}</td>
+                        <td>{{ expense.renewalTime ? expense.renewalTime + ' dni' : '-' }}</td>
                     </tr>
                 </table>
             </div>

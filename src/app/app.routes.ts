@@ -10,6 +10,7 @@ import { SubscriptionComponent } from './subscription/subscription.component';
 import { AddCategoryComponent } from './add-category/add-category.component';
 import { CategoryPageComponent } from './category-page/category-page.component';
 import { PageContainerComponent } from './page-container/page-container.component';
+import { AddExpenseComponent } from './add-expense/add-expense.component';
 
 export const routes: Routes = [
     {
@@ -70,5 +71,9 @@ export const routes: Routes = [
     {
         path: 'add-category',
         component: AddCategoryComponent
+    },
+    {
+        path: 'add-expense',
+        component: AddExpenseComponent
     }
 ];

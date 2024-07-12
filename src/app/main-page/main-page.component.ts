@@ -11,6 +11,7 @@ import { LocalStorageService } from '../services/local-storage.service';
 import { CategoriesMenuComponent } from '../categories-menu/categories-menu.component';
 import { DataService } from '../services/data.service';
 import { ModalService } from '../services/modal.service';
+import { Expense } from '../models/expense.interface';
 
 
 @Component({
@@ -39,7 +40,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   profileId = this.localStorageService.getItem('profileId');
 
-  loggedUser: User | null = null;
+  loggedUser: User;
   activeProfile: Profile;
   previewedProfile: Profile;
   previewMode = false;
@@ -49,13 +50,17 @@ export class MainPageComponent implements OnInit, OnDestroy{
       this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!
+
+        this.dataService.getExpenses(this.loggedUser.uid, this.activeProfile.id).then(data => {
+          this.activeProfile.expenses = data;
+          console.log(data)
+        })
         
         this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
           this.activeProfile.categories = data;
         }).then(() => {
           this.route.paramMap.subscribe(params => {
             if(params.has('profileId')){
-              console.log(params.get('profileId'))
               this.dataService.getProfile(this.loggedUser?.uid, params.get('profileId')).then(profile => {
                 if(profile.id === this.activeProfile.id){
                   this.previewMode = false;
@@ -66,7 +71,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
                   this.previewMode = true;
                   this.previewedProfile = profile
                 }
-                console.log(this.previewedProfile, this.previewMode)
               })
             }
           })
@@ -86,6 +90,10 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   onAddProfile(){
     this.router.navigate(["add-profile"]);
+  }
+
+  onAddExpense(){
+    this.router.navigate(['add-expense'])
   }
 
   onSettings(){
@@ -109,5 +117,9 @@ export class MainPageComponent implements OnInit, OnDestroy{
       })
     }
     console.log(this.previewedProfile)
+  }
+
+  findCategory(expense: Expense){
+    return (category) => category.id === expense.category
   }
 }

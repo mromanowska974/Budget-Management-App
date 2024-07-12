@@ -3,6 +3,7 @@ import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc,
 import { from } from "rxjs";
 import { Profile } from "../models/profile.interface";
 import { AuthService } from "./auth.service";
+import { Expense } from "../models/expense.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -91,7 +92,6 @@ export class DataService{
           name: data ? data.name : 'Założyciel',
           role: data ? 'user' : 'admin',
           PIN: data ? data.PIN : null,
-          //expenses: [], -> tu też będzie kolekcja
           monthlyLimit: 99.99,
           notificationTime: 3
       }).then(data => data.id)
@@ -168,7 +168,30 @@ export class DataService{
 
     //EXPENSES
 
-    addExpense(uid, pid, data){
+    getExpenses(uid, pid){
+      const expensesDoc = collection(this.db, `users/${uid}/profiles/${pid}/expenses`)
+      let expenses: Expense[] = []; 
 
+      return getDocs(expensesDoc).then((data): Expense[] => {
+        data.docs.forEach(expense => {
+          expenses.push(
+              {
+                id: expense.id,
+                price: expense.data()!['price'],
+                date: expense.data()!['date'],
+                description: expense.data()!['description'],
+                isPeriodic: expense.data()!['isPeriodic'],
+                renewalTime: expense.data()!['renewalTime'],
+                category: expense.data()!['category'],
+              }
+            ) 
+        })
+        return expenses;
+      })
+    }
+
+    addExpense(uid, pid, data){
+      const expensesRef = collection(this.db, `users/${uid}/profiles/${pid}/expenses`)
+      return addDoc(expensesRef, data)
     }
 }
