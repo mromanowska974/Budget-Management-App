@@ -21,13 +21,50 @@
 .change-month {
     display: flex;
     margin: 0 20px;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content .widget .scroll{
+    overflow-y: scroll;
+    height: 45vh;
+    padding-bottom: 10px;
+    margin: 0 5px;
+}
+
+.content .widget table{
+    width: 100%;
+}
+
+.content .widget h3 {
+    margin-left: 5px;
+}
+
+.content .widget table td:first-child{
+    width: 35%;
+}
+
+.content .widget table td:nth-child(2){
+    width: 25%;
+}
+
+.content .widget table td:nth-child(3){
+    width: 15%;
+}
+
+.content .widget table td:nth-child(5){
+    width: 25%;
 }
 
 .content {
     display: flex;
     justify-content: space-between;
     margin: 0 20px;
+}
+
+.no-expenses-info {
+    width: 100%;
+    text-align: center;
 }
 
 .modal-container {

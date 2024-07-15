@@ -155,6 +155,20 @@
     box-shadow: inset 3px 3px 5px #999999;
 }
 
+.chart-display {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    height: 30px;
+}
+
+.chart-display p{
+    padding: 0;
+    margin: 0;
+    width: fit-content;
+    cursor: pointer;
+}
+
 @media (orientation: landscape){  
     .box{
         padding: 20px 20px 0 20px;

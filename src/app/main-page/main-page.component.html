@@ -85,6 +85,16 @@
                 <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
                     Brak wydatków.
                 </p>
+                <canvas 
+                    id="chart" 
+                    [ngStyle]="{ 
+                        visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' 
+                    }"
+                ></canvas>
+                <div class="chart-display">
+                    <p (click)="onCategoryChart()"> <- </p>
+                    <p (click)="onDaysInMonthChart()"> -> </p>
+                </div>
             </div>
         </div>
     </div>

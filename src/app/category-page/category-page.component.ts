@@ -3,14 +3,15 @@ import { ContainerDirective } from '../directives/container.directive';
 import { WidgetDirective } from '../directives/widget.directive';
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { LocalStorageService } from '../services/local-storage.service';
-import { User } from '../models/user.interface';
-import { Profile } from '../models/profile.interface';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../services/data.service';
 import { ModalService } from '../services/modal.service';
 import { InputDirDirective } from '../directives/input-dir.directive';
 import { Router } from '@angular/router';
+import { Month } from '../models/months.enum';
+import { Expense } from '../models/expense.interface';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-category-page',
@@ -26,7 +27,7 @@ import { Router } from '@angular/router';
   templateUrl: './category-page.component.html',
   styleUrl: './category-page.component.css'
 })
-export class CategoryPageComponent implements OnInit{
+export class CategoryPageComponent implements OnInit {
   @ViewChild('modalRef', {read: ViewContainerRef}) modalRef: ViewContainerRef;
   @ViewChild('color') newColor;
   @ViewChild('content') newContent;
@@ -37,51 +38,49 @@ export class CategoryPageComponent implements OnInit{
   modalService = inject(ModalService);
   router = inject(Router);
 
-  loggedUser: User;
-  activeProfile: Profile;
   activeCategory: {id, content: string, color: string};
+  categories;
+  daysInMonthChart: any;
 
   isLoaded = false;
   action: string = '';
   actionMsg: string = '';
   errorMsg: string = '';
+  today = new Date();
+  checkedDate: Date = new Date(this.today);
+  checkedMonth = Month[this.checkedDate.getMonth()];
+  categoryExpenses: Expense[] = [];
+  monthlyExpenses: Expense[] = [];
+  monthlySum: number;
   previewMode: boolean;
 
+  catId = this.localStorageService.getItem('categoryId');
+  pid = this.localStorageService.getItem('profileId');
+  uid = this.localStorageService.getItem('uid');
+  previewedId = this.localStorageService.getItem('previewedProfileId');
+
   ngOnInit(): void {
-    const catId = this.localStorageService.getItem('categoryId');
-    const pid = this.localStorageService.getItem('profileId');
-    const uid = this.localStorageService.getItem('uid');
-    const previewedId = this.localStorageService.getItem('previewedProfileId');
-
-    this.dataService.getUser(uid!).then(user => {
-      this.dataService.getProfiles(uid).then(profiles => {
-        this.loggedUser = {
-          uid: uid!,
-          accountStatus: user!['accountStatus'],
-          email: user!['email'],
-          profiles: profiles 
-        }
-
-        if(previewedId){
-          this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === previewedId)!;
-          this.dataService.getCategories(uid!, previewedId!).then(categories => {
-            this.activeProfile.categories = categories;
-            this.activeCategory = this.activeProfile.categories!.find(category => category.id === catId)!
-            this.previewMode = true;
-            this.isLoaded = true
-          })
-        }
-        else {
-          this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === pid)!;
-          this.dataService.getCategories(uid!, pid!).then(categories => {
-            this.activeProfile.categories = categories;
-            this.activeCategory = this.activeProfile.categories!.find(category => category.id === catId)!
-            this.previewMode = false
-            this.isLoaded = true
-          })
-        }
-        
+    if(this.previewedId){
+      this.dataService.getCategories(this.uid!, this.previewedId!).then(categories => {
+        this.categories = categories
+        this.activeCategory = categories!.find(category => category.id === this.catId)!
+        this.previewMode = true;
+        this.isLoaded = true
       })
+    }
+    else {
+      this.dataService.getCategories(this.uid!, this.pid!).then(categories => {
+        this.categories = categories
+        this.activeCategory = categories!.find(category => category.id === this.catId)!
+        this.previewMode = false
+        this.isLoaded = true
+      })
+    }
+
+    this.dataService.getExpenses(this.uid, this.pid).then(data => {
+      this.categoryExpenses = data.filter(expense => this.activeCategory.id === expense.category);
+      this.filterExpensesByMonth();
+      this.createDaysInMonthChart();
     })
   }
 
@@ -97,6 +96,73 @@ export class CategoryPageComponent implements OnInit{
     this.modalService.openModal(this.modalRef, template)
   }
 
+  onStepBackMonth(){
+    this.checkedDate.setMonth(this.checkedDate.getMonth()-1);
+    this.checkedMonth = Month[this.checkedDate.getMonth()]
+    this.filterExpensesByMonth()
+    this.createDaysInMonthChart()
+  }
+
+  onMoveForwardMonth(){
+    if((this.checkedDate.getMonth() < this.today.getMonth()) || (this.checkedDate.getMonth() >= this.today.getMonth() && this.checkedDate.getFullYear() < this.today.getFullYear())){
+      this.checkedDate.setMonth(this.checkedDate.getMonth()+1);
+      this.checkedMonth = Month[this.checkedDate.getMonth()]
+      this.filterExpensesByMonth()
+      this.createDaysInMonthChart()
+    }
+  }
+
+  createDaysInMonthChart(){
+    if(this.daysInMonthChart !== undefined){
+      this.daysInMonthChart.destroy();
+    }
+
+    const daysInMonth = this.getDaysInMonth(this.checkedDate.getMonth(), this.checkedDate.getFullYear())
+
+    let days: number[] = [];
+    let daysExpensesSums: number[] = [];
+
+    daysInMonth.forEach(day => {
+      let sum = 0;
+      days.push(day.getDate());
+
+      this.monthlyExpenses.forEach(expense => {
+        expense.date.setHours(0,0,0,0);
+        day.setHours(0,0,0,0);
+        
+        if(expense.date.getTime() === day.getTime()){
+          sum+=expense.price;
+        }
+      })
+
+      daysExpensesSums.push(sum);
+    });
+
+
+    this.daysInMonthChart = new Chart('daysInMonthChart', {
+      type: 'bar',
+      data: {
+        labels: days,
+        datasets: [
+          {
+            label: 'Wydatki wg dni miesiąca',
+            data: daysExpensesSums,
+            backgroundColor: this.activeCategory.color,
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+        maintainAspectRatio: false
+      },
+    });
+  }
+
   onCloseModal(){
     this.modalService.closeModal(this.modalRef)
   }
@@ -107,19 +173,19 @@ export class CategoryPageComponent implements OnInit{
         this.errorMsg = 'Proszę zmienić co najmniej jedno pole.'
       }
       else {
-        this.dataService.updateCategory(this.loggedUser.uid, this.activeProfile.id, this.activeCategory.id, {
+        this.dataService.updateCategory(this.uid, this.pid, this.activeCategory.id, {
           content: this.newContent.nativeElement.value,
           color: this.newColor.nativeElement.value
         }).then(data => {
-          this.authService.changeCategory(this.loggedUser, this.activeProfile.id, data)
+          this.authService.changeCategory(this.authService.user.getValue()!, this.pid!, data)
           this.onCloseModal()
           window.location.reload()
         })
       }
     }
     else {
-      if(this.activeProfile.categories!.length > 2){
-        this.dataService.deleteCategory(this.loggedUser.uid, this.activeProfile.id, this.activeCategory.id).then(() => {
+      if(this.categories!.length > 2){
+        this.dataService.deleteCategory(this.uid!, this.pid!, this.activeCategory.id).then(() => {
           this.router.navigate(['main-page']);
         })
       }
@@ -128,4 +194,14 @@ export class CategoryPageComponent implements OnInit{
       }
     }
   }
+
+  filterExpensesByMonth(){
+    this.monthlySum = 0;
+    this.monthlyExpenses = this.categoryExpenses!.filter(expense => expense.date.getMonth() === this.checkedDate.getMonth() && expense.date.getFullYear() === this.checkedDate.getFullYear())!
+    this.monthlyExpenses.forEach(expense => {
+      this.monthlySum += expense.price;
+    })
+  }
+
+  getDaysInMonth = (month, year) => (new Array(31)).fill('').map((v,i)=>new Date(year,month,i+1)).filter(v=>v.getMonth()===month)
 }
