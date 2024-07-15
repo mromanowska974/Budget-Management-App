@@ -30,7 +30,7 @@ import Chart from 'chart.js/auto';
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.css'
 })
-export class MainPageComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit{
+export class MainPageComponent implements OnInit, OnDestroy{
   @ViewChild('modalRef', {read: ViewContainerRef}) modalRef: ViewContainerRef;
 
   authService = inject(AuthService);
@@ -61,49 +61,52 @@ export class MainPageComponent implements OnInit, OnDestroy, AfterContentInit, A
         this.loggedUser = user!
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!
 
-        this.dataService.getExpenses(this.loggedUser.uid, this.activeProfile.id).then(data => {
-          this.activeProfile.expenses = data;
-          this.filterExpensesByMonth();
-          this.createChart();
+        this.route.paramMap.subscribe(params => {
+          if(params.has('profileId')){
+            this.dataService.getProfile(this.loggedUser?.uid, params.get('profileId')).then(profile => {
+              if(profile.id === this.activeProfile.id){
+                this.previewMode = false;
+              }
+              else {
+                this.previewMode = true;
+                this.previewedProfile = profile
+              }
+            }).then(() => {
+              if(this.previewMode) this.getData(this.previewedProfile)
+              else this.getData(this.activeProfile)
+            })
+          }
+          else this.getData(this.activeProfile)
         })
-        
-        this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
-          this.activeProfile.categories = data;
-        }).then(() => {
-          this.route.paramMap.subscribe(params => {
-            if(params.has('profileId')){
-              this.dataService.getProfile(this.loggedUser?.uid, params.get('profileId')).then(profile => {
-                if(profile.id === this.activeProfile.id){
-                  this.previewMode = false;
-                  this.localStorageService.removeItem('previewedProfileId')
-                  this.router.navigate(['main-page']) 
-                }
-                else {
-                  this.previewMode = true;
-                  this.previewedProfile = profile
-                }
-              })
-            }
-          })
-        })
+
       })
-  }
-
-  ngAfterContentInit(): void {
-    this.createChart();
-  }
-
-  ngAfterViewInit(): void {
-    this.createChart();
   }
 
   ngOnDestroy(): void {
       this.sub.unsubscribe();
   }
 
+  getData(profile: Profile){
+    return this.dataService.getExpenses(this.loggedUser.uid, profile.id).then(expenses => {
+      profile.expenses = expenses;
+      this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile);
+    }).then(() => {
+      this.dataService.getCategories(this.loggedUser.uid, profile.id).then(categories => {
+        profile.categories = categories;
+      }).then(() => {
+        this.createChart();
+      })
+    })   
+  }
+
   createChart(){
     if(this.chart !== undefined){
       this.chart.destroy();
+    }
+    else {
+      if(this.chart === null){
+        console.log('nene')
+      }
     }
 
     let names: string[] = [];
@@ -112,8 +115,10 @@ export class MainPageComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     let daysInMonth = this.getDaysInMonth(this.checkedDate.getMonth(), this.checkedDate.getFullYear())
 
+    let profile = this.previewMode ? this.previewedProfile : this.activeProfile;
+
     if(this.activeChart === 'category'){
-      this.activeProfile.categories?.forEach(category => {
+      profile.categories?.forEach(category => {
         let sum = 0;
         names.push(category.content);
         colors.push(category.color);
@@ -151,7 +156,7 @@ export class MainPageComponent implements OnInit, OnDestroy, AfterContentInit, A
         labels: names,
         datasets: [
           {
-            label: 'Wydatki',
+            label: this.activeChart === 'category' ? 'Wydatki wg kategorii' : 'Wydatki w '+this.checkedMonth,
             data: expensesSums,
             backgroundColor: this.activeChart === 'category' ? colors : '#c6c4ff',
             borderWidth: 1,
@@ -186,7 +191,7 @@ export class MainPageComponent implements OnInit, OnDestroy, AfterContentInit, A
   onStepBackMonth(){
     this.checkedDate.setMonth(this.checkedDate.getMonth()-1);
     this.checkedMonth = Month[this.checkedDate.getMonth()]
-    this.filterExpensesByMonth()
+    this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile)
     this.createChart()
   }
 
@@ -194,7 +199,7 @@ export class MainPageComponent implements OnInit, OnDestroy, AfterContentInit, A
     if((this.checkedDate.getMonth() < this.today.getMonth()) || (this.checkedDate.getMonth() >= this.today.getMonth() && this.checkedDate.getFullYear() < this.today.getFullYear())){
       this.checkedDate.setMonth(this.checkedDate.getMonth()+1);
       this.checkedMonth = Month[this.checkedDate.getMonth()]
-      this.filterExpensesByMonth()
+      this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile)
       this.createChart()
     }
   }
@@ -224,8 +229,19 @@ export class MainPageComponent implements OnInit, OnDestroy, AfterContentInit, A
   onSelectProfile(profile: Profile){
     if((this.previewMode === false && profile.id !== this.activeProfile.id) || (this.previewMode === true && profile.id !== this.previewedProfile.id)){
       this.previewedProfile = profile;
+
+      if(this.chart !== undefined){
+        this.chart.destroy()
+      }
+
       this.localStorageService.setItem('previewedProfileId', this.previewedProfile.id)
       this.router.navigate(['main-page','preview', this.previewedProfile.id]).then(() => {
+        window.location.reload();
+      })
+    }
+    else if(this.previewMode === false && profile.id === this.activeProfile.id){
+      this.localStorageService.removeItem('previewedProfileId')
+      this.router.navigate(['main-page']).then(() => {
         window.location.reload();
       })
     }
@@ -235,9 +251,9 @@ export class MainPageComponent implements OnInit, OnDestroy, AfterContentInit, A
     return (category) => category.id === expense.category
   }
 
-  filterExpensesByMonth(){
+  filterExpensesByMonth(profile: Profile){
     this.monthlySum = 0;
-    this.monthlyExpenses = this.activeProfile.expenses!.filter(expense => expense.date.getMonth() === this.checkedDate.getMonth() && expense.date.getFullYear() === this.checkedDate.getFullYear())!
+    this.monthlyExpenses = profile.expenses!.filter(expense => expense.date.getMonth() === this.checkedDate.getMonth() && expense.date.getFullYear() === this.checkedDate.getFullYear())!
     this.monthlyExpenses.forEach(expense => {
       this.monthlySum += expense.price;
     })

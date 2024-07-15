@@ -60,24 +60,15 @@ export class CategoryPageComponent implements OnInit {
   previewedId = this.localStorageService.getItem('previewedProfileId');
 
   ngOnInit(): void {
-    if(this.previewedId){
-      this.dataService.getCategories(this.uid!, this.previewedId!).then(categories => {
-        this.categories = categories
-        this.activeCategory = categories!.find(category => category.id === this.catId)!
-        this.previewMode = true;
-        this.isLoaded = true
-      })
-    }
-    else {
-      this.dataService.getCategories(this.uid!, this.pid!).then(categories => {
-        this.categories = categories
-        this.activeCategory = categories!.find(category => category.id === this.catId)!
-        this.previewMode = false
-        this.isLoaded = true
-      })
-    }
+    let profileId = this.previewedId ? this.previewedId : this.pid
+    this.dataService.getCategories(this.uid!, profileId!).then(categories => {
+      this.categories = categories
+      this.activeCategory = categories!.find(category => category.id === this.catId)!
+      this.previewMode = this.previewedId ? true : false;
+      this.isLoaded = true
+    })
 
-    this.dataService.getExpenses(this.uid, this.pid).then(data => {
+    this.dataService.getExpenses(this.uid, profileId).then(data => {
       this.categoryExpenses = data.filter(expense => this.activeCategory.id === expense.category);
       this.filterExpensesByMonth();
       this.createDaysInMonthChart();

@@ -71,10 +71,9 @@
 
     </div>
     <div class="box">
-        <div class="addBtn" *ngIf="!previewMode">
+        <div class="addBtn" [ngStyle]="{visibility: previewMode ? 'hidden' : 'visible'}">
             <button appButtonDir (click)="onAddExpense()">Dodaj wydatek</button>
         </div>
-        <div *ngIf="previewMode"></div>
         <div class="graph">
             <div 
                 class="widget"
@@ -112,7 +111,10 @@
                 </p>
                 <table>
                     <tr *ngFor="let expense of monthlyExpenses">
-                        <td>{{ activeProfile.categories?.find(findCategory(expense))?.content }}</td>
+                        <td>{{ 
+                            previewMode ? previewedProfile.categories?.find(findCategory(expense))?.content 
+                            : activeProfile.categories?.find(findCategory(expense))?.content 
+                        }}</td>
                         <td>{{ expense.price + ' zł' }}</td>
                         <td>{{ expense.date | date}}</td>
                         <td>{{ expense.description }}</td>

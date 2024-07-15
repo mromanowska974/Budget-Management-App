@@ -44,8 +44,7 @@
         </div>
     </ng-template>
     <div class="row">
-        <button *ngIf="activeProfile?.role === 'admin'" appButtonDir (click)="onSubscription()">Status PLUS</button>
-        <div class="gap" *ngIf="activeProfile.role === 'user'"></div>
+        <button [ngStyle]="{visibility: activeProfile.role === 'admin' ? 'visible' : 'hidden'}" appButtonDir (click)="onSubscription()">Status PLUS</button>
         <div class="account-name">
             <div 
                 class="widget"
