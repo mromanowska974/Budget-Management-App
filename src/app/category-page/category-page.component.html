@@ -78,8 +78,9 @@
         <div class="modal-content">
             <p *ngIf="action === 'delete'" style="color: red;">
                 {{ 
-                    categories!.length > 2 ? 'UWAGA!!! Czynności nie można cofnąć!'
-                    : 'Profil musi mieć co najmniej dwie kategorie.'
+                    categories!.length > 2 && categoryExpenses.length === 0 ? 'UWAGA!!! Czynności nie można cofnąć!'
+                    : (categoryExpenses.length > 0 ? 'Nie można usunąć kategorii, do której są przypisane wydatki.' 
+                    : 'Profil musi mieć co najmniej dwie kategorie.')
                 }}
             </p>
             <div *ngIf="action === 'edit'" class="edit-content">
@@ -94,6 +95,6 @@
                 <p *ngIf="errorMsg.length > 0" style="color: red;">{{ errorMsg }}</p>
             </div>
         </div>
-        <button appButtonDir (click)="onSubmitModal()" [disabled]="action === 'delete' && categories!.length <= 2">Potwierdź</button>
+        <button appButtonDir (click)="onSubmitModal()" [disabled]="action === 'delete' && (categories!.length <= 2 || categoryExpenses.length > 0)">Potwierdź</button>
     </div>
 </ng-template>
