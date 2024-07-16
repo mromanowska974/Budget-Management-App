@@ -11,6 +11,7 @@ import { AddCategoryComponent } from './add-category/add-category.component';
 import { CategoryPageComponent } from './category-page/category-page.component';
 import { PageContainerComponent } from './page-container/page-container.component';
 import { AddExpenseComponent } from './add-expense/add-expense.component';
+import { loggedAuthGuard, unloggedAuthGuard } from './services/auth-guard.service';
 
 export const routes: Routes = [
     {
@@ -20,11 +21,13 @@ export const routes: Routes = [
     },
     {
         path: 'login',
+        canActivate: [unloggedAuthGuard],
         component: LoginComponent
     },
     {
         path: 'main-page',
         component: PageContainerComponent,
+        canActivate: [loggedAuthGuard],
         children: [
             {
                 path: '',
@@ -46,34 +49,42 @@ export const routes: Routes = [
     },
     {
         path: 'add-profile',
+        canActivate: [loggedAuthGuard],
         component: AddProfileComponent
     },
     {
         path: 'profiles-panel',
+        canActivate: [loggedAuthGuard],
         component: ProfilesComponent
     },
     {
         path: 'profile-auth',
+        canActivate: [loggedAuthGuard],
         component: ProfileAuthComponent
     },
     {
         path: 'settings',
+        canActivate: [loggedAuthGuard],
         component: SettingsComponent
     },
     {
         path: 'edit-profiles',
+        canActivate: [loggedAuthGuard],
         component: EditProfilesComponent
     },
     {
         path: 'subscription',
+        canActivate: [loggedAuthGuard],
         component: SubscriptionComponent
     },
     {
         path: 'add-category',
+        canActivate: [loggedAuthGuard],
         component: AddCategoryComponent
     },
     {
         path: 'add-expense',
+        canActivate: [loggedAuthGuard],
         component: AddExpenseComponent
     }
 ];
