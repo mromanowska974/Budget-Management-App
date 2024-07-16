@@ -190,8 +190,38 @@ export class DataService{
       })
     }
 
+    getExpense(uid, pid, expId){
+      const expenseRef = doc(this.db, `users/${uid}/profiles/${pid}/expenses/${expId}`)
+
+      return getDoc(expenseRef).then(data => {
+        return {
+          id: data.id,
+          price: data.data()!['price'],
+          description: data.data()!['description'],
+          date: data.data()!['date'],
+          isPeriodic: data.data()!['isPeriodic'],
+          renewalTime: data.data()!['renewalTime'],
+          category: data.data()!['category']
+        }
+      })
+    }
+
     addExpense(uid, pid, data){
       const expensesRef = collection(this.db, `users/${uid}/profiles/${pid}/expenses`)
       return addDoc(expensesRef, data)
     }
+
+    updateExpense(uid, pid, expId, data){
+      const expenseRef = doc(this.db, `users/${uid}/profiles/${pid}/expenses/${expId}`)
+
+      return updateDoc(expenseRef, {
+        price: +data.price,
+        description: data.description,
+        date: new Date(data.date).toISOString().substring(0, 10),
+        isPeriodic: data.isPeriodic,
+        renewalTime: data.renewalTime,
+        category: data.category
+      }).then(() => this.getExpense(uid, pid, expId)).then(expense => expense)
+    }
+
 }

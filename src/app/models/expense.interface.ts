@@ -4,6 +4,6 @@ export interface Expense {
     category: string;
     date: Date;
     isPeriodic: boolean;
-    renewalTime?: number;
+    renewalTime?: number | null;
     description: string;
 }

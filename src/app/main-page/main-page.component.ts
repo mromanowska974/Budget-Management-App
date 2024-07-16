@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { WidgetDirective } from '../directives/widget.directive';
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -14,6 +14,7 @@ import { ModalService } from '../services/modal.service';
 import { Expense } from '../models/expense.interface';
 import { Month } from '../models/months.enum';
 import Chart from 'chart.js/auto';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
@@ -25,7 +26,8 @@ import Chart from 'chart.js/auto';
     CategoriesMenuComponent,
 
     RouterModule,
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.css'
@@ -49,12 +51,23 @@ export class MainPageComponent implements OnInit, OnDestroy{
   activeProfile: Profile;
   previewedProfile: Profile;
   previewMode = false;
+  propToEdit: string = '';
+  editedIndex;
+  editedId;
   today = new Date();
   checkedDate: Date = new Date(this.today);
   checkedMonth = Month[this.checkedDate.getMonth()];
   monthlyExpenses: Expense[] = [];
   monthlySum: number;
   sub: Subscription;
+
+  @HostListener('document:mousedown', ['$event'])
+  onGlobalClick(event): void {
+    if(event.target.localName !== 'input' && event.target.localName !== 'select'){
+      this.propToEdit = ''
+      this.editedIndex = null;
+    }
+  }
 
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
@@ -186,6 +199,33 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   onAddExpense(){
     this.router.navigate(['add-expense'])
+  }
+
+  onEnterEdit(propToEdit: string, index: number){
+    this.propToEdit = propToEdit;
+    this.editedIndex = index;
+    console.log(propToEdit)
+  }
+
+  onCloseEdit(){
+    this.dataService.updateExpense(this.loggedUser.uid, this.activeProfile.id, this.editedId, this.activeProfile.expenses![this.editedIndex]).then(data => {
+      this.authService.changeExpense(this.loggedUser, this.activeProfile.id, data)
+    })
+    this.propToEdit = ''
+    this.editedIndex = null;
+  }
+
+  onChangeProp(evt, propToEdit?){
+    const editedExpense = this.activeProfile.expenses![this.editedIndex];
+    if(propToEdit === 'isPeriodic'){ //only for isPeriodic
+      editedExpense.isPeriodic = evt.target.checked;
+      editedExpense.renewalTime = null;
+    }
+    else editedExpense[this.propToEdit] = evt.target.value;
+    this.editedId = editedExpense.id;
+    console.log(this.editedId)
+    
+    this.activeProfile.expenses![this.editedIndex] = editedExpense;
   }
 
   onStepBackMonth(){

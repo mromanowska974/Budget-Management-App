@@ -39,6 +39,15 @@ export class AuthService {
     this.setUser(user);
   }
 
+  changeExpense(user: User, profileId: string, newExpense){
+    const profIndex = user.profiles.indexOf(user.profiles.find(profile => profile.id === profileId)!);
+    const expIndex = user.profiles[profIndex].expenses!.indexOf(user.profiles[profIndex].expenses!.find(expense => expense.id === newExpense.id)!);
+
+    user.profiles[profIndex].expenses![expIndex] = newExpense;
+
+    this.setUser(user);
+  }
+
   deleteProfile(user: User, profileId){
     user.profiles = user.profiles.filter(profile => profile.id !== profileId);
     this.setUser(user)
