@@ -11,6 +11,16 @@
     padding: 20px 0;
 }
 
+.unread-messages {
+    display: inline-block;
+    background-color: red;
+    color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    text-align: center;
+}
+
 .box {
     display: flex;
 }

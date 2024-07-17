@@ -4,6 +4,7 @@ import { from } from "rxjs";
 import { Profile } from "../models/profile.interface";
 import { AuthService } from "./auth.service";
 import { Expense } from "../models/expense.interface";
+import { Message } from "../models/message.interface";
 
 @Injectable({
     providedIn: 'root'
@@ -224,4 +225,37 @@ export class DataService{
       }).then(() => this.getExpense(uid, pid, expId)).then(expense => expense)
     }
 
+    //MESSAGES
+
+    getMessages(uid, pid){
+      const messagesDoc = collection(this.db, `users/${uid}/profiles/${pid}/messages`)
+      let messages: Message[] = []; 
+
+      return getDocs(messagesDoc).then((data): Message[] => {
+        data.docs.forEach(message => {
+          messages.push(
+              {
+                id: message.id,
+                title: message.data()!['title'],
+                content: message.data()!['content'],
+                isRead: message.data()!['isRead'],
+              }
+            ) 
+        })
+        return messages;
+      })
+    }
+
+    addMessage(uid, pid, data, mesId){
+      const messageRef = doc(this.db, `users/${uid}/profiles/${pid}/messages/${mesId}`)
+      return setDoc(messageRef, data)
+    }
+
+    readMessage(uid, pid, mesId){
+      const messageRef = doc(this.db, `users/${uid}/profiles/${pid}/messages/${mesId}`)
+
+      return updateDoc(messageRef, {
+        isRead: true
+      })
+    }
 }

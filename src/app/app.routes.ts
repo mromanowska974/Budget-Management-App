@@ -12,6 +12,7 @@ import { CategoryPageComponent } from './category-page/category-page.component';
 import { PageContainerComponent } from './page-container/page-container.component';
 import { AddExpenseComponent } from './add-expense/add-expense.component';
 import { loggedAuthGuard, unloggedAuthGuard } from './services/auth-guard.service';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 export const routes: Routes = [
     {
@@ -86,5 +87,10 @@ export const routes: Routes = [
         path: 'add-expense',
         canActivate: [loggedAuthGuard],
         component: AddExpenseComponent
+    },
+    {
+        path: 'notifications',
+        canActivate: [loggedAuthGuard],
+        component: NotificationsComponent
     }
 ];

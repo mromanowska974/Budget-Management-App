@@ -1,0 +1,18 @@
+<div class="container" appContainer>
+    <div class="row">
+        <h1>Powiadomienia</h1>
+        <button appButtonDir (click)="onGoBack()">Wróć</button>
+    </div>
+
+    <div class="notifications-list">
+        <div 
+            class="notification" appWidget 
+            *ngFor="let message of activeProfile.messages"
+            [ngStyle]="{border: !message.isRead ? '2px solid red' : 'none'}"
+            (click)="onReadMessage(message)"
+        >
+            <h2>{{ message.title }}</h2>
+            <p>{{ message.content }}</p>
+        </div>
+    </div>
+</div>

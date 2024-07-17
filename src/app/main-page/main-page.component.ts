@@ -53,6 +53,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
   activeProfile: Profile;
   previewedProfile: Profile;
   previewMode = false;
+  unreadMessages: number;
   propToEdit: string = '';
   editedIndex;
   editedId;
@@ -72,10 +73,8 @@ export class MainPageComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    //this.messagingService.sendMessage(this.localStorageService.getItem('messageToken'), 'Zalogowano pomyślnie', 'Udało ci się zalogować. A mi wysłać tą wiadomość. Jupiiiii.');
-    this.messagingService.currentMessage.subscribe(message => {
-      console.log(message)
-    })  
+    //this.messagingService.sendMessage('Zalogowano pomyślnie', 'Udało ci się zalogować. A mi wysłać tą wiadomość. Jupiiiii.');
+
     this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!
@@ -95,9 +94,19 @@ export class MainPageComponent implements OnInit, OnDestroy{
               else this.getData(this.activeProfile)
             })
           }
-          else this.getData(this.activeProfile)
+          else this.getData(this.activeProfile).then(() => {
+            this.messagingService.currentMessage.subscribe(message => {
+              console.log(message)
+              if(!this.activeProfile.messages?.find(item => item.id === message.messageId)){
+                this.dataService.addMessage(this.loggedUser.uid, this.activeProfile.id, {
+                  title: message.notification.title,
+                  content: message.notification.body,
+                  isRead: false
+                }, message.messageId)
+              }
+            })
+          })
         })
-
       })
   }
 
@@ -115,7 +124,13 @@ export class MainPageComponent implements OnInit, OnDestroy{
       }).then(() => {
         this.createChart();
       })
-    })   
+    }).then(() => {
+      this.dataService.getMessages(this.loggedUser.uid, profile.id).then(messages => {
+        profile.messages;
+
+        this.unreadMessages = messages.filter(message => !message.isRead).length;
+      })
+    }) 
   }
 
   createChart(){
@@ -252,6 +267,10 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   onSettings(){
     this.router.navigate(["settings"]);
+  }
+
+  onNotifications(){
+    this.router.navigate(['notifications']);
   }
 
   onCategoryChart(){

@@ -39,7 +39,12 @@
                     Dodaj profil
                 </a>
                 <a style="cursor: pointer;" (click)="onSettings()">Ustawienia</a>
-                <a style="cursor: pointer;">Powiadomienia</a>
+                <a style="cursor: pointer;" (click)="onNotifications()">
+                    Powiadomienia 
+                    <span class="unread-messages" *ngIf="unreadMessages > 0">
+                        {{ unreadMessages }}
+                    </span>
+                </a>
                 <a style="cursor: pointer;" (click)="onLogout()">Wyloguj się</a>
                 <p
                     style="color: red;"

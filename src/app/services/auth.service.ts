@@ -18,6 +18,8 @@ export class AuthService {
     this.user.next(loggedUser)
   }
 
+  //MODIFYING CURRENT USER DATA
+
   changeUser(propToChange, newValue, user: User){
     user[propToChange] = newValue;
     this.setUser(user);
@@ -52,6 +54,8 @@ export class AuthService {
     user.profiles = user.profiles.filter(profile => profile.id !== profileId);
     this.setUser(user)
   }
+
+  //LOGIN OR REGISTER
 
   private alternateAuthLogin(provider: any) {
     return this.afAuth
