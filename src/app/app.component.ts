@@ -6,6 +6,7 @@ import { User } from './models/user.interface';
 import { Firestore } from '@angular/fire/firestore';
 import { DataService } from './services/data.service';
 import { LocalStorageService } from './services/local-storage.service';
+import { MessagingService } from './services/messaging.service';
 
 @Component({
   selector: 'app-root',
@@ -20,12 +21,13 @@ export class AppComponent implements OnInit{
   authService = inject(AuthService);
   db = inject(Firestore);
   dataService = inject(DataService);
-  localStorageService = inject(LocalStorageService)
+  localStorageService = inject(LocalStorageService);
+  messagingService = inject(MessagingService);
 
   loggedUser: User | null = null;
 
   ngOnInit(): void {
-    let uid: string |null = this.retrieveFromLocalStorage('uid');
+    let uid: string |null = this.localStorageService.getItem('uid');
 
     if(uid !== null){
       this.dataService.getUser(uid).then(result => {
@@ -40,10 +42,9 @@ export class AppComponent implements OnInit{
 
       })
     }
-  }
 
-  retrieveFromLocalStorage(key) {
-    const value = this.localStorageService.getItem(key);
-    return value;
+    //MESSAGING
+    this.messagingService.getDeviceToken();
+    this.messagingService.onMessage();
   }
 }

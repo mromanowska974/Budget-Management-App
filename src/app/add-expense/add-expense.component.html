@@ -69,6 +69,7 @@
                 </option>
             </select>
         </div>
+        <p *ngIf="errorMsg.length > 0" style="color: red;">{{ errorMsg }}</p>
         <div class="btn-box">
             <button appButtonDir type="submit" [disabled]="!expenseForm.valid">Zapisz</button>
             <button appButtonDir type="button" (click)="onCancel()">Anuluj</button>

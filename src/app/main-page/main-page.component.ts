@@ -1,4 +1,4 @@
-import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { WidgetDirective } from '../directives/widget.directive';
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -15,6 +15,7 @@ import { Expense } from '../models/expense.interface';
 import { Month } from '../models/months.enum';
 import Chart from 'chart.js/auto';
 import { FormsModule } from '@angular/forms';
+import { MessagingService } from '../services/messaging.service';
 
 
 @Component({
@@ -41,6 +42,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
   localStorageService = inject(LocalStorageService);
   modalService = inject(ModalService);
   route = inject(ActivatedRoute)
+  messagingService = inject(MessagingService);
 
   chart: any;
   activeChart = 'category'
@@ -70,7 +72,11 @@ export class MainPageComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-      this.sub = this.authService.user.subscribe(user => {
+    //this.messagingService.sendMessage(this.localStorageService.getItem('messageToken'), 'Zalogowano pomyślnie', 'Udało ci się zalogować. A mi wysłać tą wiadomość. Jupiiiii.');
+    this.messagingService.currentMessage.subscribe(message => {
+      console.log(message)
+    })  
+    this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!
 

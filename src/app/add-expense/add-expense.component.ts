@@ -12,6 +12,7 @@ import { LocalStorageService } from '../services/local-storage.service';
 import { DataService } from '../services/data.service';
 import { CommonModule } from '@angular/common';
 import { Expense } from '../models/expense.interface';
+import { MessagingService } from '../services/messaging.service';
 
 @Component({
   selector: 'app-add-expense',
@@ -34,15 +35,17 @@ export class AddExpenseComponent implements OnInit, OnDestroy{
   authService = inject(AuthService);
   dataService = inject(DataService);
   localStorageService = inject(LocalStorageService);
+  messagingService = inject(MessagingService);
 
   loggedUser: User;
   activeProfile: Profile;
   categories: {id, content: string, color: string}[];
+  errorMsg = '';
 
   sub: Subscription
 
   ngOnInit(): void {
-      this.authService.user.subscribe(user => {
+      this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!;
 
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.localStorageService.getItem('profileId'))!;
@@ -53,7 +56,7 @@ export class AddExpenseComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-      
+      this.sub.unsubscribe();
   }
 
   onSubmit(){
@@ -66,10 +69,27 @@ export class AddExpenseComponent implements OnInit, OnDestroy{
       category: this.expenseForm.value.category,
     }
 
-    this.dataService.addExpense(this.loggedUser.uid, this.activeProfile.id, newExpense).then(() => {
-      this.onCancel()
+    const today = new Date();
+    let monthlyExpenses = this.activeProfile.expenses?.filter(expense => expense.date.getMonth() === today.getMonth() && expense.date.getFullYear() === today.getFullYear())
+    let monthlySum = 0;
+
+    monthlyExpenses?.forEach(expense => {
+      monthlySum += expense.price
     })
-    console.log(newExpense)
+
+    if(monthlySum < this.activeProfile.monthlyLimit){
+      this.dataService.addExpense(this.loggedUser.uid, this.activeProfile.id, newExpense).then(() => {
+        this.onCancel()
+      })
+      console.log(newExpense)
+    }
+    else {
+      this.errorMsg = 'Przekroczono limit wydatków.'
+    }
+
+    if(monthlySum+newExpense.price >= this.activeProfile.monthlyLimit){
+      this.messagingService.sendMessage('Przekroczono limit miesięczny', 'Limit wydatków na ten miesiąc został osiągnięty. Zmień limit miesięczny, jeśli chcesz dodać kolejny wydatek w bieżącym miesiącu.');
+    }
   }
 
   onCancel(){
