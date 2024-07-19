@@ -4,10 +4,7 @@ importScripts(
 importScripts(
     'https://www.gstatic.com/firebasejs/9.8.0/firebase-messaging-compat.js',
 );
-// import { initializeApp } from "firebase/app";
-// import { getMessaging } from "firebase/messaging/sw";
-// import { onBackgroundMessage } from "firebase/messaging/sw";
-  
+
 const app = firebase.initializeApp({
     apiKey: "AIzaSyCU8X2jfKfUBOWt44hanOzdeb8kqr1moXw",
     authDomain: "budgetmanagementapp-b6eed.firebaseapp.com",
@@ -20,3 +17,15 @@ const app = firebase.initializeApp({
 });
   
 const messaging = firebase.messaging(app);
+
+messaging.onBackgroundMessage(messaging, (payload) => {
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+
+    const notificationTitle = 'Background Message Title';
+    const notificationOptions = {
+      body: 'Background Message body.'
+    };
+  
+    self.registration.showNotification(notificationTitle,
+      notificationOptions);
+});

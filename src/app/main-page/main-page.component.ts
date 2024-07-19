@@ -76,8 +76,9 @@ export class MainPageComponent implements OnInit, OnDestroy{
     //this.messagingService.sendMessage('Zalogowano pomyślnie', 'Udało ci się zalogować. A mi wysłać tą wiadomość. Jupiiiii.');
 
     this.sub = this.authService.user.subscribe(user => {
-        this.loggedUser = user!
-        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!
+        this.loggedUser = user!;
+        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!;
+        this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'lastDeviceToken', this.localStorageService.getItem('messageToken'));
 
         this.route.paramMap.subscribe(params => {
           if(params.has('profileId')){
