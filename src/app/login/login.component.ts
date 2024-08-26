@@ -136,7 +136,6 @@ export class LoginComponent {
                 if(data.profiles.length === 1) this.router.navigate(['main-page']);
                 else this.router.navigate(['profiles-panel']);
               });
-
             })
           },
           error: (error) => {

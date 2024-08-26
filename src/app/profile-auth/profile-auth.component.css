@@ -1,17 +1,29 @@
 .container {
     padding: 20px;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+    gap: calc(5px + 3vh);
 }
 
 h1 {
     font-size: 50px;
-}
-
-.widget, p, input, button {
-    margin-top: -50px;
+    text-align: center;
+    margin: 0;
 }
 
 input {
     width: 100px !important; 
+}
+
+.widget {
+    width: calc(100px + 10vh) !important;
+    height: calc(100px + 10vh) !important;
+}
+
+.widget img {
+    width: calc(100px + 10vh);
+}
+
+p {
+    margin: 0;
 }

@@ -5,6 +5,7 @@
 
 h1 {
     font-size: 50px;
+    text-align: center;
 }
 
 .profiles-box {
@@ -12,6 +13,7 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    row-gap: 10px;
 }
 
 .profile {
@@ -27,10 +29,14 @@ h1 {
 @media (orientation: portrait) {
     .profiles-box {
         width: 70vw;
+        height: fit-content;
     }
     .profile {
         width: 25vh;
         height: 25vh;
+    }
+    .container {
+        height: fit-content !important;
     }
 }
 
