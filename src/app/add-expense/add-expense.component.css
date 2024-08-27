@@ -12,7 +12,16 @@ form {
 .input {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: calc(1px + 0.3vh);
+}
+
+label {
+    font-size: calc(10px + 0.8vh);
+}
+
+input, select {
+    height: calc(15px + 1vh) !important;
+    font-size: calc(8px + 1vh);
 }
 
 .cyclic-input {

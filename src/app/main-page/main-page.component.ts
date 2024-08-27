@@ -31,7 +31,10 @@ import { MessagingService } from '../services/messaging.service';
     FormsModule
   ],
   templateUrl: './main-page.component.html',
-  styleUrl: './main-page.component.css'
+  styleUrls: [
+    './main-page.component.css',
+    './main-page.modal.component.css'
+  ]
 })
 export class MainPageComponent implements OnInit, OnDestroy{
   @ViewChild('modalRef', {read: ViewContainerRef}) modalRef: ViewContainerRef;

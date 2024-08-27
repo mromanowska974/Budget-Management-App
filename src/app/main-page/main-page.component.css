@@ -11,9 +11,13 @@
     padding: 20px 0;
 }
 
+.account-management .widget {
+    width: calc(100px + 2vh + 2vw);
+    height: calc(100px + 2vh + 2vw);
+}
+
 .unread-messages {
     display: inline-block;
-    background-color: red;
     color: white;
     width: 15px;
     height: 15px;
@@ -31,7 +35,7 @@
 }
 
 .account-info {
-    padding: 0 20px;
+    padding: 0 calc(5px + 1vw);
     display: flex;
     flex-direction: column;
 }
@@ -64,14 +68,16 @@
     flex-direction: column;
 }
 
-.widget p {
-    padding: 1% 0 0 20px;
-    font-size: 20px;
+.text-form .widget h3 {
+    margin: 0;
+    padding: calc(5px + 1vh) 0 0 calc(5px + 1vh);
+    font-size: calc(0.8em + 2vh);
 }
 
-.widget h1 {
+.text-form .widget h1 {
     align-self: flex-end;
-    padding: 0 20px;
+    padding: 0 calc(5px + 1vh) 0 0;
+    font-size: calc(1.5em + 2vh);
 }
 
 .last-expenses-list .widget .scroll{
@@ -154,35 +160,8 @@
     padding: 0;
 }
 
-.modal-container {
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-row {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px;
-}
-
-.modal-row h1{
-    width: 100%;
-    text-align: center;
-    text-wrap: wrap;
-    margin: 0;
-}
-
 .button button, .button img{
     width: 50px;
-}
-
-.modal-content {
-    display: flex;
-    gap: 30px;
-    margin: 0 15px;
-    justify-content: space-evenly;
-    overflow-x: scroll;
-    padding: 10px 0;
 }
 
 .item {
@@ -201,14 +180,15 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-    height: 30px;
+    height: 3em;
 }
 
-.chart-display p{
+.chart-display p, .change-month a{
     padding: 0;
     margin: 0;
     width: fit-content;
     cursor: pointer;
+    font-size: 2em;
 }
 
 @media (orientation: landscape){  
@@ -263,23 +243,52 @@
     .last-expenses-list .widget table td{
         padding: 5px 0;
     }
-
-    .modal-row h1{
-        font-size: 40px;
-    }
 }
 
 @media (orientation: portrait){
     .container {
-        grid-template-rows: 1fr repeat(9, 2fr);
-        max-height: 170vh;
+        display: flex;
+        flex-direction: column;
+        height: calc(500px + 120vh);
+        gap: calc(10px + 1vh);
     }
 
     .account-management {
-        margin: 0 10%;
+        margin: 0 5%;
         grid-row-start: 2;
         grid-row-end: 3;
         height: 20vh;
+    }
+
+    .account-management .widget {
+        width: calc(50px + 5vh + 15vw);
+        height: calc(50px + 5vh + 15vw);
+    }
+
+    .account-name h1{
+        font-size: calc(1.2em + 3vw);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        max-width: 35vw;
+    }
+
+    .account-name a {
+        align-self: center;
+    }
+
+    .account-name a img {
+        width: calc(15px + 3vw);
+    }
+
+    .options a, .change-month p {
+        font-size: calc(0.5em + 1.5vw);
+    }
+
+    .addBtn button {
+        font-size: calc(0.5em + 1.5vw);
+        padding: calc(5px + 1vh) 0;
+        height: 3em !important;
     }
 
     .box {
@@ -288,14 +297,16 @@
         flex-direction: column;
         grid-row-start: 3;
         grid-row-end: 6;
-        margin: 30px 5%;
+        margin: 0 5%;
+        width: 90%;
         height: 60vh;
         justify-content: space-between;
     }
 
-    .box .widget {
-        width: 100% !important;
-        height: 50vh !important;
+    .box .graph .widget {
+        width: 100%;
+        height: 50vh;
+        margin: calc(5px + 1vh) 0;
     }
 
     .text-form {
@@ -307,7 +318,7 @@
     }
 
     .text-form .widget {
-        width: 95% !important;
+        width: 95%;
     }
 
     .text-form .change-month {
@@ -320,13 +331,17 @@
         align-self: center;
         grid-row-start: 8;
         grid-row-end: 10;
-        height: 40vh;
         margin: 10px 5%;
+    }
+
+    .last-expenses-list .widget {
+        height: calc(300px + 15vh);
     }
 
     .last-expenses-list .widget table{
         margin-left: 15px;
         width: 90%;
+        height: 80%;
     }
 
     .last-expenses-list .widget table td{
@@ -336,9 +351,5 @@
 
     .last-expenses-list .widget table td:nth-child(4){
         width: 25%;
-    }
-
-    .modal-row h1{
-        font-size: 30px;
     }
 }

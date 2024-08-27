@@ -2,9 +2,7 @@
     <div class="account-management">
         <div 
             class="widget" 
-            appWidget 
-            [widgetHeight]="'150px'"
-            [widgetWidth]="'150px'"
+            appWidget
         >
             <img [src]="
                 !previewMode 
@@ -67,13 +65,10 @@
         <div 
             class="widget"
             appWidget
-            widgetHeight="150px"
-            widgetWidth="70%"
         >
-            <p>Wydatki w: {{ checkedMonth + ' ' + checkedDate.getFullYear()}}</p>
+            <h3>Wydatki w: {{ checkedMonth + ' ' + checkedDate.getFullYear()}}</h3>
             <h1>{{ monthlySum }} zł</h1>
         </div>
-
     </div>
     <div class="box">
         <div class="addBtn" [ngStyle]="{visibility: previewMode ? 'hidden' : 'visible'}">
@@ -83,8 +78,6 @@
             <div 
                 class="widget"
                 appWidget
-                widgetHeight="330px"
-                widgetWidth="100%"
             >
                 <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
                     Brak wydatków.
@@ -95,10 +88,13 @@
                         visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' 
                     }"
                 ></canvas>
-                <div class="chart-display">
-                    <p (click)="onCategoryChart()"> <- </p>
-                    <p (click)="onDaysInMonthChart()"> -> </p>
-                </div>
+            </div>
+            <div 
+                class="chart-display"
+                [ngStyle]="{display: monthlyExpenses.length === 0 ? 'none' : 'flex'}"
+            >
+                <p (click)="onCategoryChart()"> <- </p>
+                <p (click)="onDaysInMonthChart()"> -> </p>
             </div>
         </div>
     </div>
@@ -106,8 +102,6 @@
         <div 
             class="widget"
             appWidget
-            [widgetHeight]="'35vh'"
-            [widgetWidth]="'100%'"
         >
             <p>Ostatnie wydatki</p>
             <div class="scroll">
@@ -201,6 +195,7 @@
                 </table>
             </div>
         </div>
+    </div>
 </div>
 
 <ng-template #modalRef>

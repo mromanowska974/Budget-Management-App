@@ -1,0 +1,38 @@
+.modal-content {
+    display: flex;
+    gap: 30px;
+    margin: 0 15px;
+    justify-content: space-evenly;
+    overflow-x: scroll;
+    padding: 10px 0;
+}
+
+.modal-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px;
+}
+
+.modal-row h1{
+    width: 100%;
+    text-align: center;
+    text-wrap: wrap;
+    margin: 0;
+}
+
+@media (orientation: landscape) {
+    .modal-row h1{
+        font-size: 40px;
+    }
+}
+
+@media (orientation: portrait) {
+    .modal-row h1{
+        font-size: 30px;
+    }
+}
