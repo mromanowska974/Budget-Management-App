@@ -1,15 +1,24 @@
 .container {
     padding: 20px;
+    justify-content: center;
 }
 
 button:first-child {
     align-self: flex-end;
     width: 70px;
+    position: absolute;
+    top: 20px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: calc(1vh + 1vw);
 }
 
 h1 {
     align-self: center;
-    font-size: 60px;
+    font-size: calc(3em + 1vw);
     text-align: center;
 }
 
@@ -21,10 +30,9 @@ p {
 .input-box {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 40vh;
-    padding: 50px;
+    height: 50vh;
     align-items: center;
+    gap: calc(10px + 1vh);
 }
 
 .input {
@@ -34,6 +42,5 @@ p {
 
 .input-box button {
     align-self: center;
-    margin: 40px;
     width: 80px;
 }
