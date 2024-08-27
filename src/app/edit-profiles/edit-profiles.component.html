@@ -57,12 +57,9 @@
             <div 
                 class="widget"
                 appWidget
-                widgetHeight="150px"
-                widgetWidth="150px" 
             >
                 <img 
                     [src]="profile.role === 'admin' ? '../assets/icons/admin-icon.png' : '../assets/icons/user-icon.png'"
-                    width="150px"
                 >
             </div>
             <div class="btn-box">
@@ -70,16 +67,16 @@
                     appButtonDir (click)="onModifyPrivileges(modalView, profile.name, profile.id)"
                     *ngIf="loggedUser.accountStatus !== 'free'"
                 >
-                    <img src="../assets/icons/pencil-icon.png" width="20px">
+                    <img src="../assets/icons/pencil-icon.png">
                 </button>
                 <button appButtonDir (click)="onResetPinCode(modalView, profile.id)">
-                    <img src="../assets/icons/reset-icon.png" width="20px">
+                    <img src="../assets/icons/reset-icon.png">
                 </button>
                 <button 
                     appButtonDir (click)="onDeleteProfile(modalView, profile.name, profile.id)"
                     *ngIf="profile.role !== 'admin'"
                 >
-                    <img src="../assets/icons/trash-icon.png" width="20px">
+                    <img src="../assets/icons/trash-icon.png">
                 </button>
             </div>
         </div>
