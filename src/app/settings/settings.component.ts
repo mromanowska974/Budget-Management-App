@@ -26,7 +26,10 @@ import { ContainerDirective } from '../directives/container.directive';
     CommonModule
   ],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.css'
+  styleUrls: [
+    './settings.component.css',
+    './settings.modal.component.css'
+  ]
 })
 export class SettingsComponent implements OnInit, OnDestroy{
   @ViewChild('modalView', { read: ViewContainerRef }) modalView: ViewContainerRef

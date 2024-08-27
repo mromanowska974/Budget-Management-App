@@ -29,12 +29,14 @@
                     >
                 </div>
             </div>
-            <p *ngIf="errorMsg.length > 0" style="color: red;">{{ errorMsg }}</p>
-            <p *ngIf="action === 'setMonthlyLimit' || action === 'setNotificationTime'">
-                Obecny {{action === 'setMonthlyLimit' ? 
-                'limit: '+activeProfile.monthlyLimit+' zł' : 
-                (action === 'setNotificationTime' && 'czas: '+activeProfile.notificationTime+' dni')}}
-            </p>
+            <div class="info-box">
+                <p *ngIf="errorMsg.length > 0" style="color: red;">{{ errorMsg }}</p>
+                <p *ngIf="action === 'setMonthlyLimit' || action === 'setNotificationTime'">
+                    Obecny {{action === 'setMonthlyLimit' ? 
+                    'limit: '+activeProfile.monthlyLimit+' zł' : 
+                    (action === 'setNotificationTime' && 'czas: '+activeProfile.notificationTime+' dni')}}
+                </p>
+            </div>
             <button 
                 appButtonDir
                 (click)="activeProfile.PIN !== null && action === 'changePinCode' ? onSubmitModal([data.value, oldPIN.nativeElement.value]) : onSubmitModal(data.value)"
