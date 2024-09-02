@@ -1,6 +1,6 @@
 .modal-content {
     display: flex;
-    gap: 30px;
+    gap: 20px;
     margin: 0 15px;
     justify-content: space-evenly;
     overflow-x: scroll;
@@ -25,14 +25,24 @@
     margin: 0;
 }
 
-@media (orientation: landscape) {
-    .modal-row h1{
-        font-size: 40px;
-    }
+.modal-row button, .modal-row button img{
+    width: calc(2vh + 2vw) !important; 
+    height: calc(2vh + 2vw) !important; 
 }
 
-@media (orientation: portrait) {
-    .modal-row h1{
-        font-size: 30px;
-    }
+.modal-row button {
+    border: none;
+    background-color: transparent;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 170px;
+    padding-top: 10px;
+}
+
+.item .widget img {
+    width: calc(60px + 5vw + 5vh);
 }
