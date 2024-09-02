@@ -29,6 +29,12 @@
     justify-content: space-evenly;
 }
 
+.input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 @media (orientation: portrait){
     .widget, img {
         width: 200px !important;

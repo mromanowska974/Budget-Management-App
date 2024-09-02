@@ -1,55 +1,4 @@
 <div class="container" appContainer *ngIf="isLoaded">
-    <ng-template #modalView>
-        <div class="modal-container">
-            <div class="row">
-                <h1>{{ actionMsg }}</h1>
-                <button (click)="onCloseModal()">
-                    <img src="../assets/icons/cancel.png">
-                </button>
-            </div>
-            <div class="content" [ngSwitch]="action">
-                <div *ngSwitchCase="'modifyPrivileges'">
-                    <span>
-                        <input
-                            type="radio"
-                            [value]="'admin'"
-                            name="privileges"
-                            [checked]="selectedProfile.role === 'admin' ? true : false"
-                            [(ngModel)]="data"> Założyciel
-                    </span>
-                    <span>
-                        <input
-                            type="radio"
-                            [value]="'user'"
-                            name="privileges"
-                            [checked]="selectedProfile.role === 'user'"
-                            [(ngModel)]="data"> Współdzielący
-                    </span>
-                    <p *ngIf="errorMsg.length > 0" style="color: red;">{{errorMsg}}</p>
-                </div>
-                <div *ngSwitchCase="'resetPinCode'">
-                    <label>Nowy kod PIN</label>
-                    <input
-                        appInputDir
-                        name="newPinCode"
-                        type="number"
-                        style="-webkit-text-security:disc"
-                        [(ngModel)]="data">
-                </div>
-                <div *ngSwitchCase="'deleteProfile'">
-                    <p style="
-                        color: red; 
-                        text-align: center; 
-                        width: 100%;"
-                    >UWAGA!!! Czynności nie można cofnąć.</p>
-                </div>
-            </div>
-            <div class="btn-box-modal">
-                <button appButtonDir (click)="onSubmitModal()">Potwierdź</button>
-                <button *ngIf="action !== 'resetPinCode'" appButtonDir (click)="onCloseModal()">Anuluj</button>
-            </div>
-        </div>
-    </ng-template>
     <button class="backBtn" appButtonDir (click)="onGoBack()">Wróć</button>
     <div class="items-box">
         <div class="item"  *ngFor="let profile of loggedUser.profiles">
@@ -82,3 +31,55 @@
         </div>
     </div>
 </div>
+
+<ng-template #modalView>
+    <div class="modal-container">
+        <div class="row">
+            <h1>{{ actionMsg }}</h1>
+            <button (click)="onCloseModal()">
+                <img src="../assets/icons/cancel.png">
+            </button>
+        </div>
+        <div class="content" [ngSwitch]="action">
+            <div *ngSwitchCase="'modifyPrivileges'">
+                <span>
+                    <input
+                        type="radio"
+                        [value]="'admin'"
+                        name="privileges"
+                        [checked]="selectedProfile.role === 'admin' ? true : false"
+                        [(ngModel)]="data"> Założyciel
+                </span>
+                <span>
+                    <input
+                        type="radio"
+                        [value]="'user'"
+                        name="privileges"
+                        [checked]="selectedProfile.role === 'user'"
+                        [(ngModel)]="data"> Współdzielący
+                </span>
+                <p *ngIf="errorMsg.length > 0" style="color: red;">{{errorMsg}}</p>
+            </div>
+            <div class="text-input" *ngSwitchCase="'resetPinCode'">
+                <label>Nowy kod PIN</label>
+                <input
+                    appInputDir
+                    name="newPinCode"
+                    type="number"
+                    style="-webkit-text-security:disc"
+                    [(ngModel)]="data">
+            </div>
+            <div class="warning" *ngSwitchCase="'deleteProfile'">
+                <p style="
+                    color: red; 
+                    text-align: center; 
+                    width: 100%;"
+                >UWAGA!!! Czynności nie można cofnąć.</p>
+            </div>
+        </div>
+        <div class="btn-box-modal">
+            <button appButtonDir (click)="onSubmitModal()">Potwierdź</button>
+            <button *ngIf="action !== 'resetPinCode'" appButtonDir (click)="onCloseModal()">Anuluj</button>
+        </div>
+    </div>
+</ng-template>

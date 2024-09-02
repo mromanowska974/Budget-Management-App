@@ -56,51 +56,76 @@
 .modal-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
     align-items: center;
-    margin: 30px 15px;
+    margin: calc(1vh + 1vw);
+    font-family: 'Inter';
+    height: calc(100% - 2*(1vh + 1vw));
 }
 
 .row {
     display: flex;
     width: 100%;
     justify-content: center;
+    height: fit-content;
 }
 
 .row button, .row img{
-    width: 50px;
-    height: 50px;
+    width: calc(2vh + 2vw) !important; 
+    height: calc(2vh + 2vw) !important; 
 }
 
 .row button {
     border: none;
-    background-color: #eceaea;
+    background-color: transparent;
+    position: absolute;
+    top: calc(0.4vh + 0.4vw);
+    right: calc(0.7vh + 0.7vw);
 }
 
 .row h1{
     text-wrap: wrap;
     text-align: center;
-    width: 70%;
-    font-size: 40px;
-    margin: 10px 10% 0 10%;
-}
-
-.btn-box-modal {
-    display: flex;
-    justify-content: space-evenly;
-    width: 50%;
+    width: 90%;
+    font-size: calc(1.3em + 1vh + 1vw);
+    margin: 0;
+    padding-top: 10px;
 }
 
 .content {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 15vh;
+    flex-grow: 1;
+    width: 70%;
 }
 
 .content div{
     display: flex;
     flex-direction: column;
+}
+
+.warning {
+    align-self: end;
+    font-size: calc(10px + 0.5vw);
+}
+
+.text-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.text-input input {
+    width: 100% !important;
+}
+
+.btn-box-modal {
+    display: flex;
+    justify-content: space-evenly;
+    width: 50%;
+    height: fit-content;
+
 }
 
 span {
@@ -126,11 +151,6 @@ span {
     .widget img {
         width: calc(70px + 15vh - 5vw);
         height: calc(70px + 15vh - 5vw);
-    }
-
-    .row h1{
-        font-size: 30px;
-        width: 90%;
     }
 
     .btn-box-modal {
