@@ -8,6 +8,12 @@
 
 .hamburger {
     margin: 10px 0 0 10px;
+    height: fit-content;
+    width: fit-content;
+}
+
+img {
+    width: calc(1vw + 30px + 1vh);
 }
 
 .content {
