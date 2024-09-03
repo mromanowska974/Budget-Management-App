@@ -1,5 +1,6 @@
 <div class="container" appContainer>
     <form class="form" #categoryForm="ngForm" (ngSubmit)="onSubmit()">
+        <p style="color: red;" *ngIf="errorMsg.length > 0">{{ errorMsg }}</p>
         <div class="inputs">
             <div class="color-select">
                 <div class="color-select-input">
@@ -10,6 +11,7 @@
                         name="color"
                         ngModel
                         required
+                        (change)="onInputChange()"
                     >
                 </div>
                 <div 
@@ -32,10 +34,10 @@
                     type="text"
                     ngModel
                     required
+                    (change)="onInputChange()"
                 >
             </div>
         </div>
-        <p style="color: red;" *ngIf="errorMsg.length > 0">{{ errorMsg }}</p>
         <div class="btn-box">
             <button appButtonDir type="submit">Zapisz</button>
             <button appButtonDir (click)="onGoBack()" type="button">Anuluj</button>

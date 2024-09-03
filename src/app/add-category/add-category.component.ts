@@ -55,13 +55,15 @@ export class AddCategoryComponent implements OnInit, OnDestroy{
       this.sub.unsubscribe()
   }
 
+  onInputChange(){
+    this.errorMsg = '';
+  }
+
   onGoBack(){
     this.router.navigate(['main-page'])
   }
 
   onSubmit(){
-    console.log(this.activeProfile.categories);
-    
     if(this.categoryForm.value.content.length === 0 || this.categoryForm.value.color.length === 0){
       this.errorMsg = 'Proszę podać prawidłowe dane.'
     }

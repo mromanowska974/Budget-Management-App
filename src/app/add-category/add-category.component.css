@@ -11,9 +11,10 @@
 .form {
     display: flex;
     flex-direction: column;
-    height: 70vh;
-    justify-content: space-evenly;
+    height: 50vh;
     align-items: center;
+    justify-content: center;
+    gap: 50px;
 }
 
 .inputs {
@@ -54,4 +55,9 @@
 
 button {
     width: 80px;
+}
+
+p {
+    position: relative;
+    top: 0;
 }
