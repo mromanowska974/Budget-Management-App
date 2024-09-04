@@ -17,10 +17,12 @@ button {
 
 .item {
     display: flex;
+    height: fit-content;
+    padding: 5px;
 }
 
 .active {
-    box-shadow: inset 2px 2px 5px #9f9dcf;
+    background-color: #9f9dcf;
 }
 
 .block {

@@ -1,13 +1,17 @@
 .container {
     display: flex;
+    height: fit-content !important;
+    overflow: hidden;
 }
 
 .menu {
     display: flex;
+    position: relative;
+    z-index: 1;
 }
 
 .hamburger {
-    margin: 10px 0 0 10px;
+    margin: 20px 0 0 20px;
     height: fit-content;
     width: fit-content;
 }
@@ -18,11 +22,14 @@ img {
 
 .content {
     width: 100%;
+    position: relative;
+    z-index: 2;
 }
 
 @media (orientation: landscape) {
     .container {
         flex-direction: row !important;
+        min-height: 100vh;
     }
 }
 

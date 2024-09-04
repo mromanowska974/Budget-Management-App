@@ -25,7 +25,10 @@ import { Chart } from 'chart.js';
     CommonModule
   ],
   templateUrl: './category-page.component.html',
-  styleUrl: './category-page.component.css'
+  styleUrls: [
+    './category-page.component.css',
+    './category-page.modal.component.css'
+  ]
 })
 export class CategoryPageComponent implements OnInit {
   @ViewChild('modalRef', {read: ViewContainerRef}) modalRef: ViewContainerRef;

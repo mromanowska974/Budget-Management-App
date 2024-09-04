@@ -4,8 +4,6 @@
             <div 
                 class="widget"
                 appWidget
-                widgetHeight="150px"
-                widgetWidth="150px"
                 [widgetColor]="activeCategory.color"
             ></div>
             <div class="text">
@@ -31,15 +29,19 @@
         <div 
             class="widget"
             appWidget
-            widgetHeight="60vh"
-            widgetWidth="48%"
         >
             <h3>Ostatnie wydatki</h3>
             <div class="scroll">
                 <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
                     Brak wydatków.
                 </p>
-                <table>
+                <table *ngIf="monthlyExpenses.length > 0">
+                    <tr>
+                        <th>Data</th>
+                        <th>Opis</th>
+                        <th>Kwota</th>
+                        <th>Cykliczność</th>
+                    </tr>
                     <tr *ngFor="let expense of monthlyExpenses">
                         <td>{{ expense.date | date}}</td>
                         <td>{{ expense.description }}</td>
@@ -52,13 +54,13 @@
         <div 
             class="widget"
             appWidget
-            widgetHeight="60vh"
-            widgetWidth="48%"
         >
             <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
                 Brak wydatków.
             </p>
-            <canvas id="daysInMonthChart" [ngStyle]="{ visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' }"></canvas>
+            <div class="canvas-wrap">
+                <canvas id="daysInMonthChart" [ngStyle]="{ visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' }"></canvas>
+            </div>
         </div>
     </div>
 </div>

@@ -164,10 +164,6 @@
     width: 50px;
 }
 
-.active {
-    box-shadow: inset 3px 3px 5px #999999;
-}
-
 .chart-display {
     display: flex;
     width: 100%;

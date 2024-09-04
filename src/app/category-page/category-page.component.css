@@ -1,3 +1,9 @@
+.container {
+    min-height: 100vh;
+    height: fit-content !important;
+    overflow: hidden;
+}
+
 .row {
     display: flex;
     justify-content: space-between;
@@ -6,11 +12,20 @@
 
 .cat-info {
     display: flex;
-    gap: 20px
+    gap: 3vw;
 }
 
 .cat-info h1{
-    font-size: 40px;
+    font-size: calc(1.5em + 1.5vw);
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.cat-info .widget {
+    width: calc(20px + 7vw + 7vh);
+    height: calc(20px + 7vw + 7vh);
 }
 
 .btn-box {
@@ -18,22 +33,40 @@
     gap: 10px;
 }
 
+.btn-box button {
+    width: calc(1vw + 30px + 1vh);
+    height: calc(1vw + 30px + 1vh) !important;
+}
+
 .change-month {
     display: flex;
     margin: 0 20px;
     justify-content: space-between;
     align-items: center;
+    width: 30vw;
 }
 
-.content .widget .scroll{
-    overflow-y: scroll;
+.change-month p {
+    margin: 0;
+}
+
+.change-month a {
+    font-size: calc(25px + 1vw);
+}
+
+.content {
+    flex-grow: 1;
+}
+
+.content .widget {
+    flex-grow: 1;
+    width: 50%;
+}
+
+.scroll{
+    overflow-y: auto;
     height: 45vh;
-    padding-bottom: 10px;
     margin: 0 5px;
-}
-
-.content .widget table{
-    width: 100%;
 }
 
 .content .widget h3 {
@@ -41,22 +74,24 @@
 }
 
 .content .widget table {
-    border-collapse: collapse;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 5px;
 }
 
-.content .widget table td p{
-    margin: 0;
-    text-align: left;
+td, th{
+    text-align: center;
     padding: 0;
     font-size: 14px;
 }
 
+th{
+    background-color: #dedede;
+}
+
 .content .widget tr {
-    background-color: #f8f8f8;
-    box-shadow: inset 3px 3px 2px #fafafa, inset -3px -3px 2px #f0f0f0;
+    margin: 2.5px 0;
+    background-color: #f5f5f5;
 }
 
 .content .widget table td:first-child{
@@ -71,7 +106,7 @@
     width: 15%;
 }
 
-.content .widget table td:nth-child(5){
+.content .widget table td:nth-child(4){
     width: 25%;
 }
 
@@ -79,55 +114,22 @@
     display: flex;
     justify-content: space-between;
     margin: 0 20px;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.canvas-wrap {
+    height: 100%;
+}
+
+canvas {
+    height: 90%;
+    max-height: 50vh;
 }
 
 .no-expenses-info {
     width: 100%;
     text-align: center;
-}
-
-.modal-container {
-    display: flex;
-    flex-direction: column;
-    margin: 15px;
-}
-
-.modal-row {
-    display: flex;
-    width: 100%;
-}
-
-.modal-row button, .modal-row img{
-    width: 50px;
-    height: 50px;
-}
-
-.modal-row button {
-    border: none;
-    background-color: #eceaea;
-}
-
-.modal-row h1{
-    text-wrap: wrap;
-    text-align: center;
-    width: 70%;
-    font-size: 40px;
-    margin: 10px 10% 0 10%;
-}
-
-.modal-content {
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.modal-content p{
-    margin: 50px 0;
-    text-wrap: wrap;
-    text-align: center;
-}
-
-.modal-container button{
-    align-self: center;
 }
 
 .edit-content {
@@ -161,29 +163,23 @@
     .container {
         height: 160vh !important;
     }
+    
     .change-month {
         align-self: center;
-        width: 40%;
+        width: 50vw;
     }
 
     .content {
         flex-direction: column;
-        gap: 20px
     }
 
     .content .widget {
         width: 100% !important;
     }
 
-    .modal-row h1{
-        width: 100%;
-        font-size: 30px;
-        margin: 0;
-    }
-}
-
-@media (orientation: landscape){
-    .change-month {
-        width: 30vh;
+    .btn-box {
+        position: absolute;
+        top: -50px;
+        right: 10px;
     }
 }

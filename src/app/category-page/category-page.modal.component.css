@@ -1,0 +1,51 @@
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+}
+
+.modal-row {
+    display: flex;
+    width: 100%;
+}
+
+.modal-row button, .modal-row img{
+    width: 50px;
+    height: 50px;
+}
+
+.modal-row button {
+    border: none;
+    background-color: #eceaea;
+}
+
+.modal-row h1{
+    text-wrap: wrap;
+    text-align: center;
+    width: 70%;
+    font-size: 40px;
+    margin: 10px 10% 0 10%;
+}
+
+.modal-content {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.modal-content p{
+    margin: 50px 0;
+    text-wrap: wrap;
+    text-align: center;
+}
+
+.modal-container button{
+    align-self: center;
+}
+
+@media (orientation: portrait){
+    .modal-row h1{
+        width: 100%;
+        font-size: 30px;
+        margin: 0;
+    }
+}
