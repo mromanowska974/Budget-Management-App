@@ -132,15 +132,6 @@ canvas {
     text-align: center;
 }
 
-.edit-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    margin: 40px 0;
-    height: 140px;
-}
-
 .input {
     display: flex;
     flex-direction: column;
