@@ -58,9 +58,9 @@
     </div>
     <div class="text-form">
         <div class="change-month">
-            <a (click)="onStepBackMonth()" style="cursor: pointer;"> < </a>
+            <p (click)="onStepBackMonth()" style="cursor: pointer;"> < </p>
             <p> {{ checkedMonth + ' ' + checkedDate.getFullYear()}} </p>
-            <a (click)="onMoveForwardMonth()" style="cursor: pointer;"> > </a>
+            <p (click)="onMoveForwardMonth()" style="cursor: pointer;"> > </p>
         </div>
         <div 
             class="widget"
@@ -82,19 +82,21 @@
                 <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
                     Brak wydatków.
                 </p>
-                <canvas 
-                    id="chart" 
-                    [ngStyle]="{ 
-                        visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' 
-                    }"
-                ></canvas>
-            </div>
-            <div 
-                class="chart-display"
-                [ngStyle]="{display: monthlyExpenses.length === 0 ? 'none' : 'flex'}"
-            >
-                <p (click)="onCategoryChart()"> <- </p>
-                <p (click)="onDaysInMonthChart()"> -> </p>
+                <div class="chart-wrap">
+                    <canvas 
+                        id="chart" 
+                        [ngStyle]="{ 
+                            visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' 
+                        }"
+                    ></canvas>
+                </div>
+                <div 
+                    class="chart-display"
+                    [ngStyle]="{display: monthlyExpenses.length === 0 ? 'none' : 'flex'}"
+                >
+                    <p (click)="onCategoryChart()"> <- </p>
+                    <p (click)="onDaysInMonthChart()"> -> </p>
+                </div>
             </div>
         </div>
     </div>
@@ -103,12 +105,19 @@
             class="widget"
             appWidget
         >
-            <p>Ostatnie wydatki</p>
+            <h3>Ostatnie wydatki</h3>
             <div class="scroll">
                 <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
                     Brak wydatków.
                 </p>
                 <table>
+                    <tr *ngIf="monthlyExpenses.length > 0">
+                        <th>Kategoria</th>
+                        <th>Kwota</th>
+                        <th>Data</th>
+                        <th>Opis</th>
+                        <th>Cykliczność</th>
+                    </tr>
                     <tr *ngFor="let expense of monthlyExpenses; let i = index">
                         <td (dblclick)="onEnterEdit('category', i)" (keydown.enter)="onCloseEdit()">
                             <p *ngIf="previewMode || !previewMode && (propToEdit.length === 0 || editedIndex !== i || propToEdit !== 'category')">

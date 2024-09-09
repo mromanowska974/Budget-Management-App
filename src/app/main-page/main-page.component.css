@@ -27,6 +27,7 @@
 
 .box {
     display: flex;
+    gap: 20px;
 }
 
 .text-form {
@@ -41,8 +42,7 @@
 }
 
 .account-info a {
-    font-size: 13px;
-    margin: 3px;
+    margin: 0.5vh;
 }
 
 .account-name {
@@ -50,12 +50,8 @@
 }
 
 .account-name h1{
-    font-size: 35px;
-    margin: 10px 0;
-}
-
-.account-name a{
-    padding: 5px;
+    font-size: calc(25px + 1.5vh);
+    margin: 0;
 }
 
 .options {
@@ -68,6 +64,12 @@
     flex-direction: column;
 }
 
+.text-form .widget {
+    flex-grow: 1;
+    max-height: 32vh;
+    justify-content: space-between;
+}
+
 .text-form .widget h3 {
     margin: 0;
     padding: calc(5px + 1vh) 0 0 calc(5px + 1vh);
@@ -76,41 +78,79 @@
 
 .text-form .widget h1 {
     align-self: flex-end;
-    padding: 0 calc(5px + 1vh) 0 0;
+    padding-right: calc(5px + 1vh);
     font-size: calc(1.5em + 2vh);
 }
 
+.graph {
+    flex-grow: 1;
+    height: 70%;
+}
+
+.graph .widget {
+    height: 100%;
+    justify-content: space-between;
+}
+
+.chart-wrap {
+    flex-grow: 1;
+}
+
+canvas {
+    height: 100%;
+    max-height: 60vh;
+}
+
+.last-expenses-list {
+    height: 85%;
+    margin: 20px 0;
+}
+
 .last-expenses-list .widget .scroll{
-    overflow-y: scroll;
-    height: 20vh;
-    padding-bottom: 10px;
+    overflow-y: auto;
+    height: 25vh;
+    margin-bottom: 15px;
+    overflow-x: hidden;
 }
 
-.last-expenses-list .widget table {
-    border-collapse: collapse;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+.last-expenses-list .widget h3 {
+    margin-left: 15px;
+    margin-top: 5px;
 }
 
-.last-expenses-list .widget table td p{
-    margin: 0;
-    text-align: left;
+.last-expenses-list .widget .scroll table {
+    width: 98%;
+    border-collapse: separate;
+    border-spacing: 5px;
+    padding: 0;
+
+}
+
+td, th{
+    text-align: center;
     padding: 0;
     font-size: 14px;
 }
 
+th{
+    background-color: #dedede;
+}
+
 .last-expenses-list .widget tr {
-    background-color: #f8f8f8;
-    box-shadow: inset 3px 3px 2px #fafafa, inset -3px -3px 2px #f0f0f0;
+    margin: 2.5px 0;
+    background-color: #f5f5f5;
+}
+
+td p{
+    margin: 0;
 }
 
 .last-expenses-list .widget table td:first-child{
-    width: 20%;
+    width: 15%;
 }
 
 .last-expenses-list .widget table td:nth-child(2){
-    width: 15%;
+    width: 10%;
 }
 
 .last-expenses-list .widget table td:nth-child(3){
@@ -118,11 +158,11 @@
 }
 
 .last-expenses-list .widget table td:nth-child(4){
-    width: 35%;
+    width: 30%;
 }
 
 .last-expenses-list .widget table td:nth-child(5){
-    width: 300px;
+    width: 20%;
 }
 
 .no-expenses-info {
@@ -147,17 +187,19 @@
 
 .change-month {
     display: flex;
-    width: 70%;
+    width: 30vw;
+    max-width: 100%;
     justify-content: space-between;
+    height: fit-content;
 }
 
-.change-month a {
-    font-size: 25px;
-    align-self: center;
+.change-month p:first-child, .change-month p:last-child {
+    font-size: calc(20px + 1vw);
+    margin: 0;
 }
 
 .change-month p {
-    padding: 0;
+    margin: auto;
 }
 
 .button button, .button img{
@@ -168,46 +210,46 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-    height: 3em;
+    height: fit-content;
 }
 
-.chart-display p, .change-month a{
+.chart-display p{
     padding: 0;
     margin: 0;
     width: fit-content;
     cursor: pointer;
-    font-size: 2em;
+    font-size: 1.8em;
 }
 
 @media (orientation: landscape){  
     .box{
         padding: 20px 20px 0 20px;
         flex-direction: column;
-        justify-content: space-between;
         grid-column-start: 4;
         grid-column-end: 7;
         grid-row-start: 1;
-        grid-row-end: 5;
+        grid-row-end: 3;
     }
 
     .container {
-        height: 100vh;
+        height: fit-content;
+        min-height: 100vh;
         grid-template-columns: 1fr repeat(5, 3fr);
-        grid-template-rows: repeat(7, 1fr);
+        grid-template-rows: repeat(2, 30%) 40%;
     }
 
     .account-management {
         grid-column-start: 2;
         grid-column-end: 4;
         grid-row-start: 1;
-        grid-row-end: 3;
+        grid-row-end: 2;
     }
 
     .text-form {
         grid-column-start: 2;
         grid-column-end: 4;
-        grid-row-start: 3;
-        grid-row-end:5;
+        grid-row-start: 2;
+        grid-row-end:3;
     }
 
     .addBtn button {
@@ -217,19 +259,27 @@
     .last-expenses-list {
         grid-column-start: 2;
         grid-column-end: 7;
-        grid-row-start: 5;
-        grid-row-end:8;
+        grid-row-start: 3;
+        grid-row-end: 4;
         align-self: flex-end;
-        margin: 0 20px 20px 0;
+        margin-right: 20px;
+    }
+
+    .last-expenses-list .widget{
+        height: 85%;
     }
 
     .last-expenses-list .widget table{
-        margin-left: 20px;
-        width: 95%;
+        margin: 0 10px;
+        width: 90%;
     }
 
     .last-expenses-list .widget table td{
         padding: 5px 0;
+    }
+
+    .options a {
+        font-size: calc(0.3em + 1.5vh);
     }
 }
 
@@ -237,14 +287,12 @@
     .container {
         display: flex;
         flex-direction: column;
-        height: calc(500px + 120vh);
+        height: calc(400px + 100vh);
         gap: calc(10px + 1vh);
     }
 
     .account-management {
         margin: 0 5%;
-        grid-row-start: 2;
-        grid-row-end: 3;
         height: 20vh;
     }
 
@@ -283,8 +331,6 @@
         display: flex;
         align-self: center;
         flex-direction: column;
-        grid-row-start: 3;
-        grid-row-end: 6;
         margin: 0 5%;
         width: 90%;
         height: 60vh;
@@ -298,15 +344,24 @@
     }
 
     .text-form {
-        grid-row-start: 6;
-        grid-row-end: 8;
-        height: 30vh;
+        height: fit-content;
+        max-height: 40vh;
         margin: 0 5%;
         padding: 0 10%;
     }
 
     .text-form .widget {
         width: 95%;
+        height: fit-content;
+    }
+
+    .text-form .widget h3 {
+        font-size: calc(0.8em + 2.5vw);
+        padding: calc(3px + 0.5vh) 0 0 calc(3px + 0.5vh);
+    }
+
+    .text-form .widget h1 {
+        font-size: calc(2em + 2.5vw);
     }
 
     .text-form .change-month {
@@ -317,24 +372,29 @@
     .last-expenses-list {
         width: 90%;
         align-self: center;
-        grid-row-start: 8;
-        grid-row-end: 10;
         margin: 10px 5%;
     }
 
     .last-expenses-list .widget {
-        height: calc(300px + 15vh);
-    }
-
-    .last-expenses-list .widget table{
-        margin-left: 15px;
-        width: 90%;
         height: 80%;
     }
 
-    .last-expenses-list .widget table td{
+    .scroll {
+        width: 100%;
+    }
+
+    .last-expenses-list .widget table{
+        width: 70%;
+    }
+
+    td p, th{
         padding: 1px 0;
-        font-size: 85%;
+        font-size: calc(10px + 0.4vw) !important;
+        height: fit-content;
+    }
+
+    td p{
+        margin: 0;
     }
 
     .last-expenses-list .widget table td:nth-child(4){
