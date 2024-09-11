@@ -7,13 +7,13 @@
         <button appButtonDir (click)="onGoBack()">Wróć</button>
     </div>
     <div class="desc">
-        <p>Konta ze Statusem PLUS otrzymują następujące korzyści:</p>
+        <h3>Konta ze Statusem PLUS otrzymują następujące korzyści:</h3>
         <ul>
             <li>limit profili zwiększony z 3 do 6</li>
-            <li>max. 3 profile mogą mieć uprawnienia Założyciela</li>
+            <li>maks. 3 profile mogą mieć uprawnienia Założyciela</li>
             <li>zmiana ustawień limitów wydatków jest dostępna raz dziennie</li>
         </ul>
-        <p>Wszystkie profile konta ze Statusem PLUS otrzymują powyższe korzyści.</p>
+        <h3>Wszystkie profile konta ze Statusem PLUS otrzymują powyższe korzyści.</h3>
         <h1>Koszt: 19,99zł/miesiąc</h1>
         <button appButtonDir (click)="onChangeAccountStatus(modalRef)">
             {{ loggedUser.accountStatus === 'free' ? 'Kup' : 'Anuluj subskrypcję'}}
