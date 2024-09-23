@@ -15,7 +15,7 @@ export class ContainerDirective implements OnInit{
     style.display = 'flex';
     style.flexDirection = 'column';
     style.height = '100vh';
-    style.fontFamily = 'Inter';
+    style.fontFamily = 'sans-serif';
   }
 
 }

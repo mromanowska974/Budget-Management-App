@@ -5,6 +5,11 @@
     src: url('assets/Inter Font/static/Inter-SemiBold.ttf');
 }
 
+@font-face{
+    font-family: 'Lemonada';
+    src: url('assets/Lemonada/Lemonada-VariableFont_wght.ttf');
+}
+
 body {
     margin: 0;
 }

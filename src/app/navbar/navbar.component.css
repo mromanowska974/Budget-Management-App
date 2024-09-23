@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    justify-content: end;
+    gap: calc(1vh + 1vw);
+    padding: 10px;
+    width: calc(100vw - (10px)*2);
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: calc(0.9em + 0.15vh + 0.15vw);
+}

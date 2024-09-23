@@ -16,7 +16,7 @@ import { MessagingService } from './services/messaging.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
-  title = 'budget-management-app';
+  title = 'Smart Coinbook';
 
   authService = inject(AuthService);
   db = inject(Firestore);

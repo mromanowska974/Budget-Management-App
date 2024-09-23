@@ -13,12 +13,19 @@ import { PageContainerComponent } from './page-container/page-container.componen
 import { AddExpenseComponent } from './add-expense/add-expense.component';
 import { loggedAuthGuard, unloggedAuthGuard } from './services/auth-guard.service';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { WelcomePageComponent } from './welcome-page/welcome-page.component';
+import { AboutPageComponent } from './about-page/about-page.component';
 
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'login',
-        pathMatch: 'full'
+        canActivate: [unloggedAuthGuard],
+        component: WelcomePageComponent
+    },
+    {
+        path: 'about',
+        canActivate: [unloggedAuthGuard],
+        component: AboutPageComponent
     },
     {
         path: 'login',

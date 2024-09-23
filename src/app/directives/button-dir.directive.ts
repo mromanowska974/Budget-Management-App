@@ -13,7 +13,7 @@ export class ButtonDirDirective {
     style.borderRadius = '10px';
     style.height = '45px';
     style.boxShadow = '2px 2px 2px #aaaaaa';
-    style.fontFamily = 'Inter';
+    style.fontFamily = 'sans-serif';
   }
 
 }
