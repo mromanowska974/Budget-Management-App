@@ -33,6 +33,11 @@ export const routes: Routes = [
         component: LoginComponent
     },
     {
+        path: 'register',
+        canActivate: [unloggedAuthGuard],
+        component: LoginComponent
+    },
+    {
         path: 'main-page',
         component: PageContainerComponent,
         canActivate: [loggedAuthGuard],

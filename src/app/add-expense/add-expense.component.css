@@ -6,7 +6,7 @@
 form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: calc(1vw + 1vh);
 }
 
 .input {
@@ -20,7 +20,7 @@ label {
 }
 
 input, select {
-    height: calc(15px + 1vh) !important;
+    height: 1.5rem;
     font-size: calc(8px + 1vh);
 }
 
@@ -30,23 +30,34 @@ input, select {
     justify-content: space-between;
 }
 
+.chkbx {
+    display: flex;
+}
+
 .cyclic-value {
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
+.chkbx label, .cyclic-value label {
+    font-size: calc(7px + 0.8vh);
+    margin: 0;
+    align-self: center;
+}
+
 .cyclic-value input{
-    width: 50px !important;
+    width: 40px;
 }
 
 .btn-box {
     align-self: center;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     width: 80%;
 }
 
 button {
-    width: 80px;
+    width: 60px;
+    height: 2rem;
 }

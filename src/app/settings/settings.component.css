@@ -11,9 +11,10 @@
 }
 
 .row button{
-    width: calc(50px + 8vw);
-    max-width: 80px;
+    min-width: calc(40px + 8vw);
+    width: fit-content;
     font-size: calc(0.8em + 0.2vw);
+    height: 2rem;
 } 
 
 .account-name {
@@ -42,7 +43,7 @@
 }
 
 .btn-box button {
-    height: calc(1em + 3vh) !important;
+    height: 2rem;
     font-size: calc(0.5em + 0.5vw + 0.5vh);
 }
 
@@ -61,8 +62,13 @@
         width: 90vw;
     }
 
-    .btn-box button {
-        font-size: calc(1em + 0.3vw);
+    .row button{
+        width: calc(50px + 8vw);
+    }
+
+    .btn-box button, .row button {
+        height: 3rem;
+        font-size: calc(1em + 0.3vw + 0.3vh);
     }
 }
 

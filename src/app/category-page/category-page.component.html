@@ -97,6 +97,6 @@
                 <p *ngIf="errorMsg.length > 0" style="color: red;">{{ errorMsg }}</p>
             </div>
         </div>
-        <button appButtonDir (click)="onSubmitModal()" [disabled]="action === 'delete' && (categories!.length <= 2 || categoryExpenses.length > 0)">Potwierdź</button>
+        <button class="submit-btn" appButtonDir (click)="onSubmitModal()" [disabled]="action === 'delete' && (categories!.length <= 2 || categoryExpenses.length > 0)">Potwierdź</button>
     </div>
 </ng-template>

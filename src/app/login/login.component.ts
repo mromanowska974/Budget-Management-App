@@ -1,8 +1,8 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 
 import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { InputDirDirective } from '../directives/input-dir.directive';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,12 +21,13 @@ import { ContainerDirective } from '../directives/container.directive';
     ContainerDirective,
     
     FormsModule,
-    CommonModule
+    CommonModule,
+    RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   db = inject(Firestore);
   router = inject(Router);
   authService = inject(AuthService);
@@ -37,12 +38,11 @@ export class LoginComponent {
   loginMode = false;
   errorMessage: string;
 
-  onLogin(){
-    this.loginMode = true;
-  }
+  ngOnInit(): void {
+    if(this.router.url === '/register') this.loginMode = false;
+    else this.loginMode = true;
 
-  onSignUp(){
-    this.loginMode = false;
+    console.log(this.loginMode)
   }
 
   onSignInFB(){

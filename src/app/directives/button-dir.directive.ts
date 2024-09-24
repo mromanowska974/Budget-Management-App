@@ -11,7 +11,7 @@ export class ButtonDirDirective {
     style.backgroundColor = '#c6c4ff';
     style.border = '0';
     style.borderRadius = '10px';
-    style.height = '45px';
+    // style.height = '45px';
     style.boxShadow = '2px 2px 2px #aaaaaa';
     style.fontFamily = 'sans-serif';
   }

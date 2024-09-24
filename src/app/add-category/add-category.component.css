@@ -8,19 +8,28 @@
     flex-direction: column;
 }
 
+.input input {
+    height: 1.5rem;
+}
+
+.widget {
+    width: calc(80px + 2vw + 2vh);
+    height: calc(80px + 2vw + 2vh);
+}
+
 .form {
     display: flex;
     flex-direction: column;
     height: 50vh;
     align-items: center;
     justify-content: center;
-    gap: 50px;
+    gap: 30px;
 }
 
 .inputs {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 30px;
 }
 
 .color-select{
@@ -55,9 +64,11 @@
 
 button {
     width: 80px;
+    height: 2rem;
 }
 
 p {
     position: relative;
     top: 0;
+    margin: 0;
 }

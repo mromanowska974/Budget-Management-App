@@ -13,12 +13,12 @@
 button {
     margin-bottom: 10px;
     background-color: #b2b0f1 !important;
+    height: 2rem;
 }
 
 .item {
     display: flex;
-    height: fit-content;
-    padding: 10px;
+    cursor: pointer;
 }
 
 .active {
@@ -30,6 +30,7 @@ button {
     height: calc(20px + 1vw + 1vh);
     box-shadow: 1px 1px 1px #aaaaaa;
     border-radius: 5px;
+    margin: 5px 0;
 }
 
 @media (orientation: landscape) {

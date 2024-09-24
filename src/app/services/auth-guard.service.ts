@@ -12,7 +12,7 @@ export const loggedAuthGuard: CanActivateFn =
     return true;
   }
 
-  return router.createUrlTree(['/login'])
+  return router.createUrlTree([''])
 }
 
 export const unloggedAuthGuard: CanActivateFn = 

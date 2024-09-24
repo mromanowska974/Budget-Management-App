@@ -9,6 +9,6 @@
 button {
     background-color: transparent;
     border: none;
-    cursor: pointer;
     font-size: calc(0.9em + 0.15vh + 0.15vw);
+    height: 2rem;
 }

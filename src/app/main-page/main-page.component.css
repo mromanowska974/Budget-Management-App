@@ -185,6 +185,10 @@ td p{
     flex-direction: column;
 }
 
+.addBtn button {
+    height: 2.5rem;
+}
+
 .change-month {
     display: flex;
     width: 30vw;
@@ -278,7 +282,7 @@ td p{
         padding: 5px 0;
     }
 
-    .options a {
+    .options a, .options p {
         font-size: calc(0.3em + 1.5vh);
     }
 }
@@ -317,14 +321,12 @@ td p{
         width: calc(15px + 3vw);
     }
 
-    .options a, .change-month p {
+    .options a, .change-month p, .options p {
         font-size: calc(0.5em + 1.5vw);
     }
 
     .addBtn button {
         font-size: calc(0.5em + 1.5vw);
-        padding: calc(5px + 1vh) 0;
-        height: 3em !important;
     }
 
     .box {

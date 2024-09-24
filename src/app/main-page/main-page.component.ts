@@ -77,6 +77,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     //this.messagingService.sendMessage('Zalogowano pomyślnie', 'Udało ci się zalogować. A mi wysłać tą wiadomość. Jupiiiii.');
+    this.localStorageService.removeItem('categoryId');
 
     this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!;
@@ -88,6 +89,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
             this.dataService.getProfile(this.loggedUser?.uid, params.get('profileId')).then(profile => {
               if(profile.id === this.activeProfile.id){
                 this.previewMode = false;
+                this.localStorageService.removeItem('previewedProfileId');
               }
               else {
                 this.previewMode = true;
@@ -215,7 +217,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
   onLogout(){
     this.localStorageService.clear();
     this.authService.logout();
-    this.router.navigate(["login"]);
+    this.router.navigate([""]);
   }
 
   onAddProfile(){
@@ -308,7 +310,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
         window.location.reload();
       })
     }
-    else if(this.previewMode === false && profile.id === this.activeProfile.id){
+    if(this.previewMode === true && profile.id === this.activeProfile.id){
       this.localStorageService.removeItem('previewedProfileId')
       this.router.navigate(['main-page']).then(() => {
         window.location.reload();

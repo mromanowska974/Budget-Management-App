@@ -29,27 +29,32 @@
         </div>
         <div class="buttons">
             <button 
+                *ngIf="!loginMode"
                 type="submit"
                 appButtonDir 
-                (click)="onSignUp()"
                 [disabled]="!f.valid"
             >Zarejestruj się</button>
             <button
+                *ngIf="loginMode"
                 type="submit"
                 appButtonDir 
-                (click)="onLogin()"
                 [disabled]="!f.valid"
             >Zaloguj się</button>
+            <div class="other">
+                <a routerLink="/register" *ngIf="loginMode">Nie mam konta</a>
+                <a *ngIf="loginMode">Nie pamiętam hasła</a>
+                <a routerLink="/login" *ngIf="!loginMode">Mam już konto</a>
+            </div>
         </div>
     </form>
     <div class="alternate-login">
         <p>Wybierz inną metodę logowania</p>
         <div class="icon-box">
             <a (click)="onSignInFB()">
-                <img src="../assets/icons/fb-icon.png" width="50px">
+                <img src="../assets/icons/fb-icon.png">
             </a>
             <a (click)="onSignInGoogle()">
-                <img src="../assets/icons/google-icon.png" width="50px">
+                <img src="../assets/icons/google-icon.png">
             </a>
         </div>
     </div>

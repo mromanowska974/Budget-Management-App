@@ -18,7 +18,7 @@ button:first-child {
 
 h1 {
     align-self: center;
-    font-size: calc(3em + 1vw);
+    font-size: calc(1em + 3vh + 1vw);
     text-align: center;
 }
 
@@ -40,7 +40,15 @@ p {
     flex-direction: column;
 }
 
+input {
+    height: 1.5rem;
+}
+
 .input-box button {
     align-self: center;
     width: 80px;
+}
+
+button {
+    height: 2rem;
 }

@@ -24,8 +24,8 @@
 }
 
 .modal-row button, .modal-row img{
-    width: calc(2vh + 2vw) !important; 
-    height: calc(2vh + 2vw) !important; 
+    width: calc(2vh + 2vw); 
+    height: calc(2vh + 2vw); 
 }
 
 .modal-row h1 {

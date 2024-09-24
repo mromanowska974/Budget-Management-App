@@ -35,7 +35,7 @@
 
 .btn-box button {
     width: calc(1vw + 30px + 1vh);
-    height: calc(1vw + 30px + 1vh) !important;
+    height: calc(1vw + 30px + 1vh);
 }
 
 .change-month {
@@ -165,7 +165,7 @@ canvas {
     }
 
     .content .widget {
-        width: 100% !important;
+        width: 100%;
     }
 
     .btn-box {
