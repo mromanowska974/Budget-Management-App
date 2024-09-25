@@ -1,4 +1,21 @@
-<div class="container">
-    <app-navbar></app-navbar>
-    <p>about-page works!</p>
+<div class="container" appContainer>
+    <div class="navbar">
+        <app-navbar></app-navbar>
+    </div>
+    <div class="content">
+        <h1>
+            Aplikacja <span>Smart Coinbook</span> oferuje następujące funkcjonalności:
+        </h1>
+        <section [ngClass]="{'odd': (i+1) % 2 === 1, 'even': (i+1) % 2 === 0}" *ngFor="let func of functionalities; let i = index">
+            <picture>
+                <img [src]="func.imgSrc">
+            </picture>
+            <div class="text">
+                <h2>{{ func.title }}</h2>
+                <p>
+                    {{ func.description }}
+                </p>
+            </div>
+        </section>
+    </div>
 </div>
