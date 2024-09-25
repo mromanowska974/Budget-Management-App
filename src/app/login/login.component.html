@@ -42,7 +42,7 @@
             >Zaloguj się</button>
             <div class="other">
                 <a routerLink="/register" *ngIf="loginMode">Nie mam konta</a>
-                <a *ngIf="loginMode">Nie pamiętam hasła</a>
+                <a *ngIf="loginMode" (click)="onResetPassword()">Nie pamiętam hasła</a>
                 <a routerLink="/login" *ngIf="!loginMode">Mam już konto</a>
             </div>
         </div>

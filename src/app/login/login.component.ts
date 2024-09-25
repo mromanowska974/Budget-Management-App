@@ -164,4 +164,12 @@ export class LoginComponent implements OnInit{
         })
     }
   }
+
+  onResetPassword(){
+    this.authService.resetPassword(this.signupForm.value.email).then(() => {
+      alert('Wiadomość z resetem hasła została wysłana na twój adres e-mail.')
+    }).catch(err => {
+      this.errorMessage = 'Proszę najpierw podać adres e-mail.'
+    })
+  }
 }

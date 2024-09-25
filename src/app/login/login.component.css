@@ -46,6 +46,7 @@ input {
     justify-content: center;
     gap: 10px;
     text-decoration: underline;
+    text-align: center;
 }
 
 .alternate-login {
