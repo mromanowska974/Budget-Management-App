@@ -60,11 +60,10 @@ export class AddProfileComponent implements OnInit, OnDestroy{
   onSubmit(){
     this.errorMsg = '';
 
-    if(this.loggedUser.profiles.length! < this.profilesLimit 
-      && ( this.profileForm.value.pinCode.toString().length >= 4
-      && this.profileForm.value.pinCode.toString().length <= 8 )
-      && this.loggedUser.profiles.filter(profile => profile.name === this.profileForm.value.profileName).length! === 0){
-
+    if(this.loggedUser.profiles.length! >= this.profilesLimit) this.errorMsg = 'Przekroczono limit profili';
+    else if(this.profileForm.value.pinCode.toString().length < 4 || this.profileForm.value.pinCode.toString().length > 8) this.errorMsg = 'Kod PIN musi zawierać od 4 do 8 cyfr.';
+    else if(this.loggedUser.profiles.filter(profil => profil.name === this.profileForm.value.profileName).length! > 0) this.errorMsg = "Profil o podanej nazwie już istnieje";
+    else {
       let newProfile = {
         PIN: this.profileForm.value.pinCode.toString(),
         name: this.profileForm.value.profileName,
@@ -88,12 +87,6 @@ export class AddProfileComponent implements OnInit, OnDestroy{
         this.authService.changeUser('profiles', this.loggedUser.profiles, this.loggedUser)
         this.router.navigate(['main-page']);
       })
-      
-    }
-    else {
-      if(this.loggedUser.profiles.length! >= this.profilesLimit) this.errorMsg = 'Przekroczono limit profili'
-      if(this.profileForm.value.pinCode.toString().length < 4 || this.profileForm.value.pinCode.toString().length > 8) this.errorMsg = 'Kod PIN musi zawierać od 4 do 8 cyfr.'
-      if(this.loggedUser.profiles.filter(profil => profil.name === this.profileForm.value.profileName).length! > 0) this.errorMsg = "Profil o podanej nazwie już istnieje"
     }
   }
 }

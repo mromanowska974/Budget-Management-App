@@ -46,7 +46,6 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
   data: any;
   selectedProfile: Profile;
   activeProfile: Profile;
-  modalSub: Subscription;
   sub: Subscription;
 
   adminsCount;
@@ -76,8 +75,7 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
     this.action = 'modifyPrivileges'
     this.actionMsg = 'Uprawnienia profilu: '+profileName
     this.selectedProfile = this.loggedUser.profiles.find(profile => profile.id === profileIndex)!
-    this.data = this.selectedProfile.role;
-    this.modalService.openModal(this.modalView, template, profileIndex)
+    this.modalService.openModal(this.modalView, template)
   }
 
   private modifyPrivileges(data){
@@ -95,26 +93,28 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
     this.action = 'resetPinCode'
     this.actionMsg = 'Podaj nowy kod PIN'
     this.selectedProfile = this.loggedUser.profiles.find(profile => profile.id === profileIndex)!
-    this.modalService.openModal(this.modalView, template, profileIndex)
+    this.modalService.openModal(this.modalView, template)
   }
 
-  private resetPinCode(data){
-    this.modalSub = this.modalService.dataSub.subscribe(pid => {
-      this.dataService.updateProfile(this.loggedUser.uid, pid, 'PIN', data.toString()).then(data => {
+  private resetPinCode(newPin, pid){
+    if(newPin === undefined) this.errorMsg = 'Proszę podać nowy kod PIN.';
+    else if(newPin.toString().length < 4 || newPin.toString().length > 8) this.errorMsg = 'Kod PIN musi zawierać od 4 do 8 cyfr.';
+    else {
+      this.dataService.updateProfile(this.loggedUser.uid, pid, 'PIN', newPin.toString()).then(data => {
         this.authService.changeProfiles(this.loggedUser, data)
-
+  
         this.data = null;
         this.action = '';
         this.onCloseModal();
       })
-    })
+    }
   }
 
   onDeleteProfile(template, profileName, profileIndex){
     this.action = 'deleteProfile'
     this.actionMsg = 'Czy na pewno chcesz usunąć '+profileName+'?';
     this.selectedProfile = this.loggedUser.profiles.find(profile => profile.id === profileIndex)!
-    this.modalService.openModal(this.modalView, template, profileIndex)
+    this.modalService.openModal(this.modalView, template)
   }
 
   private deleteProfile(pid: string){
@@ -126,25 +126,26 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
 
   onCloseModal(){
     this.errorMsg = '';
-    if(this.modalSub) this.modalSub.unsubscribe()
-    this.modalService.closeModal(this.modalView)
+    this.action = '';
+    this.data = '';
+    this.modalService.closeModal(this.modalView);
   }
 
-  onSubmitModal(){
-    this.modalSub = this.modalService.dataSub.subscribe(data => {
-      switch(this.action){
-        case 'modifyPrivileges':
-          if(this.selectedProfile.id === this.activeProfile.id) this.errorMsg = 'Nie można zmienić uprawnień dla aktywnego profilu.'
-          else if(this.adminsCount === this.adminsLimit && this.data === 'admin') this.errorMsg = 'Przekroczono limit Założycieli.'
-          else this.modifyPrivileges(this.data)
-          break;
-        case 'resetPinCode':
-          this.resetPinCode(this.data)
-          break;
-        case 'deleteProfile':
-          this.deleteProfile(data)
-          break;
-      }
-    })
+  onSubmitModal(profileId){
+    console.log('weszło')
+    switch(this.action){
+      case 'modifyPrivileges':
+        if(this.adminsCount === this.adminsLimit && this.selectedProfile.role === 'admin') this.errorMsg = 'Przekroczono limit Założycieli.'
+        else this.modifyPrivileges(this.selectedProfile.role)
+        break;
+      case 'resetPinCode':
+        this.resetPinCode(this.data, profileId)
+        break;
+      case 'deleteProfile':
+        this.deleteProfile(profileId)
+        break;
+      default:
+        console.log('ups')
+    }
   }
 }

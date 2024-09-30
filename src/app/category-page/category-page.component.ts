@@ -158,13 +158,17 @@ export class CategoryPageComponent implements OnInit {
   }
 
   onCloseModal(){
-    this.modalService.closeModal(this.modalRef)
+    this.errorMsg = '';
+    this.modalService.closeModal(this.modalRef);
   }
 
   onSubmitModal(){
     if (this.action === 'edit'){
       if(this.newColor.nativeElement.value === this.activeCategory.color && this.newContent.nativeElement.value === this.activeCategory.content){
-        this.errorMsg = 'Proszę zmienić co najmniej jedno pole.'
+        this.errorMsg = 'Proszę zmienić co najmniej jedną z wartości.'
+      }
+      else if(this.newColor.nativeElement.value === '' || this.newContent.nativeElement.value === ''){
+        this.errorMsg = 'Proszę uzupełnić wszystkie pola.'
       }
       else {
         this.dataService.updateCategory(this.uid, this.pid, this.activeCategory.id, {
@@ -178,13 +182,16 @@ export class CategoryPageComponent implements OnInit {
       }
     }
     else {
-      if(this.categories!.length > 2){
+      if(this.categories!.length <= 2){
+        this.errorMsg = 'Profil musi mieć co najmniej 2 kategorie.'
+      }
+      else if(this.categoryExpenses.length > 0) {
+        this.errorMsg = 'Nie można usunąć kategorii, do której są przypisane wydatki.';
+      }
+      else {
         this.dataService.deleteCategory(this.uid!, this.pid!, this.activeCategory.id).then(() => {
           this.router.navigate(['main-page']);
         })
-      }
-      else {
-        this.errorMsg = 'Profil musi mieć co najmniej 2 kategorie.'
       }
     }
   }

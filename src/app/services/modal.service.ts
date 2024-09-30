@@ -9,9 +9,7 @@ export class ModalService {
   newModalComponent: ComponentRef<ModalComponent>;
   injector = inject(EnvironmentInjector)
 
-  dataSub = new BehaviorSubject<any>(null)
-
-  openModal(view: ViewContainerRef, content: TemplateRef<Element>, profileIndex?) {
+  openModal(view: ViewContainerRef, content: TemplateRef<Element>) {
     view.clear();
     const innerContent = view.createEmbeddedView(content);
 
@@ -19,8 +17,6 @@ export class ModalService {
       environmentInjector: this.injector,
       projectableNodes: [innerContent.rootNodes],
     });
-
-    if(profileIndex) this.dataSub.next(profileIndex)
   }
 
   closeModal(view: ViewContainerRef){

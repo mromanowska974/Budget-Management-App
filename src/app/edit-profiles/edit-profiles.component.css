@@ -6,6 +6,7 @@
 
 .backBtn{
     width: calc(50px + 1vw);
+    height: 2rem;
     position: absolute;
     top: calc(10px + 1vw);
     right: calc(10px + 1vw);
@@ -45,12 +46,12 @@
 
 .btn-box button{
     width: calc(20px + 1vh);
-    height: calc(20px + 1vh) !important;
+    height: calc(20px + 1vh);
 }
 
 .btn-box button img {
     width: calc(10px + 1vh);
-    height: calc(10px + 1vh) !important;
+    height: calc(10px + 1vh);
 }
 
 .modal-container {
@@ -58,7 +59,7 @@
     flex-direction: column;
     align-items: center;
     margin: calc(1vh + 1vw);
-    font-family: 'Inter';
+    font-family: Arial, Helvetica, sans-serif;
     height: calc(100% - 2*(1vh + 1vw));
 }
 
@@ -70,8 +71,8 @@
 }
 
 .row button, .row img{
-    width: calc(2vh + 2vw) !important; 
-    height: calc(2vh + 2vw) !important; 
+    width: calc(2vh + 2vw); 
+    height: calc(2vh + 2vw); 
 }
 
 .row button {
@@ -104,6 +105,10 @@
     flex-direction: column;
 }
 
+.content div p {
+    text-align: center;
+}
+
 .warning {
     align-self: end;
     font-size: calc(10px + 0.5vw);
@@ -117,7 +122,8 @@
 }
 
 .text-input input {
-    width: 100% !important;
+    width: 100%;
+    height: 1.5rem;
 }
 
 .btn-box-modal {
@@ -125,6 +131,10 @@
     justify-content: space-evenly;
     width: 50%;
     height: fit-content;
+}
+
+.btn-box-modal button {
+    height: 2rem;
 }
 
 span {

@@ -14,7 +14,7 @@
             <div class="btn-box">
                 <button 
                     appButtonDir (click)="onModifyPrivileges(modalView, profile.name, profile.id)"
-                    *ngIf="loggedUser.accountStatus !== 'free'"
+                    *ngIf="loggedUser.accountStatus !== 'free' && profile.id !== activeProfile.id"
                 >
                     <img src="../assets/icons/pencil-icon.png">
                 </button>
@@ -68,6 +68,7 @@
                     type="number"
                     style="-webkit-text-security:disc"
                     [(ngModel)]="data">
+                    <p *ngIf="errorMsg.length > 0" style="color: red;">{{errorMsg}}</p>
             </div>
             <div class="warning" *ngSwitchCase="'deleteProfile'">
                 <p style="
@@ -78,7 +79,7 @@
             </div>
         </div>
         <div class="btn-box-modal">
-            <button appButtonDir (click)="onSubmitModal()">Potwierdź</button>
+            <button appButtonDir (click)="onSubmitModal(selectedProfile.id)">Potwierdź</button>
             <button *ngIf="action !== 'resetPinCode'" appButtonDir (click)="onCloseModal()">Anuluj</button>
         </div>
     </div>
