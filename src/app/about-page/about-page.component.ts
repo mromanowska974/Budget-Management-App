@@ -53,6 +53,11 @@ export class AboutPageComponent {
       description: 'Jako Założyciel konta możesz dodawać profile Współdzielących, edytować je lub usuwać, a także przeglądać wydatki Współdzielących w trybie podglądu. Jest to funkcja szczególnie przydatna dla rodziców chcących mieć pewność, że ich pociechy odpowiedzialnie dysponują swoimi środkami. Ponadto jedynie Założyciele mają możliwość promocji konta do Statusu Plus. Profile Współdzielących automatycznie otrzymują dodatkowe korzyści.'
     },
     {
+      imgSrc: '../../assets/screenshots/preview-mode.png',
+      title: 'Tryb podglądu',
+      description: 'Jeśli jesteś rodzicem i współdzielisz konto ze swoimi dziećmi, chcesz mieć pewność, że wydają one swoje kieszonkowe odpowiedzialnie. Tryb podglądu umożliwi Ci przeglądanie ich wydatków. Nie możesz jednak wprowadzać żadnych zmian w tym trybie.'
+    },
+    {
       imgSrc: '../../assets/screenshots/status-plus.png',
       title: 'Status Plus',
       description: ' Po zakupie subskrypcji Status Plus masz możliwość utworzyć aż 6 profili zamiast 3 w wersji podstawowej. Ponadto możesz nadać 2 dodatkowym profilom uprawnienia Założyciela. Subskrypcja jest szczególnie przydatna dla osób, które chcą współdzielić konto z wieloma osobami, np. całą rodziną.'
