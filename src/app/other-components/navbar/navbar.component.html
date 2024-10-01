@@ -1,5 +1,11 @@
 <div class="container">
-    <button (click)="onGoToMainPage()">Strona Główna</button>
-    <button (click)="onGoToAboutPage()">O Aplikacji</button>
-    <button appButtonDir (click)="onLogin()">Zaloguj się</button>
+    <button *ngIf="!loggedUser" (click)="onGoToMainPage()">Strona Główna</button>
+    <button *ngIf="!loggedUser" (click)="onGoToAboutPage()">O Aplikacji</button>
+    <button *ngIf="!loggedUser" appButtonDir (click)="onLogin()">Zaloguj się</button>
+
+    <button *ngIf="loggedUser && activeProfile.PIN !== null && activeProfile.role === 'admin'" (click)="onAddProfile()">Dodaj profil</button>
+    <button *ngIf="loggedUser" (click)="onSettings()">Ustawienia</button>
+    <button *ngIf="loggedUser" (click)="onNotifications()">Powiadomienia</button>
+    <button *ngIf="loggedUser" (click)="onLogout()">Wyloguj się</button>
+    <button *ngIf="loggedUser" appButtonDir (click)="onAddExpense()">Dodaj wydatek</button>
 </div>

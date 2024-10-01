@@ -2,8 +2,8 @@
     display: flex;
     justify-content: end;
     gap: calc(1vh + 1vw);
-    padding: 10px 20px;
-    width: calc(100vw - (25px)*2);
+    padding: 10px 0;
+    width: 100%;
 }
 
 button {
@@ -11,4 +11,5 @@ button {
     border: none;
     font-size: calc(0.9em + 0.15vh + 0.15vw);
     height: 2rem;
+    text-wrap: nowrap;
 }

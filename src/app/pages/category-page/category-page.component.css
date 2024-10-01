@@ -2,12 +2,17 @@
     min-height: 100vh;
     height: fit-content !important;
     overflow: hidden;
+    border: 2px solid green;
 }
 
 .row {
     display: flex;
     justify-content: space-between;
     margin: 20px;
+}
+
+.arrows {
+    margin-left: 20px;
 }
 
 .cat-info {
@@ -38,7 +43,7 @@
     height: calc(1vw + 30px + 1vh);
 }
 
-.change-month {
+/* .change-month {
     display: flex;
     margin: 0 20px;
     justify-content: space-between;
@@ -52,7 +57,7 @@
 
 .change-month a {
     font-size: calc(25px + 1vw);
-}
+} */
 
 .content {
     flex-grow: 1;

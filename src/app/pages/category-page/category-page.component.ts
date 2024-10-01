@@ -12,6 +12,7 @@ import { DataService } from '../../services/data.service';
 import { ModalService } from '../../services/modal.service';
 import { Month } from '../../models/months.enum';
 import { Expense } from '../../models/expense.interface';
+import { ChangeMonthArrowsComponent } from "../../other-components/change-month-arrows/change-month-arrows.component";
 
 @Component({
   selector: 'app-category-page',
@@ -21,9 +22,9 @@ import { Expense } from '../../models/expense.interface';
     WidgetDirective,
     ButtonDirDirective,
     InputDirDirective,
-
-    CommonModule
-  ],
+    CommonModule,
+    ChangeMonthArrowsComponent
+],
   templateUrl: './category-page.component.html',
   styleUrls: [
     './category-page.component.css',
@@ -90,20 +91,26 @@ export class CategoryPageComponent implements OnInit {
     this.modalService.openModal(this.modalRef, template)
   }
 
-  onStepBackMonth(){
-    this.checkedDate.setMonth(this.checkedDate.getMonth()-1);
-    this.checkedMonth = Month[this.checkedDate.getMonth()]
-    this.filterExpensesByMonth()
-    this.createDaysInMonthChart()
-  }
+  // onStepBackMonth(){
+  //   this.checkedDate.setMonth(this.checkedDate.getMonth()-1);
+  //   this.checkedMonth = Month[this.checkedDate.getMonth()]
 
-  onMoveForwardMonth(){
-    if((this.checkedDate.getMonth() < this.today.getMonth()) || (this.checkedDate.getMonth() >= this.today.getMonth() && this.checkedDate.getFullYear() < this.today.getFullYear())){
-      this.checkedDate.setMonth(this.checkedDate.getMonth()+1);
-      this.checkedMonth = Month[this.checkedDate.getMonth()]
-      this.filterExpensesByMonth()
-      this.createDaysInMonthChart()
-    }
+  // }
+
+  // onMoveForwardMonth(){
+  //   if((this.checkedDate.getMonth() < this.today.getMonth()) || (this.checkedDate.getMonth() >= this.today.getMonth() && this.checkedDate.getFullYear() < this.today.getFullYear())){
+  //     this.checkedDate.setMonth(this.checkedDate.getMonth()+1);
+  //     this.checkedMonth = Month[this.checkedDate.getMonth()]
+  //     this.filterExpensesByMonth()
+  //     this.createDaysInMonthChart()
+  //   }
+  // }
+
+  onReceiveDate(event){
+    this.checkedDate = event.fullDate;
+    this.checkedMonth = event.monthName;
+    this.filterExpensesByMonth();
+    this.createDaysInMonthChart();
   }
 
   createDaysInMonthChart(){

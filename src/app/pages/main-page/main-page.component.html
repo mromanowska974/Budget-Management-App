@@ -1,101 +1,74 @@
-<div class="container">
-    <div class="account-management">
-        <div 
-            class="widget" 
-            appWidget
-        >
-            <img [src]="
-                !previewMode 
-                    ?(
-                        activeProfile.role === 'admin' ? '../assets/icons/admin-icon.png' 
-                        : '../assets/icons/user-icon.png'
-                    )
-                    : (
-                        previewedProfile.role === 'admin' ? '../assets/icons/admin-icon.png' 
-                        : '../assets/icons/user-icon.png'
-                    )
-            ">
-        </div>
-        <div class="account-info">
-            <div class="account-name">
-                <h1>
-                    {{ 
-                        !previewMode ? activeProfile.name
-                        : previewedProfile.name 
-                    }}
-                </h1>
-                <a *ngIf="activeProfile.role === 'admin'" (click)="onEnterPreviewMode(modalRef)">
-                    <img src="../assets/icons/swap-icon.png" width="35px">
-                </a>
-            </div>
-            <div class="options" *ngIf="!previewMode">
-                <a 
-                    style="cursor: pointer;" 
-                    *ngIf="activeProfile?.PIN !== null && activeProfile?.role === 'admin'"
-                    (click)="onAddProfile()"
-                >
-                    Dodaj profil
-                </a>
-                <a style="cursor: pointer;" (click)="onSettings()">Ustawienia</a>
-                <a style="cursor: pointer;" (click)="onNotifications()">
-                    Powiadomienia 
-                    <span class="unread-messages" *ngIf="unreadMessages > 0">
-                        {{ unreadMessages }}
-                    </span>
-                </a>
-                <a style="cursor: pointer;" (click)="onLogout()">Wyloguj się</a>
-                <p
-                    style="color: red;"
-                    *ngIf="activeProfile?.PIN === null && activeProfile?.role === 'admin'"
-                >
-                    Ustaw kod PIN dla swojego profilu, żeby móc dodawać nowe profile!
-                </p>
-            </div>
-            <p *ngIf="previewMode">
-                Zalogowano jako: {{ activeProfile.name }}
-            </p>
-        </div>
+<div class="container" appContainer>
+    <div class="header">
+        <app-navbar *ngIf="!previewMode"></app-navbar>
+        <p *ngIf="previewMode">Zalogowano jako: {{ activeProfile.name }}</p>
     </div>
-    <div class="text-form">
-        <div class="change-month">
-            <p (click)="onStepBackMonth()" style="cursor: pointer;"> < </p>
-            <p> {{ checkedMonth + ' ' + checkedDate.getFullYear()}} </p>
-            <p (click)="onMoveForwardMonth()" style="cursor: pointer;"> > </p>
-        </div>
-        <div 
-            class="widget"
-            appWidget
-        >
-            <h3>Wydatki w: {{ checkedMonth + ' ' + checkedDate.getFullYear()}}</h3>
-            <h1>{{ monthlySum }} zł</h1>
-        </div>
-    </div>
-    <div class="box">
-        <div class="addBtn" [ngStyle]="{visibility: previewMode ? 'hidden' : 'visible'}">
-            <button appButtonDir (click)="onAddExpense()">Dodaj wydatek</button>
-        </div>
-        <div class="graph">
-            <div 
-                class="widget"
-                appWidget
-            >
-                <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
-                    Brak wydatków.
-                </p>
-                <div class="chart-wrap">
-                    <canvas 
-                        id="chart" 
-                        [ngStyle]="{ 
-                            visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' 
-                        }"
-                    ></canvas>
+    <div class="content">
+        <div class="left-side">
+            <div class="account-management">
+                <div class="widget" appWidget>
+                    <img [src]="
+                        !previewMode 
+                            ?(
+                                activeProfile.role === 'admin' ? '../assets/icons/admin-icon.png' 
+                                : '../assets/icons/user-icon.png'
+                            )
+                            : (
+                                previewedProfile.role === 'admin' ? '../assets/icons/admin-icon.png' 
+                                : '../assets/icons/user-icon.png'
+                            )
+                    ">
                 </div>
+                <div class="account-info">
+                    <div class="account-name">
+                        <h1>
+                            {{ 
+                                !previewMode ? activeProfile.name
+                                : previewedProfile.name 
+                            }}
+                        </h1>
+                        <a *ngIf="activeProfile.role === 'admin'" (click)="onEnterPreviewMode(modalRef)">
+                            <img src="../assets/icons/swap-icon.png" width="35px">
+                        </a>
+                    </div>
+                    <p
+                        style="color: red;"
+                        *ngIf="activeProfile?.PIN === null && activeProfile?.role === 'admin'"
+                    >
+                        Ustaw kod PIN dla swojego profilu, żeby móc dodawać nowe profile!
+                    </p>
+                    <div class="text-form">
+                        <p>Wydatki w: {{ checkedMonth + ' ' + checkedDate.getFullYear()}}</p>
+                        <h1>{{ monthlySum }} zł</h1>
+                    </div>
+                </div>
+            </div>
+            <app-change-month-arrows (dateEmitter)="onReceiveDate($event)"></app-change-month-arrows>
+        </div>
+        <div class="right-side">
+            <div class="graph">
                 <div 
-                    class="chart-display"
-                    [ngStyle]="{display: monthlyExpenses.length === 0 ? 'none' : 'flex'}"
+                    class="widget"
+                    appWidget
                 >
-                    <p (click)="onCategoryChart()"> <- </p>
-                    <p (click)="onDaysInMonthChart()"> -> </p>
+                    <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
+                        Brak wydatków.
+                    </p>
+                    <div class="chart-wrap">
+                        <canvas 
+                            id="chart" 
+                            [ngStyle]="{ 
+                                visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' 
+                            }"
+                        ></canvas>
+                    </div>
+                    <div 
+                        class="chart-display"
+                        [ngStyle]="{display: monthlyExpenses.length === 0 ? 'none' : 'flex'}"
+                    >
+                        <p (click)="onCategoryChart()"> <- </p>
+                        <p (click)="onDaysInMonthChart()"> -> </p>
+                    </div>
                 </div>
             </div>
         </div>

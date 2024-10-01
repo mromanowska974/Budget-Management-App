@@ -16,6 +16,9 @@ import Chart from 'chart.js/auto';
 import { FormsModule } from '@angular/forms';
 import { MessagingService } from '../../services/messaging.service';
 import { CategoriesMenuComponent } from '../categories-menu/categories-menu.component';
+import { ChangeMonthArrowsComponent } from '../../other-components/change-month-arrows/change-month-arrows.component';
+import { NavbarComponent } from "../../other-components/navbar/navbar.component";
+import { ContainerDirective } from '../../directives/container.directive';
 
 
 @Component({
@@ -24,12 +27,14 @@ import { CategoriesMenuComponent } from '../categories-menu/categories-menu.comp
   imports: [
     WidgetDirective,
     ButtonDirDirective,
+    ContainerDirective,
     CategoriesMenuComponent,
-
+    ChangeMonthArrowsComponent,
     RouterModule,
     CommonModule,
-    FormsModule
-  ],
+    FormsModule,
+    NavbarComponent
+],
   templateUrl: './main-page.component.html',
   styleUrls: [
     './main-page.component.css',
@@ -42,7 +47,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
   authService = inject(AuthService);
   router = inject(Router);
   dataService = inject(DataService);
-  localStorageService = inject(LocalStorageService);
   modalService = inject(ModalService);
   route = inject(ActivatedRoute)
   messagingService = inject(MessagingService);
@@ -50,7 +54,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
   chart: any;
   activeChart = 'category'
 
-  profileId = this.localStorageService.getItem('profileId');
+  profileId = localStorage.getItem('profileId');
 
   loggedUser: User;
   activeProfile: Profile;
@@ -77,19 +81,19 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     //this.messagingService.sendMessage('Zalogowano pomyślnie', 'Udało ci się zalogować. A mi wysłać tą wiadomość. Jupiiiii.');
-    this.localStorageService.removeItem('categoryId');
+    localStorage.removeItem('categoryId');
 
     this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!;
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!;
-        this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'lastDeviceToken', this.localStorageService.getItem('messageToken'));
+        this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'lastDeviceToken', localStorage.getItem('messageToken'));
 
         this.route.paramMap.subscribe(params => {
           if(params.has('profileId')){
             this.dataService.getProfile(this.loggedUser?.uid, params.get('profileId')).then(profile => {
               if(profile.id === this.activeProfile.id){
                 this.previewMode = false;
-                this.localStorageService.removeItem('previewedProfileId');
+                localStorage.removeItem('previewedProfileId');
               }
               else {
                 this.previewMode = true;
@@ -214,18 +218,11 @@ export class MainPageComponent implements OnInit, OnDestroy{
     });
   }
 
-  onLogout(){
-    this.localStorageService.clear();
-    this.authService.logout();
-    this.router.navigate([""]);
-  }
-
-  onAddProfile(){
-    this.router.navigate(["add-profile"]);
-  }
-
-  onAddExpense(){
-    this.router.navigate(['add-expense'])
+  onReceiveDate(event){
+    this.checkedDate = event.fullDate;
+    this.checkedMonth = event.monthName;
+    this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile);
+    this.createChart();
   }
 
   onEnterEdit(propToEdit: string, index: number){
@@ -254,30 +251,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
     this.activeProfile.expenses![this.editedIndex] = editedExpense;
   }
 
-  onStepBackMonth(){
-    this.checkedDate.setMonth(this.checkedDate.getMonth()-1);
-    this.checkedMonth = Month[this.checkedDate.getMonth()]
-    this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile)
-    this.createChart()
-  }
-
-  onMoveForwardMonth(){
-    if((this.checkedDate.getMonth() < this.today.getMonth()) || (this.checkedDate.getMonth() >= this.today.getMonth() && this.checkedDate.getFullYear() < this.today.getFullYear())){
-      this.checkedDate.setMonth(this.checkedDate.getMonth()+1);
-      this.checkedMonth = Month[this.checkedDate.getMonth()]
-      this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile)
-      this.createChart()
-    }
-  }
-
-  onSettings(){
-    this.router.navigate(["settings"]);
-  }
-
-  onNotifications(){
-    this.router.navigate(['notifications']);
-  }
-
   onCategoryChart(){
     this.activeChart = 'category'
     this.createChart()
@@ -304,13 +277,13 @@ export class MainPageComponent implements OnInit, OnDestroy{
         this.chart.destroy()
       }
 
-      this.localStorageService.setItem('previewedProfileId', this.previewedProfile.id)
+      localStorage.setItem('previewedProfileId', this.previewedProfile.id)
       this.router.navigate(['main-page','preview', this.previewedProfile.id]).then(() => {
         window.location.reload();
       })
     }
     if(this.previewMode === true && profile.id === this.activeProfile.id){
-      this.localStorageService.removeItem('previewedProfileId')
+      localStorage.removeItem('previewedProfileId')
       this.router.navigate(['main-page']).then(() => {
         window.location.reload();
       })

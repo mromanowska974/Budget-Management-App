@@ -20,10 +20,8 @@
             </button>
         </div>
     </div>
-    <div class="change-month">
-        <a (click)="onStepBackMonth()" style="cursor: pointer;"> < </a>
-        <p> {{ checkedMonth + ' ' + checkedDate.getFullYear()}} </p>
-        <a (click)="onMoveForwardMonth()" style="cursor: pointer;"> > </a>
+    <div class="arrows">
+        <app-change-month-arrows (dateEmitter)="onReceiveDate($event)"></app-change-month-arrows>
     </div>
     <div class="content">
         <div 
