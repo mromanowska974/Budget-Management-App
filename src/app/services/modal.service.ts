@@ -1,5 +1,5 @@
 import { ComponentRef, EnvironmentInjector, Injectable, TemplateRef, ViewContainerRef, inject } from '@angular/core';
-import { ModalComponent } from '../modal/modal.component';
+import { ModalComponent } from '../other-components/modal/modal.component';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({

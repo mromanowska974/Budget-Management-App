@@ -1,20 +1,20 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { MainPageComponent } from './main-page/main-page.component';
-import { AddProfileComponent } from './add-profile/add-profile.component';
-import { ProfilesComponent } from './profiles/profiles.component';
-import { ProfileAuthComponent } from './profile-auth/profile-auth.component';
-import { SettingsComponent } from './settings/settings.component';
-import { EditProfilesComponent } from './edit-profiles/edit-profiles.component';
-import { SubscriptionComponent } from './subscription/subscription.component';
-import { AddCategoryComponent } from './add-category/add-category.component';
-import { CategoryPageComponent } from './category-page/category-page.component';
-import { PageContainerComponent } from './page-container/page-container.component';
-import { AddExpenseComponent } from './add-expense/add-expense.component';
+import { LoginComponent } from './pages/login/login.component';
+import { MainPageComponent } from './pages/main-page/main-page.component';
 import { loggedAuthGuard, unloggedAuthGuard } from './services/auth-guard.service';
-import { NotificationsComponent } from './notifications/notifications.component';
-import { WelcomePageComponent } from './welcome-page/welcome-page.component';
-import { AboutPageComponent } from './about-page/about-page.component';
+import { WelcomePageComponent } from './pages/welcome-page/welcome-page.component';
+import { AboutPageComponent } from './pages/about-page/about-page.component';
+import { PageContainerComponent } from './pages/page-container/page-container.component';
+import { CategoryPageComponent } from './pages/category-page/category-page.component';
+import { AddProfileComponent } from './pages/add-profile/add-profile.component';
+import { ProfilesComponent } from './pages/profiles/profiles.component';
+import { ProfileAuthComponent } from './pages/profile-auth/profile-auth.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { EditProfilesComponent } from './pages/edit-profiles/edit-profiles.component';
+import { SubscriptionComponent } from './pages/subscription/subscription.component';
+import { AddCategoryComponent } from './pages/add-category/add-category.component';
+import { AddExpenseComponent } from './pages/add-expense/add-expense.component';
+import { NotificationsComponent } from './pages/notifications/notifications.component';
 
 export const routes: Routes = [
     {
