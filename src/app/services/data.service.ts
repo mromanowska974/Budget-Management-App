@@ -37,11 +37,11 @@ export class DataService{
         }).then(() => {
           this.addProfile(data.user.uid).then(pid => {
             this.addCategory(data.user.uid, pid, {
-              content: 'jedzenie',
+              content: 'Jedzenie',
               color: '#ff0000'
             })
             this.addCategory(data.user.uid, pid, {
-              content: 'transport',
+              content: 'Transport',
               color: '#ffff00'
             })
           })

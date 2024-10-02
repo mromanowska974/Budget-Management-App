@@ -13,6 +13,7 @@ import { ModalService } from '../../services/modal.service';
 import { Month } from '../../models/months.enum';
 import { Expense } from '../../models/expense.interface';
 import { ChangeMonthArrowsComponent } from "../../other-components/change-month-arrows/change-month-arrows.component";
+import { ExpensesInfoComponent } from "../../other-components/expenses-info/expenses-info.component";
 
 @Component({
   selector: 'app-category-page',
@@ -23,7 +24,8 @@ import { ChangeMonthArrowsComponent } from "../../other-components/change-month-
     ButtonDirDirective,
     InputDirDirective,
     CommonModule,
-    ChangeMonthArrowsComponent
+    ChangeMonthArrowsComponent,
+    ExpensesInfoComponent
 ],
   templateUrl: './category-page.component.html',
   styleUrls: [
@@ -90,21 +92,6 @@ export class CategoryPageComponent implements OnInit {
     this.actionMsg = "Czy na pewno chcesz usunąć: "+this.activeCategory.content+"?";
     this.modalService.openModal(this.modalRef, template)
   }
-
-  // onStepBackMonth(){
-  //   this.checkedDate.setMonth(this.checkedDate.getMonth()-1);
-  //   this.checkedMonth = Month[this.checkedDate.getMonth()]
-
-  // }
-
-  // onMoveForwardMonth(){
-  //   if((this.checkedDate.getMonth() < this.today.getMonth()) || (this.checkedDate.getMonth() >= this.today.getMonth() && this.checkedDate.getFullYear() < this.today.getFullYear())){
-  //     this.checkedDate.setMonth(this.checkedDate.getMonth()+1);
-  //     this.checkedMonth = Month[this.checkedDate.getMonth()]
-  //     this.filterExpensesByMonth()
-  //     this.createDaysInMonthChart()
-  //   }
-  // }
 
   onReceiveDate(event){
     this.checkedDate = event.fullDate;

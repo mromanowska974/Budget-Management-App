@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="widget" appWidget [ngStyle]="{backgroundColor: data.category ? data.category.color : 'white'}">
+        <img *ngIf="data.activeProfile || data.previewedProfile" [src]="
+            !previewMode 
+                ?(
+                    data.activeProfile.role === 'admin' ? '../assets/icons/admin-icon.png' 
+                    : '../assets/icons/user-icon.png'
+                )
+                : (
+                    data.previewedProfile.role === 'admin' ? '../assets/icons/admin-icon.png' 
+                    : '../assets/icons/user-icon.png'
+                )
+        ">
+    </div>
+    <div class="info">
+        <div class="name">
+            <h1>{{ name }}</h1>
+            <a *ngIf="data.activeProfile && data.activeProfile.role === 'admin'" (click)="onEnterPreviewMode()">
+                <img src="../assets/icons/swap-icon.png" width="35px">
+            </a>
+        </div>
+        <p
+            style="color: red;"
+            *ngIf="data.activeProfile && data.activeProfile?.PIN === null && data.activeProfile?.role === 'admin'"
+        >
+            Ustaw kod PIN dla swojego profilu, żeby móc dodawać nowe profile!
+        </p>
+        <div class="text-form">
+            <p>Wydatki w: {{ date.monthName + ' ' + date.fullDate.getFullYear()}}</p>
+            <h1>{{ monthlySum }} zł</h1>
+        </div>
+    </div>
+</div>

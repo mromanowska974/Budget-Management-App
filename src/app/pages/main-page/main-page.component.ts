@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { DataService } from '../../services/data.service';
 import { ModalService } from '../../services/modal.service';
@@ -19,6 +19,7 @@ import { CategoriesMenuComponent } from '../categories-menu/categories-menu.comp
 import { ChangeMonthArrowsComponent } from '../../other-components/change-month-arrows/change-month-arrows.component';
 import { NavbarComponent } from "../../other-components/navbar/navbar.component";
 import { ContainerDirective } from '../../directives/container.directive';
+import { ExpensesInfoComponent } from "../../other-components/expenses-info/expenses-info.component";
 
 
 @Component({
@@ -33,7 +34,8 @@ import { ContainerDirective } from '../../directives/container.directive';
     RouterModule,
     CommonModule,
     FormsModule,
-    NavbarComponent
+    NavbarComponent,
+    ExpensesInfoComponent
 ],
   templateUrl: './main-page.component.html',
   styleUrls: [

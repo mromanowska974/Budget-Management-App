@@ -10,11 +10,6 @@
     margin: 0 2%;
 }
 
-.account-management {
-    display: flex;
-    padding: 20px 0;
-}
-
 .right-side, .left-side {
     width: 48%;
 }
@@ -23,11 +18,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-}
-
-.account-management .widget {
-    width: calc(100px + 2vh + 2vw);
-    height: calc(100px + 2vh + 2vw);
 }
 
 .unread-messages {
@@ -39,48 +29,9 @@
     text-align: center;
 }
 
-.text-form {
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-}
-
-.account-info {
-    padding: 0 calc(5px + 1vw);
-    display: flex;
-    flex-direction: column;
-    gap: calc(1vh + 1vw);
-}
-
-.account-name {
-    display: flex;
-}
-
-.account-name h1{
-    font-size: calc(25px + 1.5vh);
-    margin: 0;
-}
-
 .widget {
     display: flex;
     flex-direction: column;
-}
-
-.text-form {
-    flex-grow: 1;
-    max-height: 32vh;
-    justify-content: space-between;
-}
-
-.text-form p {
-    margin: 0;
-    font-size: calc(0.8em + 1vh);
-}
-
-.text-form h1 {
-    margin: 0;
-    align-self: flex-end;
-    font-size: calc(1.5em + 2vh);
 }
 
 .graph {
@@ -226,39 +177,6 @@ td p{
         flex-direction: column;
         height: calc(400px + 100vh);
         gap: calc(10px + 1vh);
-    }
-
-    .account-name h1{
-        font-size: calc(1.2em + 3vw);
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        max-width: 35vw;
-    }
-
-    .account-name a {
-        align-self: center;
-    }
-
-    .account-name a img {
-        width: calc(15px + 3vw);
-    }
-
-    .text-form {
-        height: fit-content;
-        max-height: 40vh;
-        margin: 0 5%;
-        padding: 0 10%;
-        width: 95%;
-    }
-
-    .text-form p {
-        font-size: calc(0.8em + 2.5vw);
-        padding: calc(3px + 0.5vh) 0 0 calc(3px + 0.5vh);
-    }
-
-    .text-form h1 {
-        font-size: calc(2em + 2.5vw);
     }
 
     .last-expenses-list {

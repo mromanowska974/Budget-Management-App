@@ -5,44 +5,14 @@
     </div>
     <div class="content">
         <div class="left-side">
-            <div class="account-management">
-                <div class="widget" appWidget>
-                    <img [src]="
-                        !previewMode 
-                            ?(
-                                activeProfile.role === 'admin' ? '../assets/icons/admin-icon.png' 
-                                : '../assets/icons/user-icon.png'
-                            )
-                            : (
-                                previewedProfile.role === 'admin' ? '../assets/icons/admin-icon.png' 
-                                : '../assets/icons/user-icon.png'
-                            )
-                    ">
-                </div>
-                <div class="account-info">
-                    <div class="account-name">
-                        <h1>
-                            {{ 
-                                !previewMode ? activeProfile.name
-                                : previewedProfile.name 
-                            }}
-                        </h1>
-                        <a *ngIf="activeProfile.role === 'admin'" (click)="onEnterPreviewMode(modalRef)">
-                            <img src="../assets/icons/swap-icon.png" width="35px">
-                        </a>
-                    </div>
-                    <p
-                        style="color: red;"
-                        *ngIf="activeProfile?.PIN === null && activeProfile?.role === 'admin'"
-                    >
-                        Ustaw kod PIN dla swojego profilu, żeby móc dodawać nowe profile!
-                    </p>
-                    <div class="text-form">
-                        <p>Wydatki w: {{ checkedMonth + ' ' + checkedDate.getFullYear()}}</p>
-                        <h1>{{ monthlySum }} zł</h1>
-                    </div>
-                </div>
-            </div>
+            <app-expenses-info 
+                (enterPreviewMode)="onEnterPreviewMode(modalRef)"
+                [previewMode]="previewMode"
+                [monthlySum]="monthlySum"
+                [date]="{fullDate: checkedDate, monthName: checkedMonth}"
+                [data]="{activeProfile, previewedProfile}"
+            >
+            </app-expenses-info>
             <app-change-month-arrows (dateEmitter)="onReceiveDate($event)"></app-change-month-arrows>
         </div>
         <div class="right-side">

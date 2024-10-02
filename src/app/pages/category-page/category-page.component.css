@@ -2,7 +2,6 @@
     min-height: 100vh;
     height: fit-content !important;
     overflow: hidden;
-    border: 2px solid green;
 }
 
 .row {
@@ -15,24 +14,6 @@
     margin-left: 20px;
 }
 
-.cat-info {
-    display: flex;
-    gap: 3vw;
-}
-
-.cat-info h1{
-    font-size: calc(1.5em + 1.5vw);
-    margin: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.cat-info .widget {
-    width: calc(20px + 7vw + 7vh);
-    height: calc(20px + 7vw + 7vh);
-}
-
 .btn-box {
     display: flex;
     gap: 10px;
@@ -42,22 +23,6 @@
     width: calc(1vw + 30px + 1vh);
     height: calc(1vw + 30px + 1vh);
 }
-
-/* .change-month {
-    display: flex;
-    margin: 0 20px;
-    justify-content: space-between;
-    align-items: center;
-    width: 30vw;
-}
-
-.change-month p {
-    margin: 0;
-}
-
-.change-month a {
-    font-size: calc(25px + 1vw);
-} */
 
 .content {
     flex-grow: 1;
@@ -158,11 +123,6 @@ canvas {
 @media (orientation: portrait){
     .container {
         height: 160vh !important;
-    }
-    
-    .change-month {
-        align-self: center;
-        width: 50vw;
     }
 
     .content {
