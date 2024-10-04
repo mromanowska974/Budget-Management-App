@@ -11,12 +11,11 @@
                 [monthlySum]="monthlySum"
                 [date]="{fullDate: checkedDate, monthName: checkedMonth}"
                 [data]="{activeProfile, previewedProfile}"
-            >
-            </app-expenses-info>
+            ></app-expenses-info>
             <app-change-month-arrows (dateEmitter)="onReceiveDate($event)"></app-change-month-arrows>
         </div>
         <div class="right-side">
-            <div class="graph">
+            <!-- <div class="graph">
                 <div 
                     class="widget"
                     appWidget
@@ -40,7 +39,12 @@
                         <p (click)="onDaysInMonthChart()"> -> </p>
                     </div>
                 </div>
-            </div>
+            </div> -->
+            <app-graph 
+                [monthlyExpenses]="monthlyExpenses"
+                [categories]="previewMode ? previewedProfile.categories! : activeProfile.categories!"
+                [date]="{fullDate: checkedDate, monthName: checkedMonth}"
+            ></app-graph>
         </div>
     </div>
     <div class="last-expenses-list">

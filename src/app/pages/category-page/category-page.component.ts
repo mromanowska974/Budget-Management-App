@@ -14,6 +14,7 @@ import { Month } from '../../models/months.enum';
 import { Expense } from '../../models/expense.interface';
 import { ChangeMonthArrowsComponent } from "../../other-components/change-month-arrows/change-month-arrows.component";
 import { ExpensesInfoComponent } from "../../other-components/expenses-info/expenses-info.component";
+import { GraphComponent } from "../../other-components/graph/graph.component";
 
 @Component({
   selector: 'app-category-page',
@@ -25,7 +26,8 @@ import { ExpensesInfoComponent } from "../../other-components/expenses-info/expe
     InputDirDirective,
     CommonModule,
     ChangeMonthArrowsComponent,
-    ExpensesInfoComponent
+    ExpensesInfoComponent,
+    GraphComponent
 ],
   templateUrl: './category-page.component.html',
   styleUrls: [

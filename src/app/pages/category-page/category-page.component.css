@@ -28,9 +28,9 @@
     flex-grow: 1;
 }
 
-.content .widget {
-    flex-grow: 1;
-    width: 50%;
+.left-side .widget {
+    width: 100%;
+    height: 100%;
 }
 
 .scroll{
@@ -39,11 +39,12 @@
     margin: 0 5px;
 }
 
-.content .widget h3 {
-    margin-left: 15px;
+.left-side .widget h3 {
+    margin: 0;
+    padding: 5px 0 0 5px;
 }
 
-.content .widget table {
+.left-side .widget table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 5px;
@@ -59,24 +60,24 @@ th{
     background-color: #dedede;
 }
 
-.content .widget tr {
+.left-side .widget tr {
     margin: 2.5px 0;
     background-color: #f5f5f5;
 }
 
-.content .widget table td:first-child{
+.left-side .widget table td:first-child{
     width: 35%;
 }
 
-.content .widget table td:nth-child(2){
+.left-side .widget table td:nth-child(2){
     width: 25%;
 }
 
-.content .widget table td:nth-child(3){
+.left-side .widget table td:nth-child(3){
     width: 15%;
 }
 
-.content .widget table td:nth-child(4){
+.left-side .widget table td:nth-child(4){
     width: 25%;
 }
 
@@ -88,18 +89,8 @@ th{
     padding: 20px 0;
 }
 
-.canvas-wrap {
-    height: 100%;
-}
-
-canvas {
-    height: 90%;
-    max-height: 50vh;
-}
-
-.no-expenses-info {
-    width: 100%;
-    text-align: center;
+.left-side, .right-side {
+    width: 50%;
 }
 
 .input {

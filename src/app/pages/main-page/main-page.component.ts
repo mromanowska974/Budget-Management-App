@@ -6,13 +6,11 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
 import { CommonModule } from '@angular/common';
-import { Observable, Subscription } from 'rxjs';
-import { LocalStorageService } from '../../services/local-storage.service';
+import { Subscription } from 'rxjs';
 import { DataService } from '../../services/data.service';
 import { ModalService } from '../../services/modal.service';
 import { Expense } from '../../models/expense.interface';
 import { Month } from '../../models/months.enum';
-import Chart from 'chart.js/auto';
 import { FormsModule } from '@angular/forms';
 import { MessagingService } from '../../services/messaging.service';
 import { CategoriesMenuComponent } from '../categories-menu/categories-menu.component';
@@ -20,6 +18,7 @@ import { ChangeMonthArrowsComponent } from '../../other-components/change-month-
 import { NavbarComponent } from "../../other-components/navbar/navbar.component";
 import { ContainerDirective } from '../../directives/container.directive';
 import { ExpensesInfoComponent } from "../../other-components/expenses-info/expenses-info.component";
+import { GraphComponent } from "../../other-components/graph/graph.component";
 
 
 @Component({
@@ -35,7 +34,8 @@ import { ExpensesInfoComponent } from "../../other-components/expenses-info/expe
     CommonModule,
     FormsModule,
     NavbarComponent,
-    ExpensesInfoComponent
+    ExpensesInfoComponent,
+    GraphComponent
 ],
   templateUrl: './main-page.component.html',
   styleUrls: [
@@ -52,9 +52,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
   modalService = inject(ModalService);
   route = inject(ActivatedRoute)
   messagingService = inject(MessagingService);
-
-  chart: any;
-  activeChart = 'category'
 
   profileId = localStorage.getItem('profileId');
 
@@ -133,8 +130,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
     }).then(() => {
       this.dataService.getCategories(this.loggedUser.uid, profile.id).then(categories => {
         profile.categories = categories;
-      }).then(() => {
-        this.createChart();
       })
     }).then(() => {
       this.dataService.getMessages(this.loggedUser.uid, profile.id).then(messages => {
@@ -145,86 +140,10 @@ export class MainPageComponent implements OnInit, OnDestroy{
     }) 
   }
 
-  createChart(){
-    if(this.chart !== undefined){
-      this.chart.destroy();
-    }
-    else {
-      if(this.chart === null){
-        console.log('nene')
-      }
-    }
-
-    let names: string[] = [];
-    let expensesSums: number[] = [];
-    let colors: string[] = [];
-
-    let daysInMonth = this.getDaysInMonth(this.checkedDate.getMonth(), this.checkedDate.getFullYear())
-
-    let profile = this.previewMode ? this.previewedProfile : this.activeProfile;
-
-    if(this.activeChart === 'category'){
-      profile.categories?.forEach(category => {
-        let sum = 0;
-        names.push(category.content);
-        colors.push(category.color);
-  
-        this.monthlyExpenses?.forEach(expense => {
-          if(expense.category === category.id){
-            sum += expense.price;
-          }
-        })
-        expensesSums.push(sum);
-      })
-    }
-    else if(this.activeChart === 'daysInMonth'){
-      daysInMonth.forEach(day => {
-        let sum = 0;
-        names.push(day.getDate().toString());
-  
-        this.monthlyExpenses.forEach(expense => {
-          expense.date.setHours(0,0,0,0);
-          day.setHours(0,0,0,0);
-          
-          if(expense.date.getTime() === day.getTime()){
-            sum+=expense.price;
-          }
-        })
-  
-        expensesSums.push(sum);
-      });
-    }
-
-
-    this.chart = new Chart('chart', {
-      type: 'bar',
-      data: {
-        labels: names,
-        datasets: [
-          {
-            label: this.activeChart === 'category' ? 'Wydatki wg kategorii' : 'Wydatki w '+this.checkedMonth,
-            data: expensesSums,
-            backgroundColor: this.activeChart === 'category' ? colors : '#c6c4ff',
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-        maintainAspectRatio: false
-      },
-    });
-  }
-
   onReceiveDate(event){
     this.checkedDate = event.fullDate;
     this.checkedMonth = event.monthName;
     this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile);
-    this.createChart();
   }
 
   onEnterEdit(propToEdit: string, index: number){
@@ -253,16 +172,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
     this.activeProfile.expenses![this.editedIndex] = editedExpense;
   }
 
-  onCategoryChart(){
-    this.activeChart = 'category'
-    this.createChart()
-  }
-
-  onDaysInMonthChart(){
-    this.activeChart = 'daysInMonth'
-    this.createChart()
-  }
-
   onEnterPreviewMode(template){
     this.modalService.openModal(this.modalRef, template)
   }
@@ -274,10 +183,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
   onSelectProfile(profile: Profile){
     if((this.previewMode === false && profile.id !== this.activeProfile.id) || (this.previewMode === true && profile.id !== this.previewedProfile.id)){
       this.previewedProfile = profile;
-
-      if(this.chart !== undefined){
-        this.chart.destroy()
-      }
 
       localStorage.setItem('previewedProfileId', this.previewedProfile.id)
       this.router.navigate(['main-page','preview', this.previewedProfile.id]).then(() => {
@@ -303,6 +208,4 @@ export class MainPageComponent implements OnInit, OnDestroy{
       this.monthlySum += expense.price;
     })
   }
-
-  getDaysInMonth = (month, year) => (new Array(31)).fill('').map((v,i)=>new Date(year,month,i+1)).filter(v=>v.getMonth()===month)
 }

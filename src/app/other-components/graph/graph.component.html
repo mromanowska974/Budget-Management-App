@@ -1,0 +1,26 @@
+<div class="graph">
+    <div 
+        class="widget"
+        appWidget
+    >
+        <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
+            Brak wydatków.
+        </p>
+        <div class="chart-wrap">
+            <canvas 
+                id="chart" 
+                [ngStyle]="{ 
+                    visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' 
+                }"
+            ></canvas>
+        </div>
+        <div 
+            *ngIf="!activeCategory"
+            class="chart-display"
+            [ngStyle]="{display: monthlyExpenses.length === 0 ? 'none' : 'flex'}"
+        >
+            <p (click)="onSwitchChartType()"> < </p>
+            <p (click)="onSwitchChartType()"> > </p>
+        </div>
+    </div>
+</div>

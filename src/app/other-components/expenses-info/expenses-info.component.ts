@@ -25,8 +25,6 @@ export class ExpensesInfoComponent implements OnChanges{
   ngOnChanges(changes: SimpleChanges): void {
     this.name = this.data.category ? this.data.category.content 
     : (this.previewMode ? this.data.previewedProfile.name : this.data.activeProfile.name);
-
-    console.log(this.data.category.color)
   }
 
   onEnterPreviewMode(){
