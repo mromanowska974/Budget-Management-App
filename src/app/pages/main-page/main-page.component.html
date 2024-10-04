@@ -15,31 +15,6 @@
             <app-change-month-arrows (dateEmitter)="onReceiveDate($event)"></app-change-month-arrows>
         </div>
         <div class="right-side">
-            <!-- <div class="graph">
-                <div 
-                    class="widget"
-                    appWidget
-                >
-                    <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
-                        Brak wydatków.
-                    </p>
-                    <div class="chart-wrap">
-                        <canvas 
-                            id="chart" 
-                            [ngStyle]="{ 
-                                visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' 
-                            }"
-                        ></canvas>
-                    </div>
-                    <div 
-                        class="chart-display"
-                        [ngStyle]="{display: monthlyExpenses.length === 0 ? 'none' : 'flex'}"
-                    >
-                        <p (click)="onCategoryChart()"> <- </p>
-                        <p (click)="onDaysInMonthChart()"> -> </p>
-                    </div>
-                </div>
-            </div> -->
             <app-graph 
                 [monthlyExpenses]="monthlyExpenses"
                 [categories]="previewMode ? previewedProfile.categories! : activeProfile.categories!"

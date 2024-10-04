@@ -98,7 +98,6 @@ export class GraphComponent implements OnChanges{
   }
 
   onSwitchChartType(){
-    console.log('lol');
     this.isChartDaysInMonthType = !this.isChartDaysInMonthType;
     this.isChartCategoryType = !this.isChartCategoryType;
 

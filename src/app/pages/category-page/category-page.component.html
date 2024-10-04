@@ -46,17 +46,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div 
-            class="widget"
-            appWidget
-        >
-            <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
-                Brak wydatków.
-            </p>
-            <div class="canvas-wrap">
-                <canvas id="daysInMonthChart" [ngStyle]="{ visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' }"></canvas>
-            </div>
-        </div> -->
         <div class="right-side">
             <app-graph 
                 [date]="{fullDate: checkedDate, monthName: checkedMonth}"

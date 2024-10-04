@@ -4,10 +4,10 @@
 
 .change-month {
     display: flex;
-    width: 30vw;
-    max-width: 100%;
+    max-width: 95%;
     justify-content: space-between;
     height: fit-content;
+    margin: 0 2.5%;
 }
 
 .change-month p:first-child, .change-month p:last-child {
