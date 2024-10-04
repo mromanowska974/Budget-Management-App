@@ -7,7 +7,11 @@
 .row {
     display: flex;
     justify-content: space-between;
-    margin: 20px;
+    margin: 0 20px;
+}
+
+.expenses-info {
+    width: 70%;
 }
 
 .btn-box {
@@ -109,7 +113,12 @@ th{
 
 @media (orientation: portrait){
     .content {
-        flex-direction: column;
+        flex-direction: column-reverse;
+        justify-content: start;
+    }
+    
+    .right-side, .left-side {
+        height: 30vh;
     }
 
     .content .widget {
@@ -127,6 +136,10 @@ th{
     }
 
     .left-side, .right-side {
+        width: 100%;
+    }
+
+    .expenses-info {
         width: 100%;
     }
 }

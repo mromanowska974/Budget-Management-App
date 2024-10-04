@@ -1,11 +1,13 @@
 <div class="container" appContainer *ngIf="isLoaded">
     <div class="row">
-        <app-expenses-info 
-            [date]="{fullDate: checkedDate, monthName: checkedMonth}"
-            [data]="{category: activeCategory}"
-            [monthlySum]="monthlySum"
-            [previewMode]="previewMode"
-        ></app-expenses-info>
+        <div class="expenses-info">
+            <app-expenses-info 
+                [date]="{fullDate: checkedDate, monthName: checkedMonth}"
+                [data]="{category: activeCategory}"
+                [monthlySum]="monthlySum"
+                [previewMode]="previewMode"
+            ></app-expenses-info>
+        </div>
         <div class="btn-box" *ngIf="!previewMode">
             <button appButtonDir (click)="onEditCategory(modalRef)">
                 <img src="../assets/icons/pencil-icon.png" width="30px">

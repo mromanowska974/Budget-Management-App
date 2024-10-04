@@ -17,6 +17,7 @@
     display: flex;
     flex-direction: column;
     gap: calc(1vh + 1vw);
+    min-width: 60%;
 }
 
 .name {
@@ -27,7 +28,7 @@
     font-size: calc(25px + 1.5vh);
     margin: 0;
     width: fit-content;
-    max-width: 70%;
+    max-width: 80%;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -35,7 +36,7 @@
 
 
 .text-form {
-    align-self: center;
+    align-self: flex-start;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -73,5 +74,9 @@
 
     .text-form h1 {
         font-size: calc(2em + 2.5vw);
+    }
+
+    .info {
+        width: 50%;
     }
 }
