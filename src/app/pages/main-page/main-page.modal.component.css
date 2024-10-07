@@ -50,3 +50,7 @@
 .active {
     background-color: #cccccc;
 }
+
+.button button, .button img{
+    width: 50px;
+}

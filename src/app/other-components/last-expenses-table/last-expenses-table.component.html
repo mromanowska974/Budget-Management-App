@@ -1,0 +1,87 @@
+<div 
+    class="widget"
+    appWidget
+>
+    <h3>Ostatnie wydatki</h3>
+    <div class="scroll">
+        <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
+            Brak wydatków.
+        </p>
+        <table>
+            <tr *ngIf="monthlyExpenses.length > 0">
+                <th>Kategoria</th>
+                <th>Kwota</th>
+                <th>Data</th>
+                <th>Opis</th>
+                <th>Cykliczność</th>
+            </tr>
+            <tr *ngFor="let expense of monthlyExpenses; let i = index" title="Kliknij dwukrotnie lewym przyciskiem myszy żeby edytować dane.">
+                <!-- 
+                <td (dblclick)="onEnterEdit('renewalTime', i)" (keydown.enter)="onCloseEdit()">
+                    <p *ngIf="previewMode || !previewMode && (propToEdit.length === 0 || editedIndex !== i || propToEdit !== 'renewalTime')">
+                        {{ expense.renewalTime ? expense.renewalTime + ' dni' : 'Jednorazowy' }}
+                    </p>
+                    <div 
+                        class="cyclic-input" 
+                        *ngIf="propToEdit === 'renewalTime' && editedIndex === i && !previewMode"
+                        (keydown.enter)="onCloseEdit()"
+                    >
+                        <div class="chkbx">
+                            <input 
+                                type="checkbox"
+                                id="cyclic"
+                                name="cyclic"
+                                ngModel
+                                #chkbx
+                                (change)="onChangeProp($event, 'isPeriodic')"
+                            > Cykliczny
+                        </div>
+                        <div class="cyclic-value">
+                            <p>Co</p>
+                            <input 
+                                type="number" 
+                                id="renewal"
+                                name="renewal"
+                                ngModel
+                                [disabled]="!chkbx.checked" 
+                                (keydown.enter)="onChangeProp($event)"
+                            >
+                            <p>dni</p>
+                        </div>
+                    </div>
+                </td> -->
+                <td>
+                    <app-table-item
+                        [propToEdit]="'category'"
+                        [expense]="expense"
+                        [categories]="profile.categories"
+                    ></app-table-item>
+                </td>
+                <td>
+                    <app-table-item
+                        [propToEdit]="'price'"
+                        [expense]="expense"
+                    ></app-table-item>
+                </td>
+                <td>
+                    <app-table-item
+                        [propToEdit]="'date'"
+                        [expense]="expense"
+                    ></app-table-item>
+                </td>
+                <td>
+                    <app-table-item
+                        [propToEdit]="'description'"
+                        [expense]="expense"
+                    ></app-table-item>
+                </td>
+                <td>
+                    <app-table-item
+                        [propToEdit]="'renewalTime'"
+                        [expense]="expense"
+                    ></app-table-item>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

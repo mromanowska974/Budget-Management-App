@@ -1,0 +1,114 @@
+.widget {
+    height: 100%;
+    padding-bottom: 5vh;
+}
+
+.scroll{
+    overflow-y: auto;
+    height: 30vh;
+    overflow-x: hidden;
+}
+
+.widget h3 {
+    margin-left: 15px;
+    margin-top: 5px;
+}
+
+.widget .scroll table {
+    width: 98%;
+    border-collapse: separate;
+    border-spacing: 5px;
+    padding: 0;
+
+}
+
+th, td{
+    text-align: center;
+    padding: 0;
+    font-size: 14px;
+}
+
+th{
+    background-color: #dedede;
+}
+
+tr {
+    margin: 2.5px 0;
+    background-color: #f5f5f5;
+}
+
+.widget table td:first-child{
+    width: 15%;
+}
+
+.widget table td:nth-child(2){
+    width: 10%;
+}
+
+.widget table td:nth-child(3){
+    width: 20%;
+}
+
+.widget table td:nth-child(4){
+    width: 30%;
+}
+
+.widget table td:nth-child(5){
+    width: 20%;
+}
+
+.no-expenses-info {
+    width: 90%;
+    text-align: center;
+}
+
+@media (orientation: landscape){  
+    .container {
+        min-height: 100vh;
+    }
+
+    .widget{
+        margin-inline: 3%;
+        width: 94%;
+    }
+
+    .widget table{
+        margin: 0 10px;
+        width: 90%;
+    }
+
+    .widget table td{
+        padding: 5px 0;
+    }
+}
+
+@media (orientation: portrait) {
+    .widget {
+        width: 90%;
+        align-self: center;
+        margin: 10px 5%;
+        height: 80%;
+    }
+
+    .scroll {
+        width: 100%;
+    }
+
+    .widget table{
+        width: 70%;
+    }
+
+    td p, th{
+        padding: 1px 0;
+        font-size: calc(10px + 0.4vw) !important;
+        height: fit-content;
+    }
+
+    td p{
+        margin: 0;
+    }
+
+    .widget table td:nth-child(4){
+        width: 25%;
+    }
+}

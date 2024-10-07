@@ -1,0 +1,33 @@
+<div (dblclick)="onEnterEdit(propToEdit)">
+    <p *ngIf="previewMode || (!previewMode && !editMode)">
+        {{
+            propToEdit === 'category' ? categories.find(findCategory()).content :    
+            propToEdit === 'price' ? expense.price + ' zł' : 
+            propToEdit === 'date' ? (expense.date | date) : 
+            propToEdit === 'renewalTime' && expense.renewalTime ? 'Co ' + expense.renewalTime + ' dni' :
+            propToEdit === 'renewalTime' && !expense.renewalTime ? 'Jednorazowy' :
+            expense[propToEdit]
+        }}
+    </p>
+    <div class="edit-option" *ngIf="!previewMode && editMode">
+        <select
+            *ngIf="propToEdit === 'category'"
+            id="category"
+            name="category"
+            (change)="onChangeProp($event)"
+        >
+            <option [value]="category.id" *ngFor="let category of categories">
+                {{ category.content }}
+            </option>
+        </select>
+        <input
+            *ngIf="propToEdit !== 'category' && propToEdit !== 'renewalTime'"
+            [type]="propToEdit === 'price' ? 'number' : (propToEdit === 'date' ? 'date' : 'text')"
+            (change)="onChangeProp($event)"
+        >
+        <div class="btn-box">
+            <button (click)="onCloseEdit()">Y</button>
+            <button (click)="onCloseEdit()">N</button>
+        </div>
+    </div>
+</div>

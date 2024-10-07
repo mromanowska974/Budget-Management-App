@@ -19,6 +19,7 @@ import { NavbarComponent } from "../../other-components/navbar/navbar.component"
 import { ContainerDirective } from '../../directives/container.directive';
 import { ExpensesInfoComponent } from "../../other-components/expenses-info/expenses-info.component";
 import { GraphComponent } from "../../other-components/graph/graph.component";
+import { LastExpensesTableComponent } from '../../other-components/last-expenses-table/last-expenses-table.component';
 
 
 @Component({
@@ -35,7 +36,8 @@ import { GraphComponent } from "../../other-components/graph/graph.component";
     FormsModule,
     NavbarComponent,
     ExpensesInfoComponent,
-    GraphComponent
+    GraphComponent,
+    LastExpensesTableComponent
 ],
   templateUrl: './main-page.component.html',
   styleUrls: [
@@ -146,32 +148,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
     this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile);
   }
 
-  onEnterEdit(propToEdit: string, index: number){
-    this.propToEdit = propToEdit;
-    this.editedIndex = index;
-  }
-
-  onCloseEdit(){
-    this.dataService.updateExpense(this.loggedUser.uid, this.activeProfile.id, this.editedId, this.activeProfile.expenses![this.editedIndex]).then(data => {
-      this.authService.changeExpense(this.loggedUser, this.activeProfile.id, data);
-    })
-    this.propToEdit = '';
-    this.editedIndex = null;
-  }
-
-  onChangeProp(evt, propToEdit?){
-    const editedExpense = this.activeProfile.expenses![this.editedIndex];
-    if(propToEdit === 'isPeriodic'){ //only for isPeriodic
-      editedExpense.isPeriodic = evt.target.checked;
-      editedExpense.renewalTime = null;
-    }
-    else editedExpense[this.propToEdit] = evt.target.value;
-    this.editedId = editedExpense.id;
-    console.log(this.editedId)
-    
-    this.activeProfile.expenses![this.editedIndex] = editedExpense;
-  }
-
   onEnterPreviewMode(template){
     this.modalService.openModal(this.modalRef, template)
   }
@@ -195,10 +171,6 @@ export class MainPageComponent implements OnInit, OnDestroy{
         window.location.reload();
       })
     }
-  }
-
-  findCategory(expense: Expense){
-    return (category) => category.id === expense.category
   }
 
   filterExpensesByMonth(profile: Profile){

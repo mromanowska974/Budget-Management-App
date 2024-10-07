@@ -1,0 +1,12 @@
+.cyclic-input {
+    display: flex;
+    flex-basis: 100%;
+}
+
+.cyclic-value input{
+    width: 30px;
+}
+
+p{
+    margin: 0;
+}
