@@ -7,7 +7,6 @@ import { ButtonDirDirective } from '../../directives/button-dir.directive';
 import { InputDirDirective } from '../../directives/input-dir.directive';
 import { ContainerDirective } from '../../directives/container.directive';
 import { AuthService } from '../../services/auth.service';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { Profile } from '../../models/profile.interface';
 import { User } from '../../models/user.interface';
 
@@ -28,16 +27,16 @@ import { User } from '../../models/user.interface';
 export class ProfileAuthComponent implements OnInit, OnDestroy{
   authService = inject(AuthService);
   router = inject(Router);
-  localStorageService = inject(LocalStorageService);
 
-  profileId = this.localStorageService.getItem('profileId');
+  profileId = localStorage.getItem('profileId');
   sub: Subscription;
 
   loggedUser: User | null = null
   activeProfile: Profile;
   isLoaded: boolean = false;
-  @ViewChild('pinCode') pinCodeInput: ElementRef;
   errorMsg: string = '';
+  
+  @ViewChild('pinCode') pinCodeInput: ElementRef;
 
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
@@ -48,7 +47,7 @@ export class ProfileAuthComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-      this.sub.unsubscribe()
+      if(this.sub) this.sub.unsubscribe()
   }
 
   onSubmit(){

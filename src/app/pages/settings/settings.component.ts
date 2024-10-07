@@ -1,9 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewContainerRef, inject } from '@angular/core';
-// import { WidgetDirective } from '../directives/widget.directive';
-// import { ButtonDirDirective } from '../directives/button-dir.directive';
 import { Router } from '@angular/router';
-// import { AuthService } from '../services/auth.service';
-// import { User } from '../models/user.interface';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { WidgetDirective } from '../../directives/widget.directive';
@@ -12,16 +8,9 @@ import { InputDirDirective } from '../../directives/input-dir.directive';
 import { ContainerDirective } from '../../directives/container.directive';
 import { AuthService } from '../../services/auth.service';
 import { ModalService } from '../../services/modal.service';
-import { DataService } from '../../services/data.service';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
-// import { Profile } from '../models/profile.interface';
-// import { ModalService } from '../services/modal.service';
-// import { InputDirDirective } from '../directives/input-dir.directive';
-// import { DataService } from '../services/data.service';
-// import { LocalStorageService } from '../services/local-storage.service';
-// import { ContainerDirective } from '../directives/container.directive';
+import { ProfileService } from '../../services/profile.service';
 
 
 @Component({
@@ -48,11 +37,10 @@ export class SettingsComponent implements OnInit, OnDestroy{
   router = inject(Router)
   authService = inject(AuthService);
   modalService = inject(ModalService);
-  dataService = inject(DataService);
-  localStorageService = inject(LocalStorageService);
+  profileService = inject(ProfileService);
 
   sub: Subscription
-  profileId = this.localStorageService.getItem('profileId');
+  profileId = localStorage.getItem('profileId');
 
   isLoaded = false;
   action: string;
@@ -78,7 +66,7 @@ export class SettingsComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-      this.sub.unsubscribe()
+      if(this.sub) this.sub.unsubscribe()
   }
 
   onSubscription(){
@@ -107,8 +95,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
         this.errorMsg = 'Kod PIN musi mieć długość od 4 do 8 cyfr.'
       }
       else {
-        this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data).then(() => {
-          this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+        this.profileService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data).then(() => {
+          this.profileService.getProfiles(this.loggedUser.uid).then(data => {
             this.authService.changeUser('profiles', data, this.loggedUser)
           })
         })
@@ -125,8 +113,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
           this.errorMsg = 'Kod PIN musi mieć długość od 4 do 8 cyfr.'
         }
         else {
-          this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data[0]).then(() => {
-            this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+          this.profileService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data[0]).then(() => {
+            this.profileService.getProfiles(this.loggedUser.uid).then(data => {
               this.authService.changeUser('profiles', data, this.loggedUser)
             })
           })
@@ -154,8 +142,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Profil o podanej nazwie już istnieje'
     }
     else {
-      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'name', data).then(() => {
-        this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+      this.profileService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'name', data).then(() => {
+        this.profileService.getProfiles(this.loggedUser.uid).then(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })
       })
@@ -175,8 +163,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
-      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'monthlyLimit', data).then(() => {
-        this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+      this.profileService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'monthlyLimit', data).then(() => {
+        this.profileService.getProfiles(this.loggedUser.uid).then(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })
       })
@@ -196,8 +184,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
-      this.dataService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'notificationTime', data).then(() => {
-        this.dataService.getProfiles(this.loggedUser.uid).then(data => {
+      this.profileService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'notificationTime', data).then(() => {
+        this.profileService.getProfiles(this.loggedUser.uid).then(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })
       })

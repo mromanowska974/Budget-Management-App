@@ -1,21 +1,13 @@
-import { Component, inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-// import { ContainerDirective } from '../directives/container.directive';
-// import { ButtonDirDirective } from '../directives/button-dir.directive';
+import { Component, inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ContainerDirective } from '../../directives/container.directive';
 import { ButtonDirDirective } from '../../directives/button-dir.directive';
 import { AuthService } from '../../services/auth.service';
-import { DataService } from '../../services/data.service';
 import { ModalService } from '../../services/modal.service';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
-// import { AuthService } from '../services/auth.service';
-// import { User } from '../models/user.interface';
-// import { DataService } from '../services/data.service';
-// import { ModalService } from '../services/modal.service';
-// import { LocalStorageService } from '../services/local-storage.service';
-// import { Profile } from '../models/profile.interface';
+import { UserService } from '../../services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-subscription',
@@ -27,24 +19,29 @@ import { Profile } from '../../models/profile.interface';
   templateUrl: './subscription.component.html',
   styleUrl: './subscription.component.css'
 })
-export class SubscriptionComponent implements OnInit{
+export class SubscriptionComponent implements OnInit, OnDestroy{
   @ViewChild('modalRef', {read: ViewContainerRef}) modalRef: ViewContainerRef;
 
   router = inject(Router);
   authService = inject(AuthService);
-  dataService = inject(DataService);
+  userService = inject(UserService);
   modalService = inject(ModalService);
-  localStorageService = inject(LocalStorageService);
 
   loggedUser: User;
   activeProfile: Profile;
 
+  sub: Subscription;
+
   ngOnInit(): void {
-      this.authService.user.subscribe(user => {
+      this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
 
-        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.localStorageService.getItem('profileId'))!
+        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === localStorage.getItem('profileId'))!
       })
+  }
+
+  ngOnDestroy(): void {
+      if(this.sub) this.sub.unsubscribe();
   }
 
   onGoBack(){
@@ -53,7 +50,7 @@ export class SubscriptionComponent implements OnInit{
 
   onChangeAccountStatus(template){
     if(this.loggedUser.accountStatus==='free'){
-      this.dataService.updateUser(this.loggedUser.uid, 'accountStatus', 'PLUS').subscribe(data => {
+      this.userService.updateUser(this.loggedUser.uid, 'accountStatus', 'PLUS').subscribe(data => {
         this.authService.changeUser('accountStatus', data!['accountStatus'], this.loggedUser)
       })
     }
@@ -69,12 +66,9 @@ export class SubscriptionComponent implements OnInit{
 
   onUnderstood(){
     if(this.loggedUser.profiles.length <= 3 && this.loggedUser.profiles.filter(profile => profile.role === 'admin').length === 1){
-      this.dataService.updateUser(this.loggedUser.uid, 'accountStatus', 'free').subscribe(data => {
+      this.userService.updateUser(this.loggedUser.uid, 'accountStatus', 'free').subscribe(data => {
         this.authService.changeUser('accountStatus', data!['accountStatus'], this.loggedUser)
       })
-    }
-    else {
-      console.log('Nie można anulować')
     }
     this.onCloseModal()
   }

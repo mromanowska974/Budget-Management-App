@@ -7,10 +7,10 @@ import { AuthService } from '../../services/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Firestore } from '@angular/fire/firestore';
-import { DataService } from '../../services/data.service';
 import { User } from '../../models/user.interface';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { ContainerDirective } from '../../directives/container.directive';
+import { ProfileService } from '../../services/profile.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit{
   db = inject(Firestore);
   router = inject(Router);
   authService = inject(AuthService);
-  dataService = inject(DataService);
-  localStorageService = inject(LocalStorageService);
+  profileService = inject(ProfileService);
+  userService = inject(UserService);
 
   @ViewChild('f') signupForm: NgForm;
   loginMode = false;
@@ -41,8 +41,6 @@ export class LoginComponent implements OnInit{
   ngOnInit(): void {
     if(this.router.url === '/register') this.loginMode = false;
     else this.loginMode = true;
-
-    console.log(this.loginMode)
   }
 
   onSignInFB(){
@@ -77,7 +75,7 @@ export class LoginComponent implements OnInit{
   }
 
   setActiveUser(doc, uid){
-      return this.dataService.getProfiles(uid).then(data => {
+      return this.profileService.getProfiles(uid).then(data => {
         let user: User = {
           uid: uid,
           email: doc.email,
@@ -97,11 +95,11 @@ export class LoginComponent implements OnInit{
   handleAlternateSignIn(data){
     let userDoc;
 
-    this.dataService.getUser(data!.user?.uid!).then(doc => {
+    this.userService.getUser(data!.user?.uid!).then(doc => {
       userDoc = doc
       if(!userDoc){
-        this.dataService.addUser(data).then(() => {
-          this.dataService.getUser(data!.user?.uid!).then(doc => {
+        this.userService.addUser(data).then(() => {
+          this.userService.getUser(data!.user?.uid!).then(doc => {
             let loggedUser = doc
 
             this.setActiveUser(loggedUser, data!.user?.uid!).then(() => {
@@ -116,13 +114,12 @@ export class LoginComponent implements OnInit{
           if(data.profiles.length === 1) this.router.navigate(['main-page']);
           else this.router.navigate(['profiles-panel']);
         });
-
       }
     })
   }
 
   saveToLocalStorage(key, value) {
-    this.localStorageService.setItem(key, value);
+    localStorage.setItem(key, value);
   }
 
   onSubmit(){
@@ -131,7 +128,7 @@ export class LoginComponent implements OnInit{
         .login(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
           next: (data) => {
-            this.dataService.getUser(data.user.uid).then(user => {
+            this.userService.getUser(data.user.uid).then(user => {
               this.setActiveUser(user, data.user.uid).then(data => {
                 if(data.profiles.length === 1) this.router.navigate(['main-page']);
                 else this.router.navigate(['profiles-panel']);
@@ -148,8 +145,8 @@ export class LoginComponent implements OnInit{
         .register(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
           next: (credential) => {
-            this.dataService.addUser(credential).then(() => {
-              this.dataService.getUser(credential!.user?.uid!).then(doc => {
+            this.userService.addUser(credential).then(() => {
+              this.userService.getUser(credential!.user?.uid!).then(doc => {
                 let loggedUser = doc
   
                 this.setActiveUser(loggedUser, credential!.user?.uid!).then(() => {

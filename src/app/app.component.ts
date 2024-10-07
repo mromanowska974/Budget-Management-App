@@ -4,9 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { User } from './models/user.interface';
 import { Firestore } from '@angular/fire/firestore';
-import { DataService } from './services/data.service';
-import { LocalStorageService } from './services/local-storage.service';
 import { MessagingService } from './services/messaging.service';
+import { UserService } from './services/user.service';
+import { ProfileService } from './services/profile.service';
 
 @Component({
   selector: 'app-root',
@@ -18,20 +18,20 @@ import { MessagingService } from './services/messaging.service';
 export class AppComponent implements OnInit{
   title = 'Smart Coinbook';
 
-  authService = inject(AuthService);
   db = inject(Firestore);
-  dataService = inject(DataService);
-  localStorageService = inject(LocalStorageService);
+  authService = inject(AuthService);
   messagingService = inject(MessagingService);
+  userService = inject(UserService);
+  profileService = inject(ProfileService);
 
   loggedUser: User | null = null;
 
   ngOnInit(): void {
-    let uid: string |null = this.localStorageService.getItem('uid');
+    let uid: string |null = localStorage.getItem('uid');
 
     if(uid !== null){
-      this.dataService.getUser(uid).then(result => {
-        this.dataService.getProfiles(uid).then(data => {
+      this.userService.getUser(uid).then(result => {
+        this.profileService.getProfiles(uid).then(data => {
           this.authService.setUser({
             email: result!['email'],
             accountStatus: result!['accountStatus'],

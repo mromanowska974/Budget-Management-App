@@ -7,11 +7,10 @@ import { ContainerDirective } from '../../directives/container.directive';
 import { ButtonDirDirective } from '../../directives/button-dir.directive';
 import { InputDirDirective } from '../../directives/input-dir.directive';
 import { WidgetDirective } from '../../directives/widget.directive';
-import { DataService } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-add-category',
@@ -32,9 +31,8 @@ export class AddCategoryComponent implements OnInit, OnDestroy{
   @ViewChild('categoryForm') categoryForm: NgForm;
 
   router = inject(Router);
-  dataService = inject(DataService);
   authService = inject(AuthService);
-  localStorageService = inject(LocalStorageService);
+  categoryService = inject(CategoryService);
 
   sub: Subscription;
   loggedUser: User;
@@ -44,15 +42,15 @@ export class AddCategoryComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
-        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.localStorageService.getItem('profileId'))!
-        this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
+        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === localStorage.getItem('profileId'))!
+        this.categoryService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
           this.activeProfile.categories = data;
         })
       })
   }
 
   ngOnDestroy(): void {
-      this.sub.unsubscribe()
+      if(this.sub) this.sub.unsubscribe()
   }
 
   onInputChange(){
@@ -74,7 +72,7 @@ export class AddCategoryComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Kategoria o podanym kolorze już istnieje.'
     }
     else{
-      this.dataService.addCategory(this.loggedUser.uid, this.activeProfile.id, this.categoryForm.value)
+      this.categoryService.addCategory(this.loggedUser.uid, this.activeProfile.id, this.categoryForm.value)
       this.onGoBack()
     }
   }

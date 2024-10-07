@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { DataService } from '../../services/data.service';
+import { Component, inject, Input } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Expense } from '../../models/expense.interface';
+import { ExpenseService } from '../../services/expense.service';
 
 @Component({
   selector: 'app-table-item',
@@ -18,7 +18,7 @@ export class TableItemComponent{
   @Input() categories;
   @Input() expense: Expense;
   
-  dataService = inject(DataService);
+  expenseService = inject(ExpenseService);
   authService = inject(AuthService);
   
   uid = localStorage.getItem('uid');
@@ -30,24 +30,22 @@ export class TableItemComponent{
     this.editMode = true;
   }
 
-  onCloseEdit(){
-    this.dataService.updateExpense(this.uid, this.profileId, this.expense.id, this.expense).then(data => {
+  onCloseEdit(expense?){
+    this.expenseService.updateExpense(this.uid, this.profileId, expense.id, expense).then(data => {
       // this.authService.changeExpense(this.loggedUser, this.activeProfile.id, data);
     })
     this.editMode = false;
   }
 
   onChangeProp(evt, propToEdit?){
-    // const editedExpense = this.activeProfile.expenses![this.editedIndex];
+    let newExpense = this.expense;
     if(propToEdit === 'isPeriodic'){ //only for isPeriodic
-      this.expense.isPeriodic = evt.target.checked;
-      this.expense.renewalTime = null;
+      newExpense.isPeriodic = evt.target.checked;
+      newExpense.renewalTime = null;
     }
-    else this.expense[this.propToEdit] = evt.target.value;
-    // this.editedId = editedExpense.id;
-    // console.log(this.editedId)
-    
-    // this.activeProfile.expenses![this.editedIndex] = editedExpense;
+    else newExpense[this.propToEdit] = evt.target.value;
+
+    this.onCloseEdit(newExpense);
   }
 
   findCategory(){

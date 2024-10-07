@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { ContainerDirective } from '../../directives/container.directive';
 import { ButtonDirDirective } from '../../directives/button-dir.directive';
 import { WidgetDirective } from '../../directives/widget.directive';
-import { LocalStorageService } from '../../services/local-storage.service';
-import { DataService } from '../../services/data.service';
 import { Profile } from '../../models/profile.interface';
 import { Message } from '../../models/message.interface';
+import { ProfileService } from '../../services/profile.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-notifications',
@@ -24,18 +24,18 @@ import { Message } from '../../models/message.interface';
 })
 export class NotificationsComponent implements OnInit{
   router = inject(Router);
-  localStorageService = inject(LocalStorageService);
-  dataService = inject(DataService);
+  profileService = inject(ProfileService);
+  notificationService = inject(NotificationService);
   activeProfile: Profile;
 
-  uid = this.localStorageService.getItem('uid');
-  pid = this.localStorageService.getItem('profileId');
+  uid = localStorage.getItem('uid');
+  pid = localStorage.getItem('profileId');
 
   ngOnInit(): void {
-      this.dataService.getProfile(this.uid, this.pid).then(profile => {
+      this.profileService.getProfile(this.uid, this.pid).then(profile => {
         this.activeProfile = profile
       }).then(() => {
-        this.dataService.getMessages(this.uid, this.pid).then(messages => {
+        this.notificationService.getMessages(this.uid, this.pid).then(messages => {
           this.activeProfile.messages = messages;
         })
       })
@@ -47,6 +47,6 @@ export class NotificationsComponent implements OnInit{
 
   onReadMessage(message: Message){
     message.isRead = true
-    this.dataService.readMessage(this.uid, this.pid, message.id)
+    this.notificationService.readMessage(this.uid, this.pid, message.id)
   }
 }

@@ -25,9 +25,40 @@
             [type]="propToEdit === 'price' ? 'number' : (propToEdit === 'date' ? 'date' : 'text')"
             (change)="onChangeProp($event)"
         >
+        <div 
+            class="cyclic-input" 
+            *ngIf="propToEdit === 'renewalTime' && !previewMode"
+        >
+            <div class="chkbx">
+                <input 
+                    type="checkbox"
+                    id="cyclic"
+                    name="cyclic"
+                    ngModel
+                    #chkbx
+                    (change)="onChangeProp($event, 'isPeriodic')"
+                > Cykliczny
+            </div>
+            <div class="cyclic-value">
+                <p>Co</p>
+                <input 
+                    type="number" 
+                    id="renewal"
+                    name="renewal"
+                    ngModel
+                    [disabled]="!chkbx.checked" 
+                    (keydown.enter)="onChangeProp($event)"
+                >
+                <p>dni</p>
+            </div>
+        </div>
         <div class="btn-box">
-            <button (click)="onCloseEdit()">Y</button>
-            <button (click)="onCloseEdit()">N</button>
+            <button (click)="onCloseEdit()">
+                <img src="../../../assets/icons/yes-icon.svg">
+            </button>
+            <button (click)="onCloseEdit()">
+                <img src="../../../assets/icons/no-icon.svg">
+            </button>
         </div>
     </div>
 </div>

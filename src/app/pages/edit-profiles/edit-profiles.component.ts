@@ -8,11 +8,10 @@ import { ButtonDirDirective } from '../../directives/button-dir.directive';
 import { WidgetDirective } from '../../directives/widget.directive';
 import { InputDirDirective } from '../../directives/input-dir.directive';
 import { AuthService } from '../../services/auth.service';
-import { DataService } from '../../services/data.service';
 import { ModalService } from '../../services/modal.service';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
   selector: 'app-edit-profiles',
@@ -34,9 +33,8 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
 
   router = inject(Router);
   authService = inject(AuthService);
-  dataService = inject(DataService);
   modalService = inject(ModalService);
-  localStorageService = inject(LocalStorageService);
+  profileService = inject(ProfileService);
 
   loggedUser: User;
   isLoaded = false;
@@ -57,14 +55,14 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
         this.isLoaded = true;
         this.adminsCount = this.loggedUser.profiles.filter(profile => profile.role === 'admin').length;
 
-        this.dataService.getProfile(this.loggedUser.uid, this.localStorageService.getItem('profileId')).then(profile => {
+        this.profileService.getProfile(this.loggedUser.uid, localStorage.getItem('profileId')).then(profile => {
           this.activeProfile = profile
         })
       })
   }
 
   ngOnDestroy(): void {
-      this.sub.unsubscribe();
+      if(this.sub) this.sub.unsubscribe();
   }
 
   onGoBack(){
@@ -80,7 +78,7 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
 
   private modifyPrivileges(data){
     if(((data === 'admin' && this.adminsCount < this.adminsLimit) || data === 'user') && this.selectedProfile.id !== this.activeProfile.id){
-      this.dataService.updateProfile(this.loggedUser.uid, this.selectedProfile.id, 'role', data).then(profile => {
+      this.profileService.updateProfile(this.loggedUser.uid, this.selectedProfile.id, 'role', data).then(profile => {
         this.authService.changeProfiles(this.loggedUser, profile)
         this.data = null;
         this.action = '';
@@ -100,7 +98,7 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
     if(newPin === undefined) this.errorMsg = 'Proszę podać nowy kod PIN.';
     else if(newPin.toString().length < 4 || newPin.toString().length > 8) this.errorMsg = 'Kod PIN musi zawierać od 4 do 8 cyfr.';
     else {
-      this.dataService.updateProfile(this.loggedUser.uid, pid, 'PIN', newPin.toString()).then(data => {
+      this.profileService.updateProfile(this.loggedUser.uid, pid, 'PIN', newPin.toString()).then(data => {
         this.authService.changeProfiles(this.loggedUser, data)
   
         this.data = null;
@@ -118,7 +116,7 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
   }
 
   private deleteProfile(pid: string){
-    this.dataService.deleteProfile(this.loggedUser.uid, pid).then(() => {
+    this.profileService.deleteProfile(this.loggedUser.uid, pid).then(() => {
       this.authService.deleteProfile(this.loggedUser, pid)
       this.onCloseModal();
     })

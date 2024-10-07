@@ -21,34 +21,7 @@
                     <p *ngIf="previewMode || !previewMode && (propToEdit.length === 0 || editedIndex !== i || propToEdit !== 'renewalTime')">
                         {{ expense.renewalTime ? expense.renewalTime + ' dni' : 'Jednorazowy' }}
                     </p>
-                    <div 
-                        class="cyclic-input" 
-                        *ngIf="propToEdit === 'renewalTime' && editedIndex === i && !previewMode"
-                        (keydown.enter)="onCloseEdit()"
-                    >
-                        <div class="chkbx">
-                            <input 
-                                type="checkbox"
-                                id="cyclic"
-                                name="cyclic"
-                                ngModel
-                                #chkbx
-                                (change)="onChangeProp($event, 'isPeriodic')"
-                            > Cykliczny
-                        </div>
-                        <div class="cyclic-value">
-                            <p>Co</p>
-                            <input 
-                                type="number" 
-                                id="renewal"
-                                name="renewal"
-                                ngModel
-                                [disabled]="!chkbx.checked" 
-                                (keydown.enter)="onChangeProp($event)"
-                            >
-                            <p>dni</p>
-                        </div>
-                    </div>
+
                 </td> -->
                 <td>
                     <app-table-item

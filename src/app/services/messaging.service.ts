@@ -1,15 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
-import { LocalStorageService } from './local-storage.service';
 import { getToken, Messaging, onMessage } from '@angular/fire/messaging';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagingService {
-  localStorageService = inject(LocalStorageService);
   messaging = inject(Messaging);
   http = inject(HttpClient);
 
@@ -20,7 +18,7 @@ export class MessagingService {
   getDeviceToken(){
     getToken(this.messaging, {vapidKey: environment.vapidKey})
     .then(token => {
-      this.localStorageService.setItem('messageToken', token)
+      localStorage.setItem('messageToken', token)
     }).catch(error => {
       console.log(error)
     })
@@ -39,7 +37,7 @@ export class MessagingService {
 
   sendMessage(title, content){
     this.http.post(this.serverUrl+'/send', {
-      fcmToken: this.localStorageService.getItem('messageToken'),
+      fcmToken: localStorage.getItem('messageToken'),
       title: title,
       content: content
     }).subscribe();

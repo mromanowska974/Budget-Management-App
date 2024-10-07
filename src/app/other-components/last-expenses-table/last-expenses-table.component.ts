@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { WidgetDirective } from '../../directives/widget.directive';
 import { TableItemComponent } from "../table-item/table-item.component";
 import { Profile } from '../../models/profile.interface';

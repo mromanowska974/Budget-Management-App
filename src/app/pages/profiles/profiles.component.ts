@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { WidgetDirective } from '../../directives/widget.directive';
 import { ContainerDirective } from '../../directives/container.directive';
 import { AuthService } from '../../services/auth.service';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
 
@@ -23,7 +22,6 @@ import { Profile } from '../../models/profile.interface';
 })
 export class ProfilesComponent implements OnInit, OnDestroy{
   authService = inject(AuthService);
-  localStorageService = inject(LocalStorageService);
   router = inject(Router);
 
   sub: Subscription;
@@ -42,12 +40,12 @@ export class ProfilesComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-      this.sub.unsubscribe();
+      if(this.sub) this.sub.unsubscribe();
   }
 
   onSelectProfile(name: string){
     let selectedProfile = this.currentUser?.profiles.find(profile => profile.name === name)
-    this.localStorageService.setItem('profileId', selectedProfile?.id!)
+    localStorage.setItem('profileId', selectedProfile?.id!)
     this.router.navigate(['profile-auth'])
   }
 }

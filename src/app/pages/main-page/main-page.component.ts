@@ -7,7 +7,6 @@ import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { DataService } from '../../services/data.service';
 import { ModalService } from '../../services/modal.service';
 import { Expense } from '../../models/expense.interface';
 import { Month } from '../../models/months.enum';
@@ -20,6 +19,10 @@ import { ContainerDirective } from '../../directives/container.directive';
 import { ExpensesInfoComponent } from "../../other-components/expenses-info/expenses-info.component";
 import { GraphComponent } from "../../other-components/graph/graph.component";
 import { LastExpensesTableComponent } from '../../other-components/last-expenses-table/last-expenses-table.component';
+import { ProfileService } from '../../services/profile.service';
+import { NotificationService } from '../../services/notification.service';
+import { ExpenseService } from '../../services/expense.service';
+import { CategoryService } from '../../services/category.service';
 
 
 @Component({
@@ -50,7 +53,10 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   authService = inject(AuthService);
   router = inject(Router);
-  dataService = inject(DataService);
+  profileService = inject(ProfileService);
+  notificationService = inject(NotificationService);
+  expenseService = inject(ExpenseService);
+  categoryService = inject(CategoryService);
   modalService = inject(ModalService);
   route = inject(ActivatedRoute)
   messagingService = inject(MessagingService);
@@ -87,11 +93,11 @@ export class MainPageComponent implements OnInit, OnDestroy{
     this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!;
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!;
-        this.dataService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'lastDeviceToken', localStorage.getItem('messageToken'));
+        this.profileService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'lastDeviceToken', localStorage.getItem('messageToken'));
 
         this.route.paramMap.subscribe(params => {
           if(params.has('profileId')){
-            this.dataService.getProfile(this.loggedUser?.uid, params.get('profileId')).then(profile => {
+            this.profileService.getProfile(this.loggedUser?.uid, params.get('profileId')).then(profile => {
               if(profile.id === this.activeProfile.id){
                 this.previewMode = false;
                 localStorage.removeItem('previewedProfileId');
@@ -109,7 +115,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
             this.messagingService.currentMessage.subscribe(message => {
               console.log(message)
               if(!this.activeProfile.messages?.find(item => item.id === message.messageId)){
-                this.dataService.addMessage(this.loggedUser.uid, this.activeProfile.id, {
+                this.notificationService.addMessage(this.loggedUser.uid, this.activeProfile.id, {
                   title: message.notification.title,
                   content: message.notification.body,
                   isRead: false
@@ -126,15 +132,15 @@ export class MainPageComponent implements OnInit, OnDestroy{
   }
 
   getData(profile: Profile){
-    return this.dataService.getExpenses(this.loggedUser.uid, profile.id).then(expenses => {
+    return this.expenseService.getExpenses(this.loggedUser.uid, profile.id).then(expenses => {
       profile.expenses = expenses;
       this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile);
     }).then(() => {
-      this.dataService.getCategories(this.loggedUser.uid, profile.id).then(categories => {
+      this.categoryService.getCategories(this.loggedUser.uid, profile.id).then(categories => {
         profile.categories = categories;
       })
     }).then(() => {
-      this.dataService.getMessages(this.loggedUser.uid, profile.id).then(messages => {
+      this.notificationService.getMessages(this.loggedUser.uid, profile.id).then(messages => {
         profile.messages;
 
         this.unreadMessages = messages.filter(message => !message.isRead).length;

@@ -10,3 +10,22 @@
 p{
     margin: 0;
 }
+
+.btn-box {
+    display: flex;
+    border: 2px solid blue;
+}
+
+.btn-box button {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+.btn-box button img {
+    width: 1rem;
+}
+
+.edit-option {
+    display: flex;
+}

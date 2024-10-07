@@ -8,8 +8,9 @@ import { ButtonDirDirective } from '../../directives/button-dir.directive';
 import { InputDirDirective } from '../../directives/input-dir.directive';
 import { ContainerDirective } from '../../directives/container.directive';
 import { AuthService } from '../../services/auth.service';
-import { DataService } from '../../services/data.service';
 import { User } from '../../models/user.interface';
+import { ProfileService } from '../../services/profile.service';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-add-profile',
@@ -29,7 +30,8 @@ export class AddProfileComponent implements OnInit, OnDestroy{
   @ViewChild('f') profileForm: NgForm;
   router = inject(Router);
   authService = inject(AuthService);
-  dataService = inject(DataService);
+  profileService = inject(ProfileService);
+  categoryService = inject(CategoryService);
   db = inject(Firestore);
 
   loggedUser: User;
@@ -46,9 +48,7 @@ export class AddProfileComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-      if(this.sub){
-        this.sub.unsubscribe()
-      }
+      if(this.sub) this.sub.unsubscribe()
   }
 
   onGoBack(){
@@ -70,12 +70,12 @@ export class AddProfileComponent implements OnInit, OnDestroy{
         notificationTime: 3
       }
 
-      this.dataService.addProfile(this.loggedUser.uid, newProfile).then(pid => {
-        this.dataService.addCategory(this.loggedUser.uid, pid, {
+      this.profileService.addProfile(this.loggedUser.uid, newProfile).then(pid => {
+        this.categoryService.addCategory(this.loggedUser.uid, pid, {
           content: 'jedzenie',
           color: '#ff0000'
         })
-        this.dataService.addCategory(this.loggedUser.uid, pid, {
+        this.categoryService.addCategory(this.loggedUser.uid, pid, {
           content: 'transport',
           color: '#ffff00'
         })

@@ -7,12 +7,12 @@ import { InputDirDirective } from '../../directives/input-dir.directive';
 import { ContainerDirective } from '../../directives/container.directive';
 import { ButtonDirDirective } from '../../directives/button-dir.directive';
 import { AuthService } from '../../services/auth.service';
-import { DataService } from '../../services/data.service';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { MessagingService } from '../../services/messaging.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
 import { Expense } from '../../models/expense.interface';
+import { CategoryService } from '../../services/category.service';
+import { ExpenseService } from '../../services/expense.service';
 
 @Component({
   selector: 'app-add-expense',
@@ -33,9 +33,9 @@ export class AddExpenseComponent implements OnInit, OnDestroy{
 
   router = inject(Router);
   authService = inject(AuthService);
-  dataService = inject(DataService);
-  localStorageService = inject(LocalStorageService);
   messagingService = inject(MessagingService);
+  categoryService = inject(CategoryService);
+  expenseService = inject(ExpenseService);
 
   loggedUser: User;
   activeProfile: Profile;
@@ -49,8 +49,8 @@ export class AddExpenseComponent implements OnInit, OnDestroy{
       this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!;
 
-        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.localStorageService.getItem('profileId'))!;
-        this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
+        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === localStorage.getItem('profileId'))!;
+        this.categoryService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
           this.categories = data
         })
       })
@@ -59,7 +59,7 @@ export class AddExpenseComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-      this.sub.unsubscribe();
+      if(this.sub) this.sub.unsubscribe();
   }
 
   private formatDate(){
@@ -88,7 +88,7 @@ export class AddExpenseComponent implements OnInit, OnDestroy{
     })
 
     if(monthlySum < this.activeProfile.monthlyLimit){
-      this.dataService.addExpense(this.loggedUser.uid, this.activeProfile.id, newExpense).then(() => {
+      this.expenseService.addExpense(this.loggedUser.uid, this.activeProfile.id, newExpense).then(() => {
         this.onCancel()
       })
     }

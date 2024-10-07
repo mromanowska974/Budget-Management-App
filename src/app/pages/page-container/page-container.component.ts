@@ -6,11 +6,11 @@ import { CommonModule } from '@angular/common';
 import { CategoriesMenuComponent } from '../categories-menu/categories-menu.component';
 import { ContainerDirective } from '../../directives/container.directive';
 import { AuthService } from '../../services/auth.service';
-import { DataService } from '../../services/data.service';
 import { ModalService } from '../../services/modal.service';
-import { LocalStorageService } from '../../services/local-storage.service';
 import { Profile } from '../../models/profile.interface';
 import { User } from '../../models/user.interface';
+import { CategoryService } from '../../services/category.service';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
   selector: 'app-page-container',
@@ -26,9 +26,9 @@ import { User } from '../../models/user.interface';
 })
 export class PageContainerComponent {
   authService = inject(AuthService);
-  dataService = inject(DataService);
+  categoryService = inject(CategoryService);
+  profileService = inject(ProfileService);
   modalService = inject(ModalService);
-  localStorageService = inject(LocalStorageService);
 
   menuToggled = false;
   loggedUser: User | null = null;
@@ -39,16 +39,16 @@ export class PageContainerComponent {
   ngOnInit(): void {
       this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
-        this.activeProfile = this.activeProfile || (this.loggedUser.profiles.find(profile => profile.id === this.localStorageService.getItem('profileId'))!)
+        this.activeProfile = this.activeProfile || (this.loggedUser.profiles.find(profile => profile.id === localStorage.getItem('profileId'))!)
         
-        this.dataService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
+        this.categoryService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
           this.activeProfile.categories = data;
         })
       })
   }
 
   ngOnDestroy(): void {
-      this.sub.unsubscribe();
+      if(this.sub) this.sub.unsubscribe();
   }
 
   onToggleMenu(){
@@ -56,15 +56,15 @@ export class PageContainerComponent {
   }
 
   onActivate(){
-    const profileId = this.localStorageService.getItem('previewedProfileId')
+    const profileId = localStorage.getItem('previewedProfileId')
     if(profileId){
-      this.dataService.getProfile(this.localStorageService.getItem('uid'), profileId).then(profile => {
+      this.profileService.getProfile(localStorage.getItem('uid'), profileId).then(profile => {
         this.activeProfile = profile
       }).then(() => {
-        this.dataService.getCategories(this.localStorageService.getItem('uid')!, this.activeProfile.id).then(data => {
+        this.categoryService.getCategories(localStorage.getItem('uid')!, this.activeProfile.id).then(data => {
           this.activeProfile.categories = data;
 
-          if(this.activeProfile.id !== this.localStorageService.getItem('profileId')) this.previewMode = true
+          if(this.activeProfile.id !== localStorage.getItem('profileId')) this.previewMode = true
         })
       })
     }
