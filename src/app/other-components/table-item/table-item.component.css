@@ -26,6 +26,10 @@ p{
     width: 1rem;
 }
 
-.edit-option {
+form {
     display: flex;
+}
+
+.invalid {
+    filter: saturate(0);
 }

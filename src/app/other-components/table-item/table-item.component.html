@@ -1,4 +1,4 @@
-<div (dblclick)="onEnterEdit(propToEdit)">
+<div (dblclick)="onEnterEdit()">
     <p *ngIf="previewMode || (!previewMode && !editMode)">
         {{
             propToEdit === 'category' ? categories.find(findCategory()).content :    
@@ -9,12 +9,13 @@
             expense[propToEdit]
         }}
     </p>
-    <div class="edit-option" *ngIf="!previewMode && editMode">
+    <form *ngIf="!previewMode && editMode" (ngSubmit)="onChangeProp()" #editForm="ngForm">
         <select
             *ngIf="propToEdit === 'category'"
             id="category"
-            name="category"
-            (change)="onChangeProp($event)"
+            name="newValue"
+            ngModel
+            required
         >
             <option [value]="category.id" *ngFor="let category of categories">
                 {{ category.content }}
@@ -23,7 +24,12 @@
         <input
             *ngIf="propToEdit !== 'category' && propToEdit !== 'renewalTime'"
             [type]="propToEdit === 'price' ? 'number' : (propToEdit === 'date' ? 'date' : 'text')"
-            (change)="onChangeProp($event)"
+            min="0"
+            [max]="today"
+            id="input"
+            ngModel
+            name="newValue"
+            required
         >
         <div 
             class="cyclic-input" 
@@ -32,11 +38,10 @@
             <div class="chkbx">
                 <input 
                     type="checkbox"
-                    id="cyclic"
-                    name="cyclic"
+                    id="periodic"
+                    name="periodic"
                     ngModel
                     #chkbx
-                    (change)="onChangeProp($event, 'isPeriodic')"
                 > Cykliczny
             </div>
             <div class="cyclic-value">
@@ -44,21 +49,22 @@
                 <input 
                     type="number" 
                     id="renewal"
-                    name="renewal"
+                    name="newValue"
                     ngModel
-                    [disabled]="!chkbx.checked" 
-                    (keydown.enter)="onChangeProp($event)"
+                    min="1"
+                    [disabled]="!chkbx.checked"
+                    [required]="chkbx.checked"
                 >
                 <p>dni</p>
             </div>
         </div>
         <div class="btn-box">
-            <button (click)="onCloseEdit()">
+            <button type="submit" [disabled]="!editForm.valid" [ngClass]="{invalid: !editForm.valid}">
                 <img src="../../../assets/icons/yes-icon.svg">
             </button>
-            <button (click)="onCloseEdit()">
+            <button (click)="onCloseEdit()" type="button">
                 <img src="../../../assets/icons/no-icon.svg">
             </button>
         </div>
-    </div>
+    </form>
 </div>

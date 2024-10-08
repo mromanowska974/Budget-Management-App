@@ -16,7 +16,7 @@ import { Chart } from 'chart.js/auto';
 export class GraphComponent implements OnChanges{
   @Input() monthlyExpenses;
   @Input() categories: {id, content: string, color: string}[] = [];
-  @Input() date: {fullDate, monthName};
+  @Input() date: {fullDate, monthName: string};
   @Input() activeCategory;
   
   isChartDaysInMonthType: boolean = true;
@@ -57,7 +57,7 @@ export class GraphComponent implements OnChanges{
     else if(this.isChartDaysInMonthType){
       daysInMonth.forEach(day => {
         let sum = 0;
-        names.push(day.getDate().toString());
+        names.push(day.getDate().toString()+' '+this.date.monthName.substring(0, 3));
   
         this.monthlyExpenses.forEach(expense => {
           expense.date.setHours(0,0,0,0);
