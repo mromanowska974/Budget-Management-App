@@ -2,7 +2,7 @@ export interface Expense {
     id?;
     price: number;
     category: string;
-    date: Date;
+    date: string;
     isPeriodic: boolean;
     renewalTime?: number | null;
     description: string;

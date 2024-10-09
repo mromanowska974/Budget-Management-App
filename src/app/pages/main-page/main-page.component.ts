@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ModalService } from '../../services/modal.service';
 import { Expense } from '../../models/expense.interface';
 import { Month } from '../../models/months.enum';
@@ -63,41 +63,35 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   profileId = localStorage.getItem('profileId');
 
-  loggedUser: User;
+  loggedUser: User; //not needed imo
   activeProfile: Profile;
-  previewedProfile: Profile;
-  previewMode = false;
+  previewedProfile: Profile; //można zrobić jeden profil w zależności od istnienia id previewedProfile w przeglądarce
+  profile: Profile;
+  previewMode = false; //można by to pozyskać od ExpenseInfo
   unreadMessages: number;
-  propToEdit: string = '';
-  editedIndex;
-  editedId;
   today = new Date();
   checkedDate: Date = new Date(this.today);
   checkedMonth = Month[this.checkedDate.getMonth()];
-  monthlyExpenses: Expense[] = [];
+  monthlyExpenses: Observable<Expense[]>; 
   monthlySum: number;
-  sub: Subscription;
-
-  // @HostListener('document:mousedown', ['$event'])
-  // onGlobalClick(event): void {
-  //   if(event.target.localName !== 'input' && event.target.localName !== 'select'){
-  //     this.propToEdit = ''
-  //     this.editedIndex = null;
-  //   }
-  // }
+  authSub: Subscription;
+  expenseSub: Subscription;
 
   ngOnInit(): void {
     //this.messagingService.sendMessage('Zalogowano pomyślnie', 'Udało ci się zalogować. A mi wysłać tą wiadomość. Jupiiiii.');
     localStorage.removeItem('categoryId');
+    this.expenseSub = this.expenseService.expenseWasEdited.subscribe(() => {
+      this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile)
+    })
 
-    this.sub = this.authService.user.subscribe(user => {
+    this.authSub = this.authService.user.subscribe(user => {
         this.loggedUser = user!;
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!;
-        this.profileService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'lastDeviceToken', localStorage.getItem('messageToken'));
+        this.profileService.updateProfile(localStorage.getItem('uid')!, localStorage.getItem('profileId')!, 'lastDeviceToken', localStorage.getItem('messageToken'));
 
         this.route.paramMap.subscribe(params => {
           if(params.has('profileId')){
-            this.profileService.getProfile(this.loggedUser?.uid, params.get('profileId')).then(profile => {
+            this.profileService.getProfile(localStorage.getItem('uid'), params.get('profileId')).then(profile => {
               if(profile.id === this.activeProfile.id){
                 this.previewMode = false;
                 localStorage.removeItem('previewedProfileId');
@@ -113,9 +107,8 @@ export class MainPageComponent implements OnInit, OnDestroy{
           }
           else this.getData(this.activeProfile).then(() => {
             this.messagingService.currentMessage.subscribe(message => {
-              console.log(message)
               if(!this.activeProfile.messages?.find(item => item.id === message.messageId)){
-                this.notificationService.addMessage(this.loggedUser.uid, this.activeProfile.id, {
+                this.notificationService.addMessage(localStorage.getItem('uid'), this.activeProfile.id, {
                   title: message.notification.title,
                   content: message.notification.body,
                   isRead: false
@@ -128,19 +121,20 @@ export class MainPageComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-      this.sub.unsubscribe();
+      if(this.authSub) this.authSub.unsubscribe();
+      if(this.expenseSub) this.expenseSub.unsubscribe();
   }
 
-  getData(profile: Profile){
-    return this.expenseService.getExpenses(this.loggedUser.uid, profile.id).then(expenses => {
+  private getData(profile: Profile){
+    return this.expenseService.getExpenses(localStorage.getItem('uid'), profile.id).then(expenses => {
       profile.expenses = expenses;
       this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile);
     }).then(() => {
-      this.categoryService.getCategories(this.loggedUser.uid, profile.id).then(categories => {
+      this.categoryService.getCategories(localStorage.getItem('uid')!, profile.id).then(categories => {
         profile.categories = categories;
       })
     }).then(() => {
-      this.notificationService.getMessages(this.loggedUser.uid, profile.id).then(messages => {
+      this.notificationService.getMessages(localStorage.getItem('uid'), profile.id).then(messages => {
         profile.messages;
 
         this.unreadMessages = messages.filter(message => !message.isRead).length;
@@ -181,9 +175,14 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   filterExpensesByMonth(profile: Profile){
     this.monthlySum = 0;
-    this.monthlyExpenses = profile.expenses!.filter(expense => expense.date.getMonth() === this.checkedDate.getMonth() && expense.date.getFullYear() === this.checkedDate.getFullYear())!
-    this.monthlyExpenses.forEach(expense => {
-      this.monthlySum += expense.price;
+    this.monthlyExpenses = new Observable((subscriber) => {
+      subscriber.next(profile.expenses!.filter(expense => new Date(expense.date).getMonth() === this.checkedDate.getMonth() && new Date(expense.date).getFullYear() === this.checkedDate.getFullYear()));
+    })
+
+    this.monthlyExpenses.subscribe(expenses => {
+      expenses.forEach(expense => {
+        this.monthlySum += +expense.price;
+      })
     })
   }
 }

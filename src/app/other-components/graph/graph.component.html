@@ -3,21 +3,21 @@
         class="widget"
         appWidget
     >
-        <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
+        <p class="no-expenses-info" *ngIf="!doExpenesExist">
             Brak wydatków.
         </p>
         <div class="chart-wrap">
             <canvas 
                 id="chart" 
                 [ngStyle]="{ 
-                    visibility: monthlyExpenses.length === 0 ? 'hidden' : 'visible' 
+                    visibility: !doExpenesExist ? 'hidden' : 'visible' 
                 }"
             ></canvas>
         </div>
         <div 
             *ngIf="!activeCategory"
             class="chart-display"
-            [ngStyle]="{display: monthlyExpenses.length === 0 ? 'none' : 'flex'}"
+            [ngStyle]="{display: !doExpenesExist ? 'none' : 'flex'}"
         >
             <p (click)="onSwitchChartType()"> < </p>
             <p (click)="onSwitchChartType()"> > </p>

@@ -14,6 +14,7 @@ import { ExpensesInfoComponent } from "../../other-components/expenses-info/expe
 import { GraphComponent } from "../../other-components/graph/graph.component";
 import { CategoryService } from '../../services/category.service';
 import { ExpenseService } from '../../services/expense.service';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-category-page',
@@ -57,7 +58,7 @@ export class CategoryPageComponent implements OnInit {
   checkedDate: Date = new Date(this.today);
   checkedMonth = Month[this.checkedDate.getMonth()];
   categoryExpenses: Expense[] = [];
-  monthlyExpenses: Expense[] = [];
+  monthlyExpenses: Observable<Expense[]>;
   monthlySum: number;
   previewMode: boolean;
 
@@ -140,9 +141,12 @@ export class CategoryPageComponent implements OnInit {
 
   filterExpensesByMonth(){
     this.monthlySum = 0;
-    this.monthlyExpenses = this.categoryExpenses!.filter(expense => expense.date.getMonth() === this.checkedDate.getMonth() && expense.date.getFullYear() === this.checkedDate.getFullYear())!
-    this.monthlyExpenses.forEach(expense => {
-      this.monthlySum += expense.price;
+    this.monthlyExpenses.pipe(tap(() => {
+      return this.categoryExpenses!.filter(expense => new Date(expense.date).getMonth() === this.checkedDate.getMonth() && new Date(expense.date).getFullYear() === this.checkedDate.getFullYear())!
+    })).subscribe(expenses => {
+      expenses.forEach(expense => {
+        this.monthlySum += expense.price;
+      })
     })
   }
 }

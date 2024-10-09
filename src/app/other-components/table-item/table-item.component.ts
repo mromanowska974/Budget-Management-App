@@ -33,6 +33,7 @@ export class TableItemComponent implements OnInit{
 
   ngOnInit(): void {
       this.today = this.formatDate();
+      this.previewMode = localStorage.getItem('previewedProfileId') ? true : false;
   }
 
   private formatDate(){
@@ -59,6 +60,9 @@ export class TableItemComponent implements OnInit{
       newExpense[this.propToEdit] = this.editForm.value.newValue;
   
       this.expenseService.updateExpense(this.uid, this.profileId, newExpense.id, newExpense)
+      .then(() => {
+        this.expenseService.expenseWasEdited.emit();
+      })
   
       this.onCloseEdit();
     }    

@@ -80,7 +80,7 @@ export class AddExpenseComponent implements OnInit, OnDestroy{
     }
 
     const today = new Date();
-    let monthlyExpenses = this.activeProfile.expenses?.filter(expense => expense.date.getMonth() === today.getMonth() && expense.date.getFullYear() === today.getFullYear())
+    let monthlyExpenses = this.activeProfile.expenses?.filter(expense => new Date(expense.date).getMonth() === today.getMonth() && new Date(expense.date).getFullYear() === today.getFullYear())
     let monthlySum = 0;
 
     monthlyExpenses?.forEach(expense => {

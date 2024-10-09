@@ -4,25 +4,18 @@
 >
     <h3>Ostatnie wydatki</h3>
     <div class="scroll">
-        <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
+        <p class="no-expenses-info" *ngIf="!doExpensesExist">
             Brak wydatków.
         </p>
         <table>
-            <tr *ngIf="monthlyExpenses.length > 0">
+            <tr *ngIf="doExpensesExist">
                 <th>Kategoria</th>
                 <th>Kwota</th>
                 <th>Data</th>
                 <th>Opis</th>
                 <th>Cykliczność</th>
             </tr>
-            <tr *ngFor="let expense of monthlyExpenses; let i = index" title="Kliknij dwukrotnie lewym przyciskiem myszy żeby edytować dane.">
-                <!-- 
-                <td (dblclick)="onEnterEdit('renewalTime', i)" (keydown.enter)="onCloseEdit()">
-                    <p *ngIf="previewMode || !previewMode && (propToEdit.length === 0 || editedIndex !== i || propToEdit !== 'renewalTime')">
-                        {{ expense.renewalTime ? expense.renewalTime + ' dni' : 'Jednorazowy' }}
-                    </p>
-
-                </td> -->
+            <tr *ngFor="let expense of monthlyExpenses | async; let i = index" title="Kliknij dwukrotnie lewym przyciskiem myszy żeby edytować dane.">
                 <td>
                     <app-table-item
                         [propToEdit]="'category'"

@@ -22,7 +22,7 @@
     </div>
     <div class="content">
         <div class="left-side">
-            <div 
+            <!-- <div 
                 class="widget"
                 appWidget
             >
@@ -38,7 +38,7 @@
                             <th>Kwota</th>
                             <th>Cykliczność</th>
                         </tr>
-                        <tr *ngFor="let expense of monthlyExpenses">
+                        <tr *ngFor="let expense of monthlyExpenses | async">
                             <td>{{ expense.date | date}}</td>
                             <td>{{ expense.description }}</td>
                             <td>{{ expense.price + ' zł' }}</td>
@@ -46,7 +46,7 @@
                         </tr>
                     </table>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="right-side">
             <app-graph 

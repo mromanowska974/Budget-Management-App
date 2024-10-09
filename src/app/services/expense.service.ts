@@ -1,13 +1,15 @@
-import { inject, Injectable } from '@angular/core';
+import { EventEmitter, inject, Injectable } from '@angular/core';
 import { collection, doc, Firestore, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
 import { Expense } from '../models/expense.interface';
 import { addDoc } from 'firebase/firestore';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpenseService {
   db = inject(Firestore);
+  expenseWasEdited = new EventEmitter();
 
   constructor() { }
 
@@ -28,7 +30,7 @@ export class ExpenseService {
             {
               id: expense.id,
               price: expense.data()!['price'],
-              date: new Date(expense.data()!['date']),
+              date: expense.data()!['date'],
               description: expense.data()!['description'],
               isPeriodic: expense.data()!['isPeriodic'],
               renewalTime: expense.data()!['renewalTime'],

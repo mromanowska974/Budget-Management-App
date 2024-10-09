@@ -2,6 +2,8 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { WidgetDirective } from '../../directives/widget.directive';
 import { CommonModule } from '@angular/common';
 import { Chart } from 'chart.js/auto';
+import { Observable } from 'rxjs';
+import { Expense } from '../../models/expense.interface';
 
 @Component({
   selector: 'app-graph',
@@ -14,22 +16,26 @@ import { Chart } from 'chart.js/auto';
   styleUrl: './graph.component.css'
 })
 export class GraphComponent implements OnChanges{
-  @Input() monthlyExpenses;
+  @Input() monthlyExpenses: Observable<Expense[]>;
   @Input() categories: {id, content: string, color: string}[] = [];
   @Input() date: {fullDate, monthName: string};
   @Input() activeCategory;
-  
+
+  doExpenesExist: boolean = false;
   isChartDaysInMonthType: boolean = true;
   isChartCategoryType: boolean = false;
   chart: any;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.monthlyExpenses.length > 0){
-      this.createChart();
-    }
+    this.monthlyExpenses.subscribe(expenses => {
+      if(expenses.length > 0){
+        this.doExpenesExist = true;
+        this.createChart(expenses);
+      }
+    })
   }
   
-  createChart(){
+  createChart(expenses: Expense[]){
     if(this.chart !== undefined && this.chart !== null){
       this.chart.destroy();
     }
@@ -46,30 +52,30 @@ export class GraphComponent implements OnChanges{
         names.push(category.content);
         colors.push(category.color);
   
-        this.monthlyExpenses?.forEach(expense => {
+        expenses.forEach(expense => {
           if(expense.category === category.id){
-            sum += expense.price;
+            sum += +expense.price;
           }
         })
         expensesSums.push(sum);
-      })
+      });
     }
     else if(this.isChartDaysInMonthType){
       daysInMonth.forEach(day => {
         let sum = 0;
         names.push(day.getDate().toString()+' '+this.date.monthName.substring(0, 3));
   
-        this.monthlyExpenses.forEach(expense => {
-          expense.date.setHours(0,0,0,0);
+        expenses.forEach(expense => {
+          let expenseDate = new Date(expense.date);
+          expenseDate.setHours(0,0,0,0);
           day.setHours(0,0,0,0);
-          
-          if(expense.date.getTime() === day.getTime()){
-            sum+=expense.price;
+            
+          if(expenseDate.getTime() === day.getTime()){
+            sum += +expense.price;
           }
         })
-  
         expensesSums.push(sum);
-      });
+      })  
     }
 
 
@@ -101,7 +107,9 @@ export class GraphComponent implements OnChanges{
     this.isChartDaysInMonthType = !this.isChartDaysInMonthType;
     this.isChartCategoryType = !this.isChartCategoryType;
 
-    this.createChart();
+    this.monthlyExpenses.subscribe(expenses => {
+      this.createChart(expenses);
+    })
   }
 
   getDaysInMonth = (month, year) => (new Array(31)).fill('').map((v,i)=>new Date(year,month,i+1)).filter(v=>v.getMonth()===month)
