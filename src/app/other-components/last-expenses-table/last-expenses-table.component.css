@@ -1,6 +1,5 @@
 .widget {
     height: 100%;
-    padding-bottom: 5vh;
 }
 
 .scroll{
@@ -11,7 +10,8 @@
 
 .widget h3 {
     margin-left: 15px;
-    margin-top: 5px;
+    margin-top: 0;
+    padding-top: 5px;
 }
 
 .widget .scroll table {
@@ -68,26 +68,18 @@ tr {
     }
 
     .widget{
-        margin-inline: 3%;
-        width: 94%;
+        width: 100%;
     }
 
     .widget table{
         margin: 0 10px;
         width: 90%;
     }
-
-    .widget table td{
-        padding: 5px 0;
-    }
 }
 
 @media (orientation: portrait) {
     .widget {
-        width: 90%;
-        align-self: center;
-        margin: 10px 5%;
-        height: 80%;
+        width: 100%;
     }
 
     .scroll {

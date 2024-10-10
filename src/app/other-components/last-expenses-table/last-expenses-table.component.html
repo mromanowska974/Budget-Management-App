@@ -9,42 +9,47 @@
         </p>
         <table>
             <tr *ngIf="doExpensesExist">
-                <th>Kategoria</th>
+                <th *ngIf="!wasOpenedFromCategoryPage">Kategoria</th>
                 <th>Kwota</th>
                 <th>Data</th>
                 <th>Opis</th>
                 <th>Cykliczność</th>
             </tr>
             <tr *ngFor="let expense of monthlyExpenses | async; let i = index" title="Kliknij dwukrotnie lewym przyciskiem myszy żeby edytować dane.">
-                <td>
+                <td *ngIf="!wasOpenedFromCategoryPage">
                     <app-table-item
                         [propToEdit]="'category'"
                         [expense]="expense"
                         [categories]="profile.categories"
+                        [isEditable]="!wasOpenedFromCategoryPage"
                     ></app-table-item>
                 </td>
                 <td>
                     <app-table-item
                         [propToEdit]="'price'"
                         [expense]="expense"
+                        [isEditable]="!wasOpenedFromCategoryPage"
                     ></app-table-item>
                 </td>
                 <td>
                     <app-table-item
                         [propToEdit]="'date'"
                         [expense]="expense"
+                        [isEditable]="!wasOpenedFromCategoryPage"
                     ></app-table-item>
                 </td>
                 <td>
                     <app-table-item
                         [propToEdit]="'description'"
                         [expense]="expense"
+                        [isEditable]="!wasOpenedFromCategoryPage"
                     ></app-table-item>
                 </td>
                 <td>
                     <app-table-item
                         [propToEdit]="'renewalTime'"
                         [expense]="expense"
+                        [isEditable]="!wasOpenedFromCategoryPage"
                     ></app-table-item>
                 </td>
             </tr>

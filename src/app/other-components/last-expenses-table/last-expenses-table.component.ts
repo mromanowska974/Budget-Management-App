@@ -19,7 +19,9 @@ import { Expense } from '../../models/expense.interface';
 })
 export class LastExpensesTableComponent implements OnChanges{
   @Input() monthlyExpenses: Observable<Expense[]>;
+  @Input() wasOpenedFromCategoryPage: boolean;
   @Input() profile: Profile;
+
 
   doExpensesExist: boolean = false;
 

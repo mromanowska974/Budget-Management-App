@@ -22,31 +22,10 @@
     </div>
     <div class="content">
         <div class="left-side">
-            <!-- <div 
-                class="widget"
-                appWidget
-            >
-                <h3>Ostatnie wydatki</h3>
-                <div class="scroll">
-                    <p class="no-expenses-info" *ngIf="monthlyExpenses.length === 0">
-                        Brak wydatków.
-                    </p>
-                    <table *ngIf="monthlyExpenses.length > 0">
-                        <tr>
-                            <th>Data</th>
-                            <th>Opis</th>
-                            <th>Kwota</th>
-                            <th>Cykliczność</th>
-                        </tr>
-                        <tr *ngFor="let expense of monthlyExpenses | async">
-                            <td>{{ expense.date | date}}</td>
-                            <td>{{ expense.description }}</td>
-                            <td>{{ expense.price + ' zł' }}</td>
-                            <td>{{ expense.renewalTime ? expense.renewalTime + ' dni' : '-' }}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div> -->
+            <app-last-expenses-table
+                [monthlyExpenses]="monthlyExpenses"
+                [wasOpenedFromCategoryPage]="true"
+            ></app-last-expenses-table>
         </div>
         <div class="right-side">
             <app-graph 

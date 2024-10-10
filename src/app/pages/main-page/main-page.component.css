@@ -1,8 +1,7 @@
 .content {
     display: flex;
-    justify-content: center;
     flex-grow: 1;
-    gap: 2%;
+    gap: 4%;
 }
 
 .last-expenses-list {
@@ -12,16 +11,16 @@
 
 .container {
     height: fit-content !important;
+    margin: 0 20px;
 }
 
 .header {
     display: flex;
     justify-content: end;
-    margin: 0 2%;
 }
 
 .right-side, .left-side {
-    width: 46%;
+    width: 48%;
 }
 
 .left-side {
@@ -61,6 +60,6 @@
     }
 
     .left-side, .right-side{
-        width: 90%;
+        width: 100%;
     }
 }

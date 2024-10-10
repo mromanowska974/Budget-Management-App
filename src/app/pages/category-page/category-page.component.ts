@@ -15,6 +15,7 @@ import { GraphComponent } from "../../other-components/graph/graph.component";
 import { CategoryService } from '../../services/category.service';
 import { ExpenseService } from '../../services/expense.service';
 import { Observable, tap } from 'rxjs';
+import { LastExpensesTableComponent } from "../../other-components/last-expenses-table/last-expenses-table.component";
 
 @Component({
   selector: 'app-category-page',
@@ -27,7 +28,8 @@ import { Observable, tap } from 'rxjs';
     CommonModule,
     ChangeMonthArrowsComponent,
     ExpensesInfoComponent,
-    GraphComponent
+    GraphComponent,
+    LastExpensesTableComponent
 ],
   templateUrl: './category-page.component.html',
   styleUrls: [
@@ -141,9 +143,12 @@ export class CategoryPageComponent implements OnInit {
 
   filterExpensesByMonth(){
     this.monthlySum = 0;
-    this.monthlyExpenses.pipe(tap(() => {
-      return this.categoryExpenses!.filter(expense => new Date(expense.date).getMonth() === this.checkedDate.getMonth() && new Date(expense.date).getFullYear() === this.checkedDate.getFullYear())!
-    })).subscribe(expenses => {
+    this.monthlyExpenses = new Observable(subscriber => {
+      subscriber.next(this.categoryExpenses!.filter(expense => new Date(expense.date).getMonth() === this.checkedDate.getMonth() && new Date(expense.date).getFullYear() === this.checkedDate.getFullYear()))
+    })
+
+      
+    this.monthlyExpenses.subscribe(expenses => {
       expenses.forEach(expense => {
         this.monthlySum += expense.price;
       })

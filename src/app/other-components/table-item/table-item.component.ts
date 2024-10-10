@@ -19,6 +19,7 @@ export class TableItemComponent implements OnInit{
   @Input() propToEdit;
   @Input() categories;
   @Input() expense: Expense;
+  @Input() isEditable: boolean;
 
   @ViewChild('editForm') editForm: NgForm;
   
@@ -34,6 +35,7 @@ export class TableItemComponent implements OnInit{
   ngOnInit(): void {
       this.today = this.formatDate();
       this.previewMode = localStorage.getItem('previewedProfileId') ? true : false;
+      if(this.previewMode) this.isEditable = false;
   }
 
   private formatDate(){
@@ -44,7 +46,7 @@ export class TableItemComponent implements OnInit{
   }
 
   onEnterEdit(){
-    this.editMode = true;
+    if(this.isEditable) this.editMode = true;
   }
 
   onCloseEdit(){

@@ -9,7 +9,7 @@
             expense[propToEdit]
         }}
     </p>
-    <form *ngIf="!previewMode && editMode" (ngSubmit)="onChangeProp()" #editForm="ngForm">
+    <form *ngIf="!previewMode && editMode && isEditable" (ngSubmit)="onChangeProp()" #editForm="ngForm">
         <select
             *ngIf="propToEdit === 'category'"
             id="category"
