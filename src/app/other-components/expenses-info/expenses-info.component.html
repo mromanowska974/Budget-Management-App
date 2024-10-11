@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="widget" appWidget [ngStyle]="{backgroundColor: data.category ? data.category.color : 'white'}">
+    <div class="widget" appWidget [ngStyle]="{backgroundColor: category ? category.color : 'white'}">
         <img *ngIf="data.activeProfile || data.previewedProfile" [src]="
             !previewMode 
                 ?(

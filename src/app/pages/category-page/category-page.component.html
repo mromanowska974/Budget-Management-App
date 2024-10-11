@@ -3,7 +3,7 @@
         <div class="expenses-info">
             <app-expenses-info 
                 [date]="{fullDate: checkedDate, monthName: checkedMonth}"
-                [data]="{category: activeCategory}"
+                [data]="{category: activeCategory$}"
                 [monthlySum]="monthlySum"
                 [previewMode]="previewMode"
             ></app-expenses-info>
@@ -23,15 +23,15 @@
     <div class="content">
         <div class="left-side">
             <app-last-expenses-table
-                [monthlyExpenses]="monthlyExpenses"
+                [monthlyExpenses]="monthlyExpenses$"
                 [wasOpenedFromCategoryPage]="true"
             ></app-last-expenses-table>
         </div>
         <div class="right-side">
             <app-graph 
                 [date]="{fullDate: checkedDate, monthName: checkedMonth}"
-                [monthlyExpenses]="monthlyExpenses"
-                [activeCategory]="activeCategory"
+                [monthlyExpenses]="monthlyExpenses$"
+                [activeCategory]="activeCategory$"
             ></app-graph>
         </div>
     </div>
@@ -50,19 +50,17 @@
             </div>
         </div>
         <div class="modal-content">
-            <p *ngIf="action === 'delete'" style="color: red;">
-                {{ 
-                    categories!.length > 2 && categoryExpenses.length === 0 && 'UWAGA!!! Czynności nie można cofnąć!'
-                }}
-            </p>
+            <!-- <p *ngIf="action === 'delete'" style="color: red;">
+                {{ errorMsg }}
+            </p> -->
             <div *ngIf="action === 'edit'" class="edit-content">
                 <div class="color">
                     <label>Kolor</label>
-                    <input type="color" [value]="activeCategory.color" #color>
+                    <input type="color" [value]="category.color" #color>
                 </div>
                 <div class="input">
                     <label>Nazwa kategorii</label>
-                    <input type="text" [value]="activeCategory.content" appInputDir #content>
+                    <input type="text" [value]="category.content" appInputDir #content>
                 </div>
             </div>
         </div>

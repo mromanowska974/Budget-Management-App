@@ -31,24 +31,30 @@ export class PageContainerComponent {
   modalService = inject(ModalService);
 
   menuToggled = false;
-  loggedUser: User | null = null;
   activeProfile: Profile;
   previewMode = false;
-  sub: Subscription;
+  authSub: Subscription;
+  categoriesSub: Subscription;
 
   ngOnInit(): void {
-      this.sub = this.authService.user.subscribe(user => {
-        this.loggedUser = user!
-        this.activeProfile = this.activeProfile || (this.loggedUser.profiles.find(profile => profile.id === localStorage.getItem('profileId'))!)
+      this.authSub = this.authService.user.subscribe(user => {
+        this.activeProfile = this.activeProfile || (user!.profiles.find(profile => profile.id === localStorage.getItem('profileId'))!)
         
-        this.categoryService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
-          this.activeProfile.categories = data;
-        })
+        this.getCategories();
       })
+
+      this.categoryService.categoryWasEdited.subscribe(() => this.getCategories());
   }
 
   ngOnDestroy(): void {
-      if(this.sub) this.sub.unsubscribe();
+      if(this.authSub) this.authSub.unsubscribe();
+      if(this.categoriesSub) this.categoriesSub.unsubscribe();
+  }
+
+  private getCategories(){
+    this.categoryService.getCategories(localStorage.getItem('uid')!, this.activeProfile.id).subscribe(data => {
+      this.activeProfile.categories = data;
+    })
   }
 
   onToggleMenu(){
@@ -61,7 +67,7 @@ export class PageContainerComponent {
       this.profileService.getProfile(localStorage.getItem('uid'), profileId).then(profile => {
         this.activeProfile = profile
       }).then(() => {
-        this.categoryService.getCategories(localStorage.getItem('uid')!, this.activeProfile.id).then(data => {
+        this.categoryService.getCategories(localStorage.getItem('uid')!, this.activeProfile.id).subscribe(data => {
           this.activeProfile.categories = data;
 
           if(this.activeProfile.id !== localStorage.getItem('profileId')) this.previewMode = true

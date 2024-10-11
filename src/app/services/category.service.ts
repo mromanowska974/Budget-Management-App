@@ -1,11 +1,13 @@
-import { inject, Injectable } from '@angular/core';
+import { EventEmitter, inject, Injectable } from '@angular/core';
 import { addDoc, collection, deleteDoc, doc, Firestore, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
+import { BehaviorSubject, from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
   db = inject(Firestore);
+  categoryWasEdited = new BehaviorSubject<any>(null);
   
   constructor() { }
   
@@ -20,7 +22,7 @@ export class CategoryService {
   getCategories(uid: string, pid: string){
     let categories: {id: string, content: string, color: string}[] = []; 
 
-    return getDocs(this.getCollectionRef(uid, pid)).then((data): {id: string, content: string, color: string}[] => {
+    return from(getDocs(this.getCollectionRef(uid, pid)).then((data): {id: string, content: string, color: string}[] => {
       data.docs.forEach(category => {
         categories.push(
             {
@@ -31,31 +33,31 @@ export class CategoryService {
           ) 
       })
       return categories;
-    })
+    }))
   }
 
   getCategory(uid, pid, catId){
-    return getDoc(this.getDocRef(uid, pid, catId)).then(data => {
+    return from(getDoc(this.getDocRef(uid, pid, catId)).then(data => {
       return {
         id: data.id,
         content: data.data()!['content'],
         color: data.data()!['color'],
       }
-    })
+    }))
   }
 
   addCategory(uid, pid, data){
-    return addDoc(this.getCollectionRef(uid, pid), data)
+    return from(addDoc(this.getCollectionRef(uid, pid), data));
   }
 
   updateCategory(uid, pid, catId, data){
-    return updateDoc(this.getDocRef(uid, pid, catId), {
+    return from(updateDoc(this.getDocRef(uid, pid, catId), {
       content: data.content,
       color: data.color
-    }).then(() => this.getCategory(uid, pid, catId)).then(category => category)
+    }).then(() => this.getCategory(uid, pid, catId)));
   }
 
   deleteCategory(uid, pid, catId){
-    return deleteDoc(this.getDocRef(uid, pid, catId))
+    return from(deleteDoc(this.getDocRef(uid, pid, catId)));
   }
 }

@@ -19,12 +19,20 @@ export class ExpensesInfoComponent implements OnChanges{
   @Input() data: any;
 
   name: string = '';
+  category;
 
   @Output() enterPreviewMode = new EventEmitter();
     
   ngOnChanges(changes: SimpleChanges): void {
-    this.name = this.data.category ? this.data.category.content 
-    : (this.previewMode ? this.data.previewedProfile.name : this.data.activeProfile.name);
+    if(this.data.category){
+      this.data.category.subscribe(category => {
+        this.category = category;
+        this.name = category.content;
+      });
+    }
+    else {
+      this.name = (this.previewMode ? this.data.previewedProfile.name : this.data.activeProfile.name);
+    }
   }
 
   onEnterPreviewMode(){

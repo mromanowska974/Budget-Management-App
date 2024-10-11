@@ -76,17 +76,18 @@ export class MainPageComponent implements OnInit, OnDestroy{
   monthlySum: number;
   authSub: Subscription;
   expenseSub: Subscription;
+  editSub: Subscription
 
   ngOnInit(): void {
     //this.messagingService.sendMessage('Zalogowano pomyślnie', 'Udało ci się zalogować. A mi wysłać tą wiadomość. Jupiiiii.');
     localStorage.removeItem('categoryId');
-    this.expenseSub = this.expenseService.expenseWasEdited.subscribe(() => {
+    this.editSub = this.expenseService.expenseWasEdited.subscribe(() => {
       this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile)
     })
 
     this.authSub = this.authService.user.subscribe(user => {
-        this.loggedUser = user!;
-        this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === this.profileId)!;
+        // this.loggedUser = user!;
+        this.activeProfile = user!.profiles.find(profile => profile.id === this.profileId)!;
         this.profileService.updateProfile(localStorage.getItem('uid')!, localStorage.getItem('profileId')!, 'lastDeviceToken', localStorage.getItem('messageToken'));
 
         this.route.paramMap.subscribe(params => {
@@ -123,6 +124,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
       if(this.authSub) this.authSub.unsubscribe();
       if(this.expenseSub) this.expenseSub.unsubscribe();
+      if(this.editSub) this.editSub.unsubscribe();
   }
 
   private getData(profile: Profile){
@@ -130,7 +132,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
       profile.expenses = expenses;
       this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile);
     }).then(() => {
-      this.categoryService.getCategories(localStorage.getItem('uid')!, profile.id).then(categories => {
+      this.categoryService.getCategories(localStorage.getItem('uid')!, profile.id).subscribe(categories => {
         profile.categories = categories;
       })
     }).then(() => {
@@ -179,7 +181,7 @@ export class MainPageComponent implements OnInit, OnDestroy{
       subscriber.next(profile.expenses!.filter(expense => new Date(expense.date).getMonth() === this.checkedDate.getMonth() && new Date(expense.date).getFullYear() === this.checkedDate.getFullYear()));
     })
 
-    this.monthlyExpenses.subscribe(expenses => {
+    this.expenseSub = this.monthlyExpenses.subscribe(expenses => {
       expenses.forEach(expense => {
         this.monthlySum += +expense.price;
       })

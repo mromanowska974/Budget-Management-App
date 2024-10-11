@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { WidgetDirective } from '../../directives/widget.directive';
 import { CommonModule } from '@angular/common';
 import { Chart } from 'chart.js/auto';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Expense } from '../../models/expense.interface';
 
 @Component({
@@ -15,30 +15,56 @@ import { Expense } from '../../models/expense.interface';
   templateUrl: './graph.component.html',
   styleUrl: './graph.component.css'
 })
-export class GraphComponent implements OnChanges{
+export class GraphComponent implements OnChanges, OnDestroy{
   @Input() monthlyExpenses: Observable<Expense[]>;
   @Input() categories: {id, content: string, color: string}[] = [];
   @Input() date: {fullDate, monthName: string};
-  @Input() activeCategory;
+  @Input() activeCategory: Observable<{id, content: string, color: string}>;
 
   doExpenesExist: boolean = false;
   isChartDaysInMonthType: boolean = true;
   isChartCategoryType: boolean = false;
   chart: any;
 
+  expenseSub: Subscription;
+  categorySub: Subscription;
+
+  expenses;
+  category;
+
   ngOnChanges(changes: SimpleChanges): void {
-    this.monthlyExpenses.subscribe(expenses => {
+    this.expenseSub = this.monthlyExpenses.subscribe(expenses => {
       if(expenses.length > 0){
         this.doExpenesExist = true;
-        this.createChart(expenses);
+        this.expenses = expenses;
+        this.createChart();
+      }
+      else {
+        this.destroyChart();
+        this.doExpenesExist = false;;
       }
     })
+
+    if(changes['activeCategory']){
+      this.categorySub = this.activeCategory.subscribe(category => {
+        this.category = category;
+        this.createChart()
+      })
+    }
   }
-  
-  createChart(expenses: Expense[]){
+
+  ngOnDestroy(): void {
+      if(this.expenseSub) this.expenseSub.unsubscribe();
+  }
+
+  private destroyChart() {
     if(this.chart !== undefined && this.chart !== null){
       this.chart.destroy();
     }
+  }
+  
+  private createChart(){
+    this.destroyChart();
 
     let names: string[] = [];
     let expensesSums: number[] = [];
@@ -52,7 +78,7 @@ export class GraphComponent implements OnChanges{
         names.push(category.content);
         colors.push(category.color);
   
-        expenses.forEach(expense => {
+        this.expenses.forEach(expense => {
           if(expense.category === category.id){
             sum += +expense.price;
           }
@@ -65,7 +91,7 @@ export class GraphComponent implements OnChanges{
         let sum = 0;
         names.push(day.getDate().toString()+' '+this.date.monthName.substring(0, 3));
   
-        expenses.forEach(expense => {
+        this.expenses.forEach(expense => {
           let expenseDate = new Date(expense.date);
           expenseDate.setHours(0,0,0,0);
           day.setHours(0,0,0,0);
@@ -87,7 +113,7 @@ export class GraphComponent implements OnChanges{
           {
             label: this.isChartCategoryType ? 'Wydatki wg kategorii' : 'Wydatki w '+this.date.monthName,
             data: expensesSums,
-            backgroundColor: this.isChartCategoryType ? colors : (this.activeCategory ? this.activeCategory.color : '#c6c4ff'),
+            backgroundColor: this.isChartCategoryType ? colors : (this.activeCategory ? this.category.color : '#c6c4ff'),
             borderWidth: 1,
           },
         ],
@@ -107,9 +133,7 @@ export class GraphComponent implements OnChanges{
     this.isChartDaysInMonthType = !this.isChartDaysInMonthType;
     this.isChartCategoryType = !this.isChartCategoryType;
 
-    this.monthlyExpenses.subscribe(expenses => {
-      this.createChart(expenses);
-    })
+    this.createChart();
   }
 
   getDaysInMonth = (month, year) => (new Array(31)).fill('').map((v,i)=>new Date(year,month,i+1)).filter(v=>v.getMonth()===month)

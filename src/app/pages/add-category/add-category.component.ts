@@ -43,7 +43,7 @@ export class AddCategoryComponent implements OnInit, OnDestroy{
       this.sub = this.authService.user.subscribe(user => {
         this.loggedUser = user!
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === localStorage.getItem('profileId'))!
-        this.categoryService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
+        this.categoryService.getCategories(this.loggedUser.uid, this.activeProfile.id).subscribe(data => {
           this.activeProfile.categories = data;
         })
       })

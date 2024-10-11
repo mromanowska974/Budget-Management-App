@@ -50,7 +50,7 @@ export class AddExpenseComponent implements OnInit, OnDestroy{
         this.loggedUser = user!;
 
         this.activeProfile = this.loggedUser.profiles.find(profile => profile.id === localStorage.getItem('profileId'))!;
-        this.categoryService.getCategories(this.loggedUser.uid, this.activeProfile.id).then(data => {
+        this.categoryService.getCategories(this.loggedUser.uid, this.activeProfile.id).subscribe(data => {
           this.categories = data
         })
       })

@@ -23,14 +23,14 @@ export class CategoriesMenuComponent implements OnInit{
   activeCategory;
 
   ngOnInit(): void {
-      const catId = localStorage.getItem('categoryId')
+      const catId = localStorage.getItem('categoryId');
       if(catId){
-        this.activeCategory = this.categories.find(category => category.id === catId)
+        this.activeCategory = this.categories.find(category => category.id === catId);
       }
   }
 
   onAddCategory(){
-    this.router.navigate(['add-category'])
+    this.router.navigate(['add-category']);
   }
 
   onSelectCategory(category){
