@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { getToken, Messaging, onMessage } from '@angular/fire/messaging';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class MessagingService {
   messaging = inject(Messaging);
   http = inject(HttpClient);
 
-  currentMessage = new Subject<any>;
+  currentMessage = new BehaviorSubject<any>(null);
 
   serverUrl = 'https://aidzbo-notifications.onrender.com';
 

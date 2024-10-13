@@ -17,7 +17,7 @@
         <div class="right-side">
             <app-graph 
                 [monthlyExpenses]="monthlyExpenses"
-                [categories]="previewMode ? previewedProfile.categories! : activeProfile.categories!"
+                [categories]="previewMode ? previewedProfile!.categories! : activeProfile.categories!"
                 [date]="{fullDate: checkedDate, monthName: checkedMonth}"
             ></app-graph>
         </div>
@@ -25,7 +25,7 @@
     <div class="last-expenses-list">
         <app-last-expenses-table 
             [monthlyExpenses]="monthlyExpenses"
-            [profile]="previewMode ? previewedProfile : activeProfile"
+            [profile]="previewMode ? previewedProfile! : activeProfile"
         ></app-last-expenses-table>
     </div>
 </div>
@@ -41,9 +41,9 @@
         <div class="modal-content">
             <div 
                 class="item" 
-                *ngFor="let profile of loggedUser?.profiles"
+                *ngFor="let profile of profiles"
                 [ngClass]="{
-                    active: (previewMode === false && profile.id === activeProfile.id) || (previewMode === true && profile.id === previewedProfile.id)
+                    active: (previewMode === false && profile.id === activeProfile.id) || (previewMode === true && profile.id === previewedProfile!.id)
                 }"
                 (click)="onSelectProfile(profile)"
             >

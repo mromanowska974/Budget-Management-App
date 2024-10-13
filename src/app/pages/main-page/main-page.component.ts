@@ -3,10 +3,9 @@ import { WidgetDirective } from '../../directives/widget.directive';
 import { ButtonDirDirective } from '../../directives/button-dir.directive';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
 import { CommonModule } from '@angular/common';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, forkJoin, merge, Observable, Subscription } from 'rxjs';
 import { ModalService } from '../../services/modal.service';
 import { Expense } from '../../models/expense.interface';
 import { Month } from '../../models/months.enum';
@@ -63,95 +62,87 @@ export class MainPageComponent implements OnInit, OnDestroy{
 
   profileId = localStorage.getItem('profileId');
 
-  loggedUser: User; //not needed imo
   activeProfile: Profile;
-  previewedProfile: Profile; //można zrobić jeden profil w zależności od istnienia id previewedProfile w przeglądarce
-  profile: Profile;
-  previewMode = false; //można by to pozyskać od ExpenseInfo
+  previewedProfile: Profile | null;
+  profiles: Profile[] = [];
+  previewMode = false;
   unreadMessages: number;
   today = new Date();
   checkedDate: Date = new Date(this.today);
   checkedMonth = Month[this.checkedDate.getMonth()];
   monthlyExpenses: Observable<Expense[]>; 
   monthlySum: number;
-  authSub: Subscription;
+
   expenseSub: Subscription;
-  editSub: Subscription
+  editSub: Subscription;
+  getDataSub: Subscription;
+  initSub: Subscription;
 
   ngOnInit(): void {
     //this.messagingService.sendMessage('Zalogowano pomyślnie', 'Udało ci się zalogować. A mi wysłać tą wiadomość. Jupiiiii.');
     localStorage.removeItem('categoryId');
     this.editSub = this.expenseService.expenseWasEdited.subscribe(() => {
-      this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile)
+      this.filterExpensesByMonth(this.previewMode ? this.previewedProfile! : this.activeProfile)
     })
 
-    this.authSub = this.authService.user.subscribe(user => {
-        // this.loggedUser = user!;
-        this.activeProfile = user!.profiles.find(profile => profile.id === this.profileId)!;
-        this.profileService.updateProfile(localStorage.getItem('uid')!, localStorage.getItem('profileId')!, 'lastDeviceToken', localStorage.getItem('messageToken'));
+    const loggedUser$ = this.authService.user;
+    const routeParams$ = this.route.paramMap;
+    const currentMessage$ = this.messagingService.currentMessage;
 
-        this.route.paramMap.subscribe(params => {
-          if(params.has('profileId')){
-            this.profileService.getProfile(localStorage.getItem('uid'), params.get('profileId')).then(profile => {
-              if(profile.id === this.activeProfile.id){
-                this.previewMode = false;
-                localStorage.removeItem('previewedProfileId');
-              }
-              else {
-                this.previewMode = true;
-                this.previewedProfile = profile
-              }
-            }).then(() => {
-              if(this.previewMode) this.getData(this.previewedProfile)
-              else this.getData(this.activeProfile)
-            })
-          }
-          else this.getData(this.activeProfile).then(() => {
-            this.messagingService.currentMessage.subscribe(message => {
-              if(!this.activeProfile.messages?.find(item => item.id === message.messageId)){
-                this.notificationService.addMessage(localStorage.getItem('uid'), this.activeProfile.id, {
-                  title: message.notification.title,
-                  content: message.notification.body,
-                  isRead: false
-                }, message.messageId)
-              }
-            })
-          })
-        })
-      })
+    this.initSub = combineLatest([loggedUser$, routeParams$, currentMessage$]).subscribe(([loggedUser, routeParams, currentMessage]) => {
+      this.profiles = loggedUser!.profiles;
+      this.activeProfile = loggedUser!.profiles.find(profile => profile.id === this.profileId)!;
+      this.profileService.updateProfile(localStorage.getItem('uid')!, localStorage.getItem('profileId')!, 'lastDeviceToken', localStorage.getItem('messageToken'));
+      
+      if(!routeParams.has('profileId')){
+        this.getData(this.activeProfile);
+         
+        // if(!this.activeProfile.messages?.find(item => item.id === currentMessage.messageId)){
+        //   this.notificationService.addMessage(localStorage.getItem('uid'), this.activeProfile.id, {
+        //     title: currentMessage.notification.title,
+        //     content: currentMessage.notification.body,
+        //     isRead: false
+        //   }, currentMessage.messageId)
+        // }
+      }
+      else {
+        this.previewMode = routeParams.get('profileId') === this.activeProfile.id ? false : true;
+        this.previewedProfile = this.previewMode ? loggedUser!.profiles.find(profile => profile.id === routeParams.get('profileId'))! : null;
+        this.getData(this.previewMode ? this.previewedProfile! : this.activeProfile);
+      }
+    })
   }
 
   ngOnDestroy(): void {
-      if(this.authSub) this.authSub.unsubscribe();
+      if(this.initSub) this.initSub.unsubscribe();
       if(this.expenseSub) this.expenseSub.unsubscribe();
       if(this.editSub) this.editSub.unsubscribe();
+      if(this.getDataSub) this.getDataSub.unsubscribe();
   }
 
   private getData(profile: Profile){
-    return this.expenseService.getExpenses(localStorage.getItem('uid'), profile.id).then(expenses => {
-      profile.expenses = expenses;
-      this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile);
-    }).then(() => {
-      this.categoryService.getCategories(localStorage.getItem('uid')!, profile.id).subscribe(categories => {
-        profile.categories = categories;
-      })
-    }).then(() => {
-      this.notificationService.getMessages(localStorage.getItem('uid'), profile.id).then(messages => {
-        profile.messages;
+    const expenses$ = this.expenseService.getExpenses(localStorage.getItem('uid'), profile.id);
+    const categories$ = this.categoryService.getCategories(localStorage.getItem('uid')!, profile.id);
+    const notifications$ = this.notificationService.getMessages(localStorage.getItem('uid'), profile.id);
 
-        this.unreadMessages = messages.filter(message => !message.isRead).length;
-      })
-    }) 
+    this.getDataSub = combineLatest([expenses$, categories$, notifications$]).subscribe(([expenses, categories, notifications]) => {
+      profile.expenses = expenses;
+      profile.categories = categories;
+      profile.messages;
+
+      this.unreadMessages = notifications.filter(message => !message.isRead).length;
+      this.filterExpensesByMonth(this.previewMode ? this.previewedProfile! : this.activeProfile);
+    });
   }
 
   onReceiveDate(event){
     this.checkedDate = event.fullDate;
     this.checkedMonth = event.monthName;
-    this.filterExpensesByMonth(this.previewMode ? this.previewedProfile : this.activeProfile);
+    this.filterExpensesByMonth(this.previewMode ? this.previewedProfile! : this.activeProfile);
   }
 
   onEnterPreviewMode(template){
-    this.modalService.openModal(this.modalRef, template)
+    this.modalService.openModal(this.modalRef, template);
   }
 
   onCloseModal(){
@@ -159,23 +150,21 @@ export class MainPageComponent implements OnInit, OnDestroy{
   }
 
   onSelectProfile(profile: Profile){
-    if((this.previewMode === false && profile.id !== this.activeProfile.id) || (this.previewMode === true && profile.id !== this.previewedProfile.id)){
+    if((this.previewMode === false && profile.id !== this.activeProfile.id) || (this.previewMode === true && profile.id !== this.activeProfile.id)){
       this.previewedProfile = profile;
 
       localStorage.setItem('previewedProfileId', this.previewedProfile.id)
       this.router.navigate(['main-page','preview', this.previewedProfile.id]).then(() => {
-        window.location.reload();
+        this.onCloseModal();
       })
     }
     if(this.previewMode === true && profile.id === this.activeProfile.id){
-      localStorage.removeItem('previewedProfileId')
-      this.router.navigate(['main-page']).then(() => {
-        window.location.reload();
-      })
+      localStorage.removeItem('previewedProfileId');
+      this.router.navigate(['main-page']);
     }
   }
 
-  filterExpensesByMonth(profile: Profile){
+  private filterExpensesByMonth(profile: Profile){
     this.monthlySum = 0;
     this.monthlyExpenses = new Observable((subscriber) => {
       subscriber.next(profile.expenses!.filter(expense => new Date(expense.date).getMonth() === this.checkedDate.getMonth() && new Date(expense.date).getFullYear() === this.checkedDate.getFullYear()));
