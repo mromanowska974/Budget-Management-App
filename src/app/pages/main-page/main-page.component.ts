@@ -5,13 +5,13 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Profile } from '../../models/profile.interface';
 import { CommonModule } from '@angular/common';
-import { combineLatest, forkJoin, merge, Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { ModalService } from '../../services/modal.service';
 import { Expense } from '../../models/expense.interface';
 import { Month } from '../../models/months.enum';
 import { FormsModule } from '@angular/forms';
 import { MessagingService } from '../../services/messaging.service';
-import { CategoriesMenuComponent } from '../categories-menu/categories-menu.component';
+import { CategoriesMenuComponent } from '../../other-components/categories-menu/categories-menu.component';
 import { ChangeMonthArrowsComponent } from '../../other-components/change-month-arrows/change-month-arrows.component';
 import { NavbarComponent } from "../../other-components/navbar/navbar.component";
 import { ContainerDirective } from '../../directives/container.directive';
@@ -150,6 +150,8 @@ export class MainPageComponent implements OnInit, OnDestroy{
   }
 
   onSelectProfile(profile: Profile){
+    this.profileService.profileIsSwitched$.next(profile.id!);
+    
     if((this.previewMode === false && profile.id !== this.activeProfile.id) || (this.previewMode === true && profile.id !== this.activeProfile.id)){
       this.previewedProfile = profile;
 

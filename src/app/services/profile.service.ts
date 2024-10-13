@@ -1,12 +1,14 @@
-import { inject, Injectable } from '@angular/core';
+import { EventEmitter, inject, Injectable } from '@angular/core';
 import { Profile } from '../models/profile.interface';
 import { addDoc, collection, deleteDoc, doc, Firestore, getDoc, getDocs, updateDoc } from '@angular/fire/firestore';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
   db = inject(Firestore);
+  profileIsSwitched$ = new BehaviorSubject<string>(''); 
 
   constructor() { }
 
@@ -18,10 +20,10 @@ export class ProfileService {
     return doc(this.db, `users/${uid}/profiles/${pid}`);
   }
 
-  getProfiles(uid): Promise<Profile[]>{
+  getProfiles(uid): Observable<Profile[]>{
     let profiles: Profile[] = []; 
 
-    return getDocs(this.getCollectionRef(uid)).then((data): Profile[] => {
+    return from(getDocs(this.getCollectionRef(uid)).then((data): Profile[] => {
       data.docs.forEach(profile => {
           profiles.push(
             {
@@ -35,11 +37,11 @@ export class ProfileService {
           ) 
       })
       return profiles;
-    })
+    }));
   }
 
   getProfile(uid, pid){
-    return getDoc(this.getDocRef(uid, pid)).then(data => {
+    return from(getDoc(this.getDocRef(uid, pid)).then(data => {
       return {
         id: data.id,
         name: data.data()!['name'],
@@ -48,29 +50,28 @@ export class ProfileService {
         monthlyLimit: data.data()!['monthlyLimit'],
         notificationTime: data.data()!['notificationTime'],
       }
-    })
+    }));
   }
 
   addProfile(uid, data?){
-    return addDoc(this.getCollectionRef(uid), {
+    return from(addDoc(this.getCollectionRef(uid), {
         name: data ? data.name : 'Założyciel',
         role: data ? 'user' : 'admin',
         PIN: data ? data.PIN : null,
         monthlyLimit: 99.99,
         notificationTime: 3
-    }).then(data => data.id)
+    }).then(data => data.id));
   }
 
   updateProfile(uid: string, pid: string, propToEdit, newValue){
-    return updateDoc(this.getDocRef(uid, pid), {
+    return from(updateDoc(this.getDocRef(uid, pid), {
       [propToEdit]: newValue
     }).then(() => {
-       return this.getProfile(uid, pid).then((profile):Profile => profile)
-    })
-
+       return this.getProfile(uid, pid);
+    }));
   }
 
   deleteProfile(uid: string, pid: string){
-    return deleteDoc(this.getDocRef(uid, pid))
+    return deleteDoc(this.getDocRef(uid, pid));
   }
 }

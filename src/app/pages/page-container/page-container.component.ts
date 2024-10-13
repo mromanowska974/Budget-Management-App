@@ -3,12 +3,11 @@ import { RouterModule,  } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { CategoriesMenuComponent } from '../categories-menu/categories-menu.component';
+import { CategoriesMenuComponent } from '../../other-components/categories-menu/categories-menu.component';
 import { ContainerDirective } from '../../directives/container.directive';
 import { AuthService } from '../../services/auth.service';
 import { ModalService } from '../../services/modal.service';
 import { Profile } from '../../models/profile.interface';
-import { User } from '../../models/user.interface';
 import { CategoryService } from '../../services/category.service';
 import { ProfileService } from '../../services/profile.service';
 
@@ -33,46 +32,41 @@ export class PageContainerComponent {
   menuToggled = false;
   activeProfile: Profile;
   previewMode = false;
+
   authSub: Subscription;
   categoriesSub: Subscription;
+  editSub: Subscription;
+  switchSub: Subscription;
 
   ngOnInit(): void {
+      if(localStorage.getItem('previewedProfileId')) this.previewMode = true;
+      
+      const profileId = localStorage.getItem(this.previewMode ? 'previewedProfileId' : 'profileId');
+
       this.authSub = this.authService.user.subscribe(user => {
-        this.activeProfile = this.activeProfile || (user!.profiles.find(profile => profile.id === localStorage.getItem('profileId'))!)
+        this.activeProfile = user!.profiles.find(profile => profile.id === profileId)!;
         
-        this.getCategories();
+        this.getCategories(profileId);
       })
 
-      this.categoryService.categoryWasEdited.subscribe(() => this.getCategories());
+      this.editSub = this.categoryService.categoryWasEdited.subscribe(() => this.getCategories(profileId));
+      this.switchSub = this.profileService.profileIsSwitched$.subscribe((id) => this.getCategories(id));
   }
 
   ngOnDestroy(): void {
       if(this.authSub) this.authSub.unsubscribe();
       if(this.categoriesSub) this.categoriesSub.unsubscribe();
+      if(this.editSub) this.editSub.unsubscribe();
+      if(this.switchSub) this.switchSub.unsubscribe();
   }
 
-  private getCategories(){
-    this.categoryService.getCategories(localStorage.getItem('uid')!, this.activeProfile.id).subscribe(data => {
+  private getCategories(profileId){
+    this.categoriesSub = this.categoryService.getCategories(localStorage.getItem('uid')!, profileId).subscribe(data => {
       this.activeProfile.categories = data;
     })
   }
 
   onToggleMenu(){
-    this.menuToggled = !this.menuToggled
-  }
-
-  onActivate(){
-    const profileId = localStorage.getItem('previewedProfileId')
-    if(profileId){
-      this.profileService.getProfile(localStorage.getItem('uid'), profileId).then(profile => {
-        this.activeProfile = profile
-      }).then(() => {
-        this.categoryService.getCategories(localStorage.getItem('uid')!, this.activeProfile.id).subscribe(data => {
-          this.activeProfile.categories = data;
-
-          if(this.activeProfile.id !== localStorage.getItem('profileId')) this.previewMode = true
-        })
-      })
-    }
+    this.menuToggled = !this.menuToggled;
   }
 }

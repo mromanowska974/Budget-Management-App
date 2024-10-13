@@ -30,12 +30,12 @@ export class AppComponent implements OnInit{
     let uid: string |null = localStorage.getItem('uid');
 
     if(uid !== null){
-      this.userService.getUser(uid).then(result => {
-        this.profileService.getProfiles(uid).then(data => {
+      this.userService.getUser(uid).then(user => {
+        this.profileService.getProfiles(uid).subscribe(profiles => {
           this.authService.setUser({
-            email: result!['email'],
-            accountStatus: result!['accountStatus'],
-            profiles: data,
+            email: user!['email'],
+            accountStatus: user!['accountStatus'],
+            profiles: profiles,
             uid: uid!
           })
         })

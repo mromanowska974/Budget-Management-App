@@ -32,9 +32,8 @@ export class NotificationsComponent implements OnInit{
   pid = localStorage.getItem('profileId');
 
   ngOnInit(): void {
-      this.profileService.getProfile(this.uid, this.pid).then(profile => {
+      this.profileService.getProfile(this.uid, this.pid).subscribe(profile => {
         this.activeProfile = profile
-      }).then(() => {
         this.notificationService.getMessages(this.uid, this.pid).then(messages => {
           this.activeProfile.messages = messages;
         })

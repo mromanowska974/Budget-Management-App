@@ -55,7 +55,7 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
         this.isLoaded = true;
         this.adminsCount = this.loggedUser.profiles.filter(profile => profile.role === 'admin').length;
 
-        this.profileService.getProfile(this.loggedUser.uid, localStorage.getItem('profileId')).then(profile => {
+        this.profileService.getProfile(this.loggedUser.uid, localStorage.getItem('profileId')).subscribe(profile => {
           this.activeProfile = profile
         })
       })
@@ -78,7 +78,7 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
 
   private modifyPrivileges(data){
     if(((data === 'admin' && this.adminsCount < this.adminsLimit) || data === 'user') && this.selectedProfile.id !== this.activeProfile.id){
-      this.profileService.updateProfile(this.loggedUser.uid, this.selectedProfile.id, 'role', data).then(profile => {
+      this.profileService.updateProfile(this.loggedUser.uid, this.selectedProfile.id, 'role', data).subscribe(profile => {
         this.authService.changeProfiles(this.loggedUser, profile)
         this.data = null;
         this.action = '';
@@ -98,7 +98,7 @@ export class EditProfilesComponent implements OnInit, OnDestroy{
     if(newPin === undefined) this.errorMsg = 'Proszę podać nowy kod PIN.';
     else if(newPin.toString().length < 4 || newPin.toString().length > 8) this.errorMsg = 'Kod PIN musi zawierać od 4 do 8 cyfr.';
     else {
-      this.profileService.updateProfile(this.loggedUser.uid, pid, 'PIN', newPin.toString()).then(data => {
+      this.profileService.updateProfile(this.loggedUser.uid, pid, 'PIN', newPin.toString()).subscribe(data => {
         this.authService.changeProfiles(this.loggedUser, data)
   
         this.data = null;

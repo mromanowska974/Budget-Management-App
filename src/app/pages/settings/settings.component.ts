@@ -95,8 +95,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
         this.errorMsg = 'Kod PIN musi mieć długość od 4 do 8 cyfr.'
       }
       else {
-        this.profileService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data).then(() => {
-          this.profileService.getProfiles(this.loggedUser.uid).then(data => {
+        this.profileService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data).subscribe(() => {
+          this.profileService.getProfiles(this.loggedUser.uid).subscribe(data => {
             this.authService.changeUser('profiles', data, this.loggedUser)
           })
         })
@@ -113,8 +113,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
           this.errorMsg = 'Kod PIN musi mieć długość od 4 do 8 cyfr.'
         }
         else {
-          this.profileService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data[0]).then(() => {
-            this.profileService.getProfiles(this.loggedUser.uid).then(data => {
+          this.profileService.updateProfile(this.loggedUser.uid, this.activeProfile.id, 'PIN', data[0]).subscribe(() => {
+            this.profileService.getProfiles(this.loggedUser.uid).subscribe(data => {
               this.authService.changeUser('profiles', data, this.loggedUser)
             })
           })
@@ -142,8 +142,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Profil o podanej nazwie już istnieje'
     }
     else {
-      this.profileService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'name', data).then(() => {
-        this.profileService.getProfiles(this.loggedUser.uid).then(data => {
+      this.profileService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'name', data).subscribe(() => {
+        this.profileService.getProfiles(this.loggedUser.uid).subscribe(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })
       })
@@ -163,8 +163,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
-      this.profileService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'monthlyLimit', data).then(() => {
-        this.profileService.getProfiles(this.loggedUser.uid).then(data => {
+      this.profileService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'monthlyLimit', data).subscribe(() => {
+        this.profileService.getProfiles(this.loggedUser.uid).subscribe(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })
       })
@@ -184,8 +184,8 @@ export class SettingsComponent implements OnInit, OnDestroy{
       this.errorMsg = 'Proszę podać nową wartość.'
     }
     else {
-      this.profileService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'notificationTime', data).then(() => {
-        this.profileService.getProfiles(this.loggedUser.uid).then(data => {
+      this.profileService.updateProfile(this.loggedUser?.uid!, this.activeProfile.id, 'notificationTime', data).subscribe(() => {
+        this.profileService.getProfiles(this.loggedUser.uid).subscribe(data => {
           this.authService.changeUser('profiles', data, this.loggedUser)
         })
       })

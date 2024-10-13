@@ -20,7 +20,7 @@ export class CategoriesMenuComponent implements OnInit{
   @Input() categories;
   @Input() previewMode;
 
-  activeCategory;
+  activeCategory; //observable maybe
 
   ngOnInit(): void {
       const catId = localStorage.getItem('categoryId');
@@ -48,14 +48,10 @@ export class CategoriesMenuComponent implements OnInit{
       this.activeCategory = category;
       localStorage.setItem('categoryId', this.activeCategory.id);
       if (this.previewMode){
-        this.router.navigate(['main-page', category.content, 'preview']).then(() => {
-          window.location.reload();
-        })
+        this.router.navigate(['main-page', category.content, 'preview']);
       }
       else {
-        this.router.navigate(['main-page', category.content]).then(() => {
-          window.location.reload();
-        })
+        this.router.navigate(['main-page', category.content]);
       }
     }
   }

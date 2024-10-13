@@ -70,7 +70,7 @@ export class AddProfileComponent implements OnInit, OnDestroy{
         notificationTime: 3
       }
 
-      this.profileService.addProfile(this.loggedUser.uid, newProfile).then(pid => {
+      this.profileService.addProfile(this.loggedUser.uid, newProfile).subscribe(pid => {
         this.categoryService.addCategory(this.loggedUser.uid, pid, {
           content: 'jedzenie',
           color: '#ff0000'

@@ -74,22 +74,18 @@ export class LoginComponent implements OnInit{
     }
   }
 
-  setActiveUser(doc, uid){
-      return this.profileService.getProfiles(uid).then(data => {
-        let user: User = {
-          uid: uid,
-          email: doc.email,
-          accountStatus: doc.accountStatus,
-          profiles: data,
-        }
-    
-        this.authService.setUser(user);
-        this.saveToLocalStorage('uid', uid)
-    
-        if(user.profiles.length === 1) this.saveToLocalStorage('profileId', user.profiles[0].id)
-
-        return user;
-      }) 
+  private setActiveUser(userDoc, uid, profiles?){
+      let user: User = {
+        uid: uid,
+        email: userDoc.email,
+        accountStatus: userDoc.accountStatus,
+        profiles: profiles,
+      }
+  
+      this.authService.setUser(user);
+      this.saveToLocalStorage('uid', uid);
+  
+      if(user.profiles.length === 1) this.saveToLocalStorage('profileId', user.profiles[0].id);
   }
 
   handleAlternateSignIn(data){
@@ -99,21 +95,19 @@ export class LoginComponent implements OnInit{
       userDoc = doc
       if(!userDoc){
         this.userService.addUser(data).then(() => {
-          this.userService.getUser(data!.user?.uid!).then(doc => {
-            let loggedUser = doc
-
-            this.setActiveUser(loggedUser, data!.user?.uid!).then(() => {
-              this.router.navigate(['main-page'])
-            });
+          this.userService.getUser(data!.user?.uid!).then(userDoc => {
+            this.profileService.getProfiles(data!.user.uid).subscribe(profile => {
+              this.setActiveUser(userDoc, data!.user?.uid!, profile);
+              this.router.navigate(['main-page']);
+            })
           })
         });
         
       }
       else {
-        this.setActiveUser(userDoc, data!.user?.uid!).then(data => {
-          if(data.profiles.length === 1) this.router.navigate(['main-page']);
-          else this.router.navigate(['profiles-panel']);
-        });
+        if(data.profiles.length === 1) this.router.navigate(['main-page']);
+        else this.router.navigate(['profiles-panel']);
+        this.setActiveUser(userDoc, data!.user?.uid!);
       }
     })
   }
@@ -129,10 +123,9 @@ export class LoginComponent implements OnInit{
         .subscribe({
           next: (data) => {
             this.userService.getUser(data.user.uid).then(user => {
-              this.setActiveUser(user, data.user.uid).then(data => {
-                if(data.profiles.length === 1) this.router.navigate(['main-page']);
-                else this.router.navigate(['profiles-panel']);
-              });
+              this.setActiveUser(user, data.user.uid, user!['profiles']);
+              if(user!['profiles'].length === 1) this.router.navigate(['main-page']);
+              else this.router.navigate(['profiles-panel']);
             })
           },
           error: (error) => {
@@ -149,9 +142,8 @@ export class LoginComponent implements OnInit{
               this.userService.getUser(credential!.user?.uid!).then(doc => {
                 let loggedUser = doc
   
-                this.setActiveUser(loggedUser, credential!.user?.uid!).then(() => {
-                  this.router.navigate(['main-page']);
-                });
+                this.setActiveUser(loggedUser, credential!.user?.uid!, loggedUser!['profiles'])
+                this.router.navigate(['main-page']);
               })
             })
           },

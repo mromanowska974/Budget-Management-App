@@ -35,7 +35,7 @@ export class UserService {
         email: data.user.email,
         accountStatus: 'free'
       }).then(() => {
-        this.profileService.addProfile(data.user.uid).then(pid => {
+        this.profileService.addProfile(data.user.uid).subscribe(pid => {
           this.categoryService.addCategory(data.user.uid, pid, {
             content: 'Jedzenie',
             color: '#ff0000'
