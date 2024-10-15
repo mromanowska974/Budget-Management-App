@@ -5,7 +5,7 @@
             class="item"
             *ngFor="let category of categories"
             (click)="onSelectCategory(category)"
-            [ngClass]="{'active': activeCategory && category.id===activeCategory.id}"
+            [ngClass]="{'active': activeCategory && activeCategory.id===category.id}"
         >
             <div class="block" [style]="{backgroundColor: category.color}"></div>
             <p>{{ category.content }}</p>

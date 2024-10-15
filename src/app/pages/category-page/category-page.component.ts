@@ -54,7 +54,6 @@ export class CategoryPageComponent implements OnInit, OnDestroy {
   categories: {id, content: string, color: string}[];
   daysInMonthChart: any;
 
-  isLoaded = false;
   action: string = '';
   actionMsg: string = '';
   errorMsg: string = '';
@@ -71,19 +70,26 @@ export class CategoryPageComponent implements OnInit, OnDestroy {
   uid = localStorage.getItem('uid');
   previewedId = localStorage.getItem('previewedProfileId');
 
+  categoryEditSub: Subscription;
+  categorySwitchSub: Subscription;
   categorySub: Subscription;
   combinedSub: Subscription;
   expensesSub: Subscription;
-  edit
 
   ngOnInit(): void {
-    this.categoryService.categoryWasEdited.subscribe((category) => this.getActiveCategory(category));
- 
     let profileId = this.previewedId ? this.previewedId : this.pid;
 
     const categories$ = this.categoryService.getCategories(this.uid!, profileId!);
     const expenses$ = this.expenseService.getExpenses(this.uid, profileId);
+    const categoryWasSwitched$ = this.categoryService.categoryWasSwitched;
 
+    this.categoryEditSub = this.categoryService.categoryWasEdited.subscribe((category$) => this.getActiveCategory(category$));
+    this.categorySwitchSub = combineLatest([expenses$, categoryWasSwitched$]).subscribe(([expenses, category$]) => {
+      this.getActiveCategory(category$);
+      this.categoryExpenses = expenses.filter(expense => this.category.id === expense.category);
+      this.filterExpensesByMonth();
+    });
+ 
     this.combinedSub = combineLatest([categories$, expenses$]).subscribe(([categories, expenses]) => {
       let category$ = new Observable(subscriber => {
         subscriber.next(categories!.find(category => category.id === this.catId));
@@ -94,13 +100,11 @@ export class CategoryPageComponent implements OnInit, OnDestroy {
       this.getActiveCategory(category$);
       this.categoryExpenses = expenses.filter(expense => this.category.id === expense.category);
       this.filterExpensesByMonth();
-      
-      this.isLoaded = true;
     })
   }
 
   ngOnDestroy(): void {
-      if(this.categorySub) this.categorySub.unsubscribe();
+      if(this.categoryEditSub) this.categoryEditSub.unsubscribe();
       if(this.combinedSub) this.combinedSub.unsubscribe();
       if(this.expensesSub) this.expensesSub.unsubscribe();
   }
@@ -163,8 +167,7 @@ export class CategoryPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private deleteCategory(){
-    
+  private deleteCategory(){  
     if(this.categories!.length <= 2){
       this.errorMsg = 'Profil musi mieć co najmniej 2 kategorie.';
     }

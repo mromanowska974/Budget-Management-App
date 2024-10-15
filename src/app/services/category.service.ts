@@ -8,6 +8,7 @@ import { BehaviorSubject, from } from 'rxjs';
 export class CategoryService {
   db = inject(Firestore);
   categoryWasEdited = new BehaviorSubject<any>(null);
+  categoryWasSwitched = new BehaviorSubject<any>(null);
   
   constructor() { }
   

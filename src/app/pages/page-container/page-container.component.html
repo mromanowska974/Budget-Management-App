@@ -2,7 +2,7 @@
     <div class="menu">
         <app-categories-menu 
             *ngIf="menuToggled" 
-            [categories]="activeProfile.categories"
+            [categories]="activeProfile.categories!"
             [previewMode]="previewMode"
         ></app-categories-menu>
         <a class="hamburger" (click)="onToggleMenu()">

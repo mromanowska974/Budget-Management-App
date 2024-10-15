@@ -39,18 +39,21 @@ export class PageContainerComponent {
   switchSub: Subscription;
 
   ngOnInit(): void {
-      if(localStorage.getItem('previewedProfileId')) this.previewMode = true;
+      this.previewMode = localStorage.getItem('previewedProfileId') ? true : false;
       
       const profileId = localStorage.getItem(this.previewMode ? 'previewedProfileId' : 'profileId');
 
       this.authSub = this.authService.user.subscribe(user => {
-        this.activeProfile = user!.profiles.find(profile => profile.id === profileId)!;
-        
+        this.activeProfile = user!.profiles.find(profile => profile.id === profileId)!;        
         this.getCategories(profileId);
       })
 
       this.editSub = this.categoryService.categoryWasEdited.subscribe(() => this.getCategories(profileId));
-      this.switchSub = this.profileService.profileIsSwitched$.subscribe((id) => this.getCategories(id));
+      this.switchSub = this.profileService.profileIsSwitched$.subscribe((id) => {
+        this.getCategories(id);
+        this.previewMode = localStorage.getItem('previewedProfileId') ? true : false;
+        console.log(this.previewMode)
+      });
   }
 
   ngOnDestroy(): void {

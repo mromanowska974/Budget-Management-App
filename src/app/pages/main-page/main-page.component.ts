@@ -149,12 +149,10 @@ export class MainPageComponent implements OnInit, OnDestroy{
     this.modalService.closeModal(this.modalRef);
   }
 
-  onSelectProfile(profile: Profile){
-    this.profileService.profileIsSwitched$.next(profile.id!);
-    
+  onSelectProfile(profile: Profile){  
     if((this.previewMode === false && profile.id !== this.activeProfile.id) || (this.previewMode === true && profile.id !== this.activeProfile.id)){
       this.previewedProfile = profile;
-
+      
       localStorage.setItem('previewedProfileId', this.previewedProfile.id)
       this.router.navigate(['main-page','preview', this.previewedProfile.id]).then(() => {
         this.onCloseModal();
@@ -164,6 +162,8 @@ export class MainPageComponent implements OnInit, OnDestroy{
       localStorage.removeItem('previewedProfileId');
       this.router.navigate(['main-page']);
     }
+
+    this.profileService.profileIsSwitched$.next(profile.id!);
   }
 
   private filterExpensesByMonth(profile: Profile){
