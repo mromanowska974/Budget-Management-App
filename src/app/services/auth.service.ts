@@ -15,7 +15,7 @@ export class AuthService {
   user = new BehaviorSubject<User|null>(null);
 
   setUser(loggedUser: User | null){
-    this.user.next(loggedUser)
+    this.user.next(loggedUser);
   }
 
   //MODIFYING CURRENT USER DATA

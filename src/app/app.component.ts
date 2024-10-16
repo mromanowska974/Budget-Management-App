@@ -7,6 +7,7 @@ import { Firestore } from '@angular/fire/firestore';
 import { MessagingService } from './services/messaging.service';
 import { UserService } from './services/user.service';
 import { ProfileService } from './services/profile.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -27,19 +28,19 @@ export class AppComponent implements OnInit{
   loggedUser: User | null = null;
 
   ngOnInit(): void {
-    let uid: string |null = localStorage.getItem('uid');
+    let uid: string | null = localStorage.getItem('uid');
 
     if(uid !== null){
-      this.userService.getUser(uid).then(user => {
-        this.profileService.getProfiles(uid).subscribe(profiles => {
-          this.authService.setUser({
-            email: user!['email'],
-            accountStatus: user!['accountStatus'],
-            profiles: profiles,
-            uid: uid!
-          })
+      const user$ = this.userService.getUser(uid);
+      const profiles$ = this.profileService.getProfiles(uid);
+      
+      combineLatest([user$, profiles$]).subscribe(([user, profiles]) => {
+        this.authService.setUser({
+          email: user!['email'],
+          accountStatus: user!['accountStatus'],
+          profiles: profiles,
+          uid: uid!
         })
-
       })
     }
 

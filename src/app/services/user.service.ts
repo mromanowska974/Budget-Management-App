@@ -19,7 +19,7 @@ export class UserService {
   }
 
   getUser(id: string){
-      return getDoc(this.getDocRef(id)).then(data => data.data());
+      return from(getDoc(this.getDocRef(id)).then(data => data.data()));
   }
 
   updateUser(id: string, propToEdit, newValue){
@@ -31,7 +31,7 @@ export class UserService {
   }
 
   addUser(data){
-      return setDoc(this.getDocRef(data.user.uid), {
+      return from(setDoc(this.getDocRef(data.user.uid), {
         email: data.user.email,
         accountStatus: 'free'
       }).then(() => {
@@ -39,12 +39,12 @@ export class UserService {
           this.categoryService.addCategory(data.user.uid, pid, {
             content: 'Jedzenie',
             color: '#ff0000'
-          })
+          });
           this.categoryService.addCategory(data.user.uid, pid, {
             content: 'Transport',
             color: '#ffff00'
-          })
+          });
         })
-      })
+      }));
   }
 }

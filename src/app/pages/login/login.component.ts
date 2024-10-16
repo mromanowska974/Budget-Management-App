@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 
 import { ButtonDirDirective } from '../../directives/button-dir.directive';
 import { InputDirDirective } from '../../directives/input-dir.directive';
@@ -11,6 +11,7 @@ import { User } from '../../models/user.interface';
 import { ContainerDirective } from '../../directives/container.directive';
 import { ProfileService } from '../../services/profile.service';
 import { UserService } from '../../services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,7 @@ import { UserService } from '../../services/user.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit, OnDestroy{
   db = inject(Firestore);
   router = inject(Router);
   authService = inject(AuthService);
@@ -38,20 +39,28 @@ export class LoginComponent implements OnInit{
   loginMode = false;
   errorMessage: string;
 
+  fbSub: Subscription;
+  googleSub: Subscription;
+
   ngOnInit(): void {
     if(this.router.url === '/register') this.loginMode = false;
     else this.loginMode = true;
   }
 
+  ngOnDestroy(): void {
+    if(this.fbSub) this.fbSub.unsubscribe();
+    if(this.googleSub) this.googleSub.unsubscribe();
+  }
+
   onSignInFB(){
-    this.authService.fbAuth().subscribe((data) => {
+    this.fbSub = this.authService.fbAuth().subscribe((data) => {
       this.handleAlternateSignIn(data);
     });
   }
 
   onSignInGoogle(){
-    this.authService.googleAuth().subscribe((data) => {
-      this.handleAlternateSignIn(data)
+    this.googleSub = this.authService.googleAuth().subscribe((data) => {
+      this.handleAlternateSignIn(data);
     });
   }
 
@@ -83,37 +92,35 @@ export class LoginComponent implements OnInit{
       }
   
       this.authService.setUser(user);
-      this.saveToLocalStorage('uid', uid);
+      localStorage.setItem('uid', uid);
   
-      if(user.profiles.length === 1) this.saveToLocalStorage('profileId', user.profiles[0].id);
+      if(user.profiles.length === 1) localStorage.setItem('profileId', user.profiles[0].id);
   }
 
   handleAlternateSignIn(data){
     let userDoc;
 
-    this.userService.getUser(data!.user?.uid!).then(doc => {
-      userDoc = doc
+    this.userService.getUser(data!.user?.uid!).subscribe(doc => {
+      userDoc = doc;
+      console.log(doc);
       if(!userDoc){
-        this.userService.addUser(data).then(() => {
-          this.userService.getUser(data!.user?.uid!).then(userDoc => {
+        this.userService.addUser(data).subscribe(() => {
+          this.userService.getUser(data!.user?.uid!).subscribe(userDoc => {
             this.profileService.getProfiles(data!.user.uid).subscribe(profile => {
               this.setActiveUser(userDoc, data!.user?.uid!, profile);
               this.router.navigate(['main-page']);
             })
           })
-        });
-        
+        }); 
       }
       else {
-        if(data.profiles.length === 1) this.router.navigate(['main-page']);
-        else this.router.navigate(['profiles-panel']);
-        this.setActiveUser(userDoc, data!.user?.uid!);
+        this.profileService.getProfiles(data.user.uid).subscribe(profiles => {
+          this.setActiveUser(userDoc, data!.user?.uid!, profiles);
+          if(profiles.length === 1) this.router.navigate(['main-page']);
+          else this.router.navigate(['profiles-panel']);
+        })
       }
     })
-  }
-
-  saveToLocalStorage(key, value) {
-    localStorage.setItem(key, value);
   }
 
   onSubmit(){
@@ -122,14 +129,16 @@ export class LoginComponent implements OnInit{
         .login(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
           next: (data) => {
-            this.userService.getUser(data.user.uid).then(user => {
-              this.setActiveUser(user, data.user.uid, user!['profiles']);
-              if(user!['profiles'].length === 1) this.router.navigate(['main-page']);
-              else this.router.navigate(['profiles-panel']);
+            this.userService.getUser(data.user.uid).subscribe(user => {
+              this.profileService.getProfiles(data.user.uid).subscribe(profiles => {
+                this.setActiveUser(user, data.user.uid, profiles);
+                if(profiles.length === 1) this.router.navigate(['main-page']);
+                else this.router.navigate(['profiles-panel']);
+              })
             })
           },
           error: (error) => {
-            this.handleError(error)
+            this.handleError(error);
           }
         })
     }
@@ -138,12 +147,14 @@ export class LoginComponent implements OnInit{
         .register(this.signupForm.value.email, this.signupForm.value.password)
         .subscribe({
           next: (credential) => {
-            this.userService.addUser(credential).then(() => {
-              this.userService.getUser(credential!.user?.uid!).then(doc => {
-                let loggedUser = doc
+            this.userService.addUser(credential).subscribe(() => {
+              this.userService.getUser(credential!.user?.uid!).subscribe(doc => {
+                let loggedUser = doc;
   
-                this.setActiveUser(loggedUser, credential!.user?.uid!, loggedUser!['profiles'])
-                this.router.navigate(['main-page']);
+                this.profileService.getProfiles(credential.user.uid).subscribe(profiles => {
+                  this.setActiveUser(loggedUser, credential!.user?.uid!, profiles)
+                  this.router.navigate(['main-page']);
+                })
               })
             })
           },
