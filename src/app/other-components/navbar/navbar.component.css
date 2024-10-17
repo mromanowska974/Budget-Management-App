@@ -13,3 +13,21 @@ button {
     height: 2rem;
     text-wrap: nowrap;
 }
+
+@media (orientation: portrait) {
+    .container {
+        flex-wrap: wrap;
+        width: fit-content;
+    }
+
+    .scrollable {
+        display: flex;
+        overflow-x: auto;
+        max-width: calc(100vw - 42px);
+        flex-grow: 1;
+    }
+
+    .scrollable button:nth-of-type(1) {
+        margin-left: auto;
+    }
+}

@@ -15,41 +15,29 @@
                 <th>Opis</th>
                 <th>Cykliczność</th>
             </tr>
-            <tr *ngFor="let expense of monthlyExpenses | async; let i = index" title="Kliknij dwukrotnie lewym przyciskiem myszy żeby edytować dane.">
+            <tr 
+                *ngFor="let expense of monthlyExpenses | async; let i = index" 
+                [title]="previewMode || wasOpenedFromCategoryPage ? '' : 'Kliknij dwukrotnie lewym przyciskiem myszy żeby edytować dane.'"
+            >
                 <td *ngIf="!wasOpenedFromCategoryPage">
                     <app-table-item
                         [propToEdit]="'category'"
                         [expense]="expense"
                         [categories]="profile.categories"
                         [isEditable]="!wasOpenedFromCategoryPage"
+                        [coords]="[i, 0]"
+                        [globalActiveCoords$]="activeCoords$"
+                        (activeCoordsChanged)="onChangeActiveCoords($event)"
                     ></app-table-item>
                 </td>
-                <td>
+                <td *ngFor="let prop of props; let j = index">
                     <app-table-item
-                        [propToEdit]="'price'"
+                        [propToEdit]="prop"
                         [expense]="expense"
                         [isEditable]="!wasOpenedFromCategoryPage"
-                    ></app-table-item>
-                </td>
-                <td>
-                    <app-table-item
-                        [propToEdit]="'date'"
-                        [expense]="expense"
-                        [isEditable]="!wasOpenedFromCategoryPage"
-                    ></app-table-item>
-                </td>
-                <td>
-                    <app-table-item
-                        [propToEdit]="'description'"
-                        [expense]="expense"
-                        [isEditable]="!wasOpenedFromCategoryPage"
-                    ></app-table-item>
-                </td>
-                <td>
-                    <app-table-item
-                        [propToEdit]="'renewalTime'"
-                        [expense]="expense"
-                        [isEditable]="!wasOpenedFromCategoryPage"
+                        [coords]="[i, j]"
+                        [globalActiveCoords$]="activeCoords$"
+                        (activeCoordsChanged)="onChangeActiveCoords($event)"
                     ></app-table-item>
                 </td>
             </tr>

@@ -11,8 +11,19 @@ p{
     margin: 0;
 }
 
+.editable-prop {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+input, select {
+    width: 100%;
+}
+
 .btn-box {
     display: flex;
+    width: 2rem;
 }
 
 .btn-box button {
@@ -27,6 +38,9 @@ p{
 
 form {
     display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
 }
 
 .invalid {

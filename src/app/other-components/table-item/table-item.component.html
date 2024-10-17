@@ -10,52 +10,54 @@
         }}
     </p>
     <form *ngIf="!previewMode && editMode && isEditable" (ngSubmit)="onChangeProp()" #editForm="ngForm">
-        <select
-            *ngIf="propToEdit === 'category'"
-            id="category"
-            name="newValue"
-            ngModel
-            required
-        >
-            <option [value]="category.id" *ngFor="let category of categories">
-                {{ category.content }}
-            </option>
-        </select>
-        <input
-            *ngIf="propToEdit !== 'category' && propToEdit !== 'renewalTime'"
-            [type]="propToEdit === 'price' ? 'number' : (propToEdit === 'date' ? 'date' : 'text')"
-            min="0"
-            [max]="today"
-            id="input"
-            ngModel
-            name="newValue"
-            required
-        >
-        <div 
-            class="cyclic-input" 
-            *ngIf="propToEdit === 'renewalTime' && !previewMode"
-        >
-            <div class="chkbx">
-                <input 
-                    type="checkbox"
-                    id="periodic"
-                    name="periodic"
-                    ngModel
-                    #chkbx
-                > Cykliczny
-            </div>
-            <div class="cyclic-value">
-                <p>Co</p>
-                <input 
-                    type="number" 
-                    id="renewal"
-                    name="newValue"
-                    ngModel
-                    min="1"
-                    [disabled]="!chkbx.checked"
-                    [required]="chkbx.checked"
-                >
-                <p>dni</p>
+        <div class="editable-prop">
+            <select
+                *ngIf="propToEdit === 'category'"
+                id="category"
+                name="newValue"
+                ngModel
+                required
+            >
+                <option [value]="category.id" *ngFor="let category of categories">
+                    {{ category.content }}
+                </option>
+            </select>
+            <input
+                *ngIf="propToEdit !== 'category' && propToEdit !== 'renewalTime'"
+                [type]="propToEdit === 'price' ? 'number' : (propToEdit === 'date' ? 'date' : 'text')"
+                min="0"
+                [max]="today"
+                id="input"
+                ngModel
+                name="newValue"
+                required
+            >
+            <div 
+                class="cyclic-input" 
+                *ngIf="propToEdit === 'renewalTime' && !previewMode"
+            >
+                <div class="chkbx">
+                    <input 
+                        type="checkbox"
+                        id="periodic"
+                        name="periodic"
+                        ngModel
+                        #chkbx
+                    > Cykliczny
+                </div>
+                <div class="cyclic-value">
+                    <p>Co</p>
+                    <input 
+                        type="number" 
+                        id="renewal"
+                        name="newValue"
+                        ngModel
+                        min="1"
+                        [disabled]="!chkbx.checked"
+                        [required]="chkbx.checked"
+                    >
+                    <p>dni</p>
+                </div>
             </div>
         </div>
         <div class="btn-box">

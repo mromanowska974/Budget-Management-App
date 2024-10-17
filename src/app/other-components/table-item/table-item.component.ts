@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Expense } from '../../models/expense.interface';
 import { ExpenseService } from '../../services/expense.service';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-table-item',
@@ -15,11 +16,15 @@ import { FormsModule, NgForm } from '@angular/forms';
   templateUrl: './table-item.component.html',
   styleUrl: './table-item.component.css'
 })
-export class TableItemComponent implements OnInit{
+export class TableItemComponent implements OnChanges, OnInit{
   @Input() propToEdit;
   @Input() categories;
   @Input() expense: Expense;
   @Input() isEditable: boolean;
+  @Input() coords: number[] = [];
+  @Input() globalActiveCoords$: Observable<number[] | null> //available for every single Table Item
+
+  @Output() activeCoordsChanged = new EventEmitter<number[]>;
 
   @ViewChild('editForm') editForm: NgForm;
   
@@ -33,9 +38,19 @@ export class TableItemComponent implements OnInit{
   today: any = new Date();
 
   ngOnInit(): void {
-      this.today = this.formatDate();
-      this.previewMode = localStorage.getItem('previewedProfileId') ? true : false;
-      if(this.previewMode) this.isEditable = false;
+    this.today = this.formatDate();
+    this.previewMode = localStorage.getItem('previewedProfileId') ? true : false;
+    if(this.previewMode) this.isEditable = false;  
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['globalActiveCoords$']){
+      this.globalActiveCoords$.subscribe(coords => {
+        if(this.coords !== coords){
+          this.onCloseEdit();
+        }
+      })
+    }
   }
 
   private formatDate(){
@@ -46,7 +61,10 @@ export class TableItemComponent implements OnInit{
   }
 
   onEnterEdit(){
-    if(this.isEditable) this.editMode = true;
+    if(this.isEditable) {
+      this.activeCoordsChanged.emit(this.coords);
+      this.editMode = true;
+    }
   }
 
   onCloseEdit(){
@@ -71,6 +89,6 @@ export class TableItemComponent implements OnInit{
   }
 
   findCategory(){
-    return (category) => category.id === this.expense.category
+    return (category) => category.id === this.expense.category;
   }
 }
