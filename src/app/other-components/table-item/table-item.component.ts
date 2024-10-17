@@ -76,8 +76,11 @@ export class TableItemComponent implements OnChanges, OnInit{
       let newExpense = this.expense;
       if(this.propToEdit === 'renewalTime'){
         newExpense.isPeriodic = this.editForm.value.periodic;
+        newExpense.renewalTime = newExpense.isPeriodic ? this.editForm.value.newValue : null;
       }
-      newExpense[this.propToEdit] = this.editForm.value.newValue;
+      else{
+        newExpense[this.propToEdit] = this.editForm.value.newValue;
+      }
   
       this.expenseService.updateExpense(this.uid, this.profileId, newExpense.id, newExpense)
       .then(() => {

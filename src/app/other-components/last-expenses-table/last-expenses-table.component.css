@@ -1,5 +1,6 @@
 .widget {
     height: 100%;
+    padding: 20px 0;
 }
 
 .scroll{
@@ -11,15 +12,14 @@
 .widget h3 {
     margin-left: 15px;
     margin-top: 0;
-    padding-top: 5px;
 }
 
-.widget .scroll table {
-    width: 98%;
+table {
+    margin: 0 10px;
+    width: calc(100% - 20px);
     border-collapse: separate;
     border-spacing: 5px;
     padding: 0;
-
 }
 
 th, td{
@@ -42,7 +42,7 @@ tr {
 }
 
 .widget table td:nth-child(2){
-    width: 10%;
+    width: 15%;
 }
 
 .widget table td:nth-child(3){
@@ -70,11 +70,6 @@ tr {
     .widget{
         width: 100%;
     }
-
-    .widget table{
-        margin: 0 10px;
-        width: 90%;
-    }
 }
 
 @media (orientation: portrait) {
@@ -84,10 +79,6 @@ tr {
 
     .scroll {
         width: 100%;
-    }
-
-    .widget table{
-        width: 70%;
     }
 
     td p, th{
