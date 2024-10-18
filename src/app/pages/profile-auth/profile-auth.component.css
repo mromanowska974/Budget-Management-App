@@ -16,6 +16,12 @@ input {
     height: 1.5rem; 
 }
 
+button:first-of-type {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
 .widget {
     width: calc(100px + 10vh);
     height: calc(100px + 10vh);

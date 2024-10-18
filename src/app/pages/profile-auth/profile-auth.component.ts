@@ -54,10 +54,16 @@ export class ProfileAuthComponent implements OnInit, OnDestroy{
     this.errorMsg = '';
     let pinCode: string = this.pinCodeInput.nativeElement.value
     if(pinCode === this.activeProfile?.PIN){
+      localStorage.setItem('isProfileAuthorized', 'true');
       this.router.navigate(['main-page']);
     }
     else {
       this.errorMsg = 'Niepoprawny PIN'
     }
+  }
+
+  onGoBackToProfiles(){
+    localStorage.removeItem('profileId');
+    this.router.navigate(['profiles-panel']);
   }
 }

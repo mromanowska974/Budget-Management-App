@@ -1,6 +1,8 @@
 <div class="container">
-    <button *ngIf="!loggedUser" (click)="onGoToMainPage()">Strona Główna</button>
-    <button *ngIf="!loggedUser" (click)="onGoToAboutPage()">O Aplikacji</button>
+    <div *ngIf="!loggedUser" class="scrollable">
+        <button (click)="onGoToMainPage()">Strona Główna</button>
+        <button (click)="onGoToAboutPage()">O Aplikacji</button>
+    </div>
     <button *ngIf="!loggedUser" appButtonDir (click)="onLogin()">Zaloguj się</button>
 
     <div *ngIf="loggedUser" class="scrollable">

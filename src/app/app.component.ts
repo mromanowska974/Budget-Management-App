@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { User } from './models/user.interface';
 import { Firestore } from '@angular/fire/firestore';
@@ -24,13 +24,15 @@ export class AppComponent implements OnInit{
   messagingService = inject(MessagingService);
   userService = inject(UserService);
   profileService = inject(ProfileService);
+  router = inject(Router);
 
   loggedUser: User | null = null;
 
   ngOnInit(): void {
     let uid: string | null = localStorage.getItem('uid');
+    let isProfileAuthorized = JSON.parse(localStorage.getItem('isProfileAuthorized')!);
 
-    if(uid !== null){
+    if(uid !== null && isProfileAuthorized){
       const user$ = this.userService.getUser(uid);
       const profiles$ = this.profileService.getProfiles(uid);
       
@@ -41,6 +43,12 @@ export class AppComponent implements OnInit{
           profiles: profiles,
           uid: uid!
         })
+      })
+    }
+    else if(!isProfileAuthorized){
+      this.authService.logout().subscribe(() => {
+        localStorage.clear();
+        this.router.navigate(['']);
       })
     }
 

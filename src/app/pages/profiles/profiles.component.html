@@ -1,4 +1,5 @@
 <div class="container" appContainer>
+    <button appButtonDir (click)="onGoBackToLogin()">Wróć do panelu logowania</button>
     <h1>Wybierz Profil</h1>
     <div class="profiles-box" *ngIf="isLoaded">
         <div class="profile" *ngFor="let profile of profiles" >

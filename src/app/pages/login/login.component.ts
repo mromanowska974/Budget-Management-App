@@ -102,12 +102,12 @@ export class LoginComponent implements OnInit, OnDestroy{
 
     this.userService.getUser(data!.user?.uid!).subscribe(doc => {
       userDoc = doc;
-      console.log(doc);
       if(!userDoc){
         this.userService.addUser(data).subscribe(() => {
           this.userService.getUser(data!.user?.uid!).subscribe(userDoc => {
             this.profileService.getProfiles(data!.user.uid).subscribe(profile => {
               this.setActiveUser(userDoc, data!.user?.uid!, profile);
+              localStorage.setItem('isProfileAuthorized', 'true');
               this.router.navigate(['main-page']);
             })
           })
@@ -116,7 +116,10 @@ export class LoginComponent implements OnInit, OnDestroy{
       else {
         this.profileService.getProfiles(data.user.uid).subscribe(profiles => {
           this.setActiveUser(userDoc, data!.user?.uid!, profiles);
-          if(profiles.length === 1) this.router.navigate(['main-page']);
+          if(profiles.length === 1) {
+            localStorage.setItem('isProfileAuthorized', 'true');
+            this.router.navigate(['main-page']);
+          }
           else this.router.navigate(['profiles-panel']);
         })
       }
@@ -132,7 +135,10 @@ export class LoginComponent implements OnInit, OnDestroy{
             this.userService.getUser(data.user.uid).subscribe(user => {
               this.profileService.getProfiles(data.user.uid).subscribe(profiles => {
                 this.setActiveUser(user, data.user.uid, profiles);
-                if(profiles.length === 1) this.router.navigate(['main-page']);
+                if(profiles.length === 1) {
+                  localStorage.setItem('isProfileAuthorized', 'true');
+                  this.router.navigate(['main-page']);
+                }
                 else this.router.navigate(['profiles-panel']);
               })
             })
@@ -152,7 +158,8 @@ export class LoginComponent implements OnInit, OnDestroy{
                 let loggedUser = doc;
   
                 this.profileService.getProfiles(credential.user.uid).subscribe(profiles => {
-                  this.setActiveUser(loggedUser, credential!.user?.uid!, profiles)
+                  this.setActiveUser(loggedUser, credential!.user?.uid!, profiles);
+                  localStorage.setItem('isProfileAuthorized', 'true');
                   this.router.navigate(['main-page']);
                 })
               })

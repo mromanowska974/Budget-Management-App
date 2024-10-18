@@ -1,6 +1,8 @@
 .container {
     align-items: center;
     padding: 60px;
+    height: fit-content !important;
+    min-height: 100vh;
 }
 
 h1 {
@@ -8,12 +10,20 @@ h1 {
     text-align: center;
 }
 
+button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    height: 2rem;
+}
+
 .profiles-box {
-    height: 60vh;
+    height: fit-content;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
     row-gap: 10px;
+    width: fit-content;
 }
 
 .profile {
@@ -28,23 +38,13 @@ h1 {
 }
 
 @media (orientation: portrait) {
-    .profiles-box {
-        width: 70vw;
-        height: fit-content;
-    }
     .profile {
         width: 25vh;
         height: 25vh;
     }
-    .container {
-        height: fit-content !important;
-    }
 }
 
 @media (orientation: landscape) {
-    .profiles-box {
-        width: 60vw;
-    }
     .profile {        
         width: 30vh;
         height: 30vh;               

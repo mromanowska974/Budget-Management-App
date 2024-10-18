@@ -7,6 +7,7 @@ import { ContainerDirective } from '../../directives/container.directive';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.interface';
 import { Profile } from '../../models/profile.interface';
+import { ButtonDirDirective } from '../../directives/button-dir.directive';
 
 @Component({
   selector: 'app-profiles',
@@ -14,6 +15,7 @@ import { Profile } from '../../models/profile.interface';
   imports: [
     WidgetDirective,
     ContainerDirective,
+    ButtonDirDirective,
     
     CommonModule
   ],
@@ -34,6 +36,7 @@ export class ProfilesComponent implements OnInit, OnDestroy{
       this.sub = this.authService.user.subscribe(user => {
         this.currentUser = user
         this.profiles = this.currentUser!.profiles;
+        localStorage.setItem('isProfileAuthorized', 'false')
 
         this.isLoaded = true;
       });
@@ -47,5 +50,12 @@ export class ProfilesComponent implements OnInit, OnDestroy{
     let selectedProfile = this.currentUser?.profiles.find(profile => profile.name === name)
     localStorage.setItem('profileId', selectedProfile?.id!)
     this.router.navigate(['profile-auth'])
+  }
+
+  onGoBackToLogin(){
+    this.authService.logout().subscribe(() => {
+      localStorage.clear();
+      this.router.navigate(['login']);
+    });
   }
 }
